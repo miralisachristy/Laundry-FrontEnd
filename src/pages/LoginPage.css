@@ -1,0 +1,116 @@
+/* src/pages/LoginPage.css */
+
+h2 {
+  font-family: "Calibri", sans-serif; /* Menggunakan font Calibri */
+  font-size: 2rem; /* Ukuran font lebih besar */
+  text-align: center; /* Memusatkan teks */
+  color: #003366; /* Warna biru gelap */
+  margin-top: 0;
+  margin-bottom: 2rem; /* Jarak bawah yang lebih besar untuk memberi ruang pada elemen lain */
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Center vertically */
+  background-image: url("/public/images/laundry-background.jpg"); /* Ganti dengan path gambar */
+}
+
+.login-page form {
+  border: 1px solid #ccc; /* Thin border around the form */
+  border-radius: 8px; /* Rounded corners for the border */
+  padding: 70px 20px 70px 20px; /* Padding top right bottom left in pixels */
+  background-color: #fff; /* Background color of the form */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+  max-width: 400px; /* Max width to prevent stretching */
+  width: 100%; /* Full width inside the max width */
+  margin-top: 20px; /* Add margin to separate from logo */
+}
+
+.logo-container {
+  margin-bottom: 20px; /* Jarak antara logo dan form */
+  text-align: center; /* Memastikan logo berada di tengah secara horizontal */
+}
+
+.logo {
+  width: 100px; /* Sesuaikan lebar logo sesuai kebutuhan */
+  height: auto; /* Memastikan aspek rasio tetap terjaga */
+}
+
+.forgot-password-container {
+  margin-top: 15px; /* Jarak antara form dan tombol Forgot Password */
+  text-align: center;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.form-group {
+  margin-bottom: 15px; /* Space between form elements */
+  text-align: center; /* Center input fields horizontally */
+}
+
+.form-group label {
+  display: none; /* Menyembunyikan label jika sudah menggunakan placeholder */
+}
+
+.form-group input {
+  width: 70%;
+  padding: 0.5rem;
+  border-radius: 5px; /* Ubah nilai sesuai dengan keinginan */
+  font-size: 0.875rem; /* Ukuran font sedikit lebih kecil */
+  border: 1px solid #aaaaaa; /* Border tipis dengan warna abu muda */
+  box-sizing: border-box; /* Menghindari padding memengaruhi lebar elemen */
+  margin: 0 auto; /* Center input fields horizontally */
+  display: block; /* Ensures the margin auto works */
+}
+
+.form-group input::placeholder {
+  color: #b0b0b0; /* Warna abu muda untuk teks placeholder */
+  font-size: 0.875rem; /* Ukuran font placeholder sama dengan input */
+}
+
+.submit-button-container {
+  width: 100%; /* Mengatur lebar kontainer tombol */
+  display: flex;
+  justify-content: center; /* Memusatkan tombol di dalam kontainer */
+  text-align: center; /* Center the submit button */
+}
+
+.submit-button {
+  background-color: #007bff; /* Warna biru khas tombol login */
+  color: #fff; /* Button text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners for the button */
+  padding: 0.7rem 1rem; /* Button padding */
+  cursor: pointer; /* Pointer cursor on hover */
+  width: 70%; /* Mengatur lebar tombol agar sama dengan lebar input fields */
+  border-radius: 5px; /* Sudut tidak lancip */
+  text-align: center; /* Memastikan teks di tengah */
+  margin-bottom: 0px;
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* Darker color on hover */
+}
+
+.forgot-password-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}

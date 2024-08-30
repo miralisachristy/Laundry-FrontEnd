@@ -1,0 +1,17 @@
+/* src/pages/HomePage.css */
+
+.homepage-container {
+  display: flex;
+}
+
+.homepage-content {
+  margin-left: 240px; /* Adjust margin to create space between sidebar and content */
+  padding: 20px;
+  flex-grow: 1;
+  background-color: #f9f9f9; /* Background color for the content area */
+  min-height: 100vh; /* Ensures the content area covers the full height of the viewport */
+}
+
+button {
+  margin-bottom: 20px; /* Space between the button and the table */
+}

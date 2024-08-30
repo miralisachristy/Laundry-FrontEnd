@@ -1,0 +1,21 @@
+/* src/components/PopupMessage.css */
+
+.popup-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  color: white;
+  z-index: 1000; /* Ensure it appears on top */
+}
+
+/* Default background color, can be overridden by specific types */
+.popup-message.success {
+  background-color: green;
+}
+
+.popup-message.error {
+  background-color: red;
+}
