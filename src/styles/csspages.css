@@ -1,0 +1,228 @@
+/* src/styles/csspages.css */
+
+.container {
+  display: flex;
+  flex-direction: row; /* Aligns the navigation and content side by side */
+  width: 100%; /* Ensures the container takes up the full width of the page */
+}
+
+.content {
+  margin-left: 240px; /* Matches the width of the Navigation sidebar */
+  padding: 2rem;
+  flex-grow: 1; /* Allows the content area to expand to fill available space */
+  box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+}
+
+h1,
+h2 {
+  margin-bottom: 1.5rem; /* Adds space below the heading */
+  font-size: 2rem;
+  color: #333; /* Text color for the heading */
+}
+
+p {
+  color: rgb(0, 0, 0); /* Error message color */
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Removes the gap between table borders */
+  margin-top: 1rem; /* Adds space above the table */
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
+  vertical-align: middle; /* Centers the content vertically */
+}
+
+th {
+  background-color: #f4f4f4; /* Light background for table headers */
+  font-weight: bold; /* Makes the header text bold */
+}
+
+td img {
+  max-width: 100px; /* Limits the image width */
+  height: auto; /* Maintains the aspect ratio */
+}
+
+.add-customer-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.add-customer-box h3 {
+  margin-bottom: 10px;
+}
+
+.add-customer-box form div {
+  margin-bottom: 10px;
+}
+
+.add-customer-box form input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-customer-box form button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add-customer-box form button:hover {
+  background-color: #0056b3;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 30%; /* Updated width for the search input */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.add-customer-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.add-customer-button:hover {
+  background-color: #0056b3;
+}
+
+.close-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.close-button:hover {
+  background-color: #c82333;
+}
+
+.service-icon-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.service-icon-item {
+  width: 180px; /* Set the width of each item */
+  margin: 20px;
+}
+
+.service-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the logo horizontally */
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Rounded corners */
+  padding: 15px;
+  background-color: #f9f9f9; /* Light background color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.service-box:hover {
+  transform: translateY(
+    -4px
+  ); /* Moves the box upwards to create a floating effect */
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2); /* Increases shadow to enhance the floating effect */
+}
+
+.icon-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain; /* Ensures the image fits within the container without being cut off */
+  border-radius: 5px; /* Slightly rounded corners */
+  margin-bottom: 10px; /* Adjusted margin for better spacing */
+}
+
+.service-info {
+  margin-top: 10px;
+  text-align: left; /* Align text to the left */
+  width: 100%; /* Make the text container take full width */
+}
+
+.service-info h3 {
+  font-size: 16px;
+  margin: 10px 0 5px;
+}
+
+.service-info p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.transaction-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+}
+
+.transaction-modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.transaction-modal button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.transaction-modal button:hover {
+  background: #0056b3;
+}

@@ -25,7 +25,7 @@ const Navigation = () => {
 
   const handleLogout = () => {
     // Clear authentication data (this could be a token or session)
-    localStorage.removeItem("authToken");
+    //localStorage.removeItem("authToken");
 
     // Redirect to login or home page
     navigate("/");
@@ -37,7 +37,19 @@ const Navigation = () => {
         <div className="navbar-brand">{error ? error : outletName}</div>
         <ul className="navbar-menu">
           <li>
-            <Link to="/service-table">Service Table</Link>
+            <Link to="/outlet-table">Outlet</Link>
+          </li>
+          <li>
+            <Link to="/users-table">User</Link>
+          </li>
+          <li>
+            <Link to="/service-table">Service</Link>
+          </li>
+          <li>
+            <Link to="/order-table">Order</Link>
+          </li>
+          <li>
+            <Link to="/customer-table">Customer</Link>
           </li>
           <li>
             <Link href="#" onClick={handleLogout}>

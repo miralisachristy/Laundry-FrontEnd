@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation"; // Adjust this path if needed
-import "./ServiceTablePage.css";
+import "../styles/csspages.css"; // Import the global CSS file
 
-const ServiceTablePage = () => {
+const ServiceIconPage = () => {
   const [services, setServices] = useState([]);
   const [error, setError] = useState(null);
 
@@ -25,41 +25,32 @@ const ServiceTablePage = () => {
     <div className="container">
       <Navigation /> {/* Add Navigation here */}
       <div className="content">
-        <h1>Service Table</h1>
+        <h2>Service List</h2>
         {error && <p>{error}</p>}
-        <table>
-          <thead>
-            <tr>
-              <th>No</th> {/* Added column for No */}
-              <th>Image</th>
-              <th>Service Name</th>
-              <th>Service Type</th>
-              <th>Processing Time</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {services.map((service, index) => (
-              <tr key={service.id_service}>
-                <td>{index + 1}</td> {/* Renders the row number */}
-                <td>
+        <ul className="service-icon-list">
+          {services.map((service) => (
+            <li key={service.id_service} className="service-icon-item">
+              <div className="service-box">
+                <div className="service-icon">
                   <img
                     src={`http://localhost:3000/images/${service.image}`} // Ensure this path is correct
                     alt={service.service_name}
-                    style={{ width: "100px" }}
+                    className="icon-image"
                   />
-                </td>
-                <td>{service.service_name}</td>
-                <td>{service.service_type}</td>
-                <td>{service.processing_time}</td>
-                <td>{service.price}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+                <div className="service-info">
+                  <h3>{service.service_name}</h3>
+                  <p>Type: {service.service_type}</p>
+                  <p>Processing Time: {service.processing_time}</p>
+                  <p>Price: Rp {service.price}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
 };
 
-export default ServiceTablePage;
+export default ServiceIconPage;
