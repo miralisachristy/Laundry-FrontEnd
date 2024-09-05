@@ -25,7 +25,7 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     axios
       .post("http://localhost:5000/api/customers", newCustomer)
       .then((response) => {
-        setCustomers((prev) => [...prev, response.data]);
+        setCustomers(response.data); // Use the updated customer data directly
         setNewCustomer({
           name: "",
           phone: "",
@@ -43,11 +43,14 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   return (
     <div className="add-customer-box">
       <h3>Add New Customer</h3>
+
       <button
         className="close-button"
-        onClick={() => setShowAddCustomerForm(false)}
+        type="button"
+        onClick={() => setShowAddCustomerForm(false)} // Correctly close the form
+        aria-label="Close"
       >
-        Close
+        &times;
       </button>
       <form onSubmit={handleAddCustomer}>
         <div>
@@ -91,14 +94,8 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           />
         </div>
 
-        <button className="add-button" type="submit">
+        <button type="submit" className="add-button">
           Add Customer
-        </button>
-        <button
-          className="close-button"
-          onClick={() => setShowAddCustomerForm(false)}
-        >
-          Close
         </button>
       </form>
     </div>

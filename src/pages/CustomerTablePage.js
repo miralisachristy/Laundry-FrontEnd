@@ -1,3 +1,4 @@
+// src/pages/CustomerTablePage.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation"; // Adjust this path if needed
@@ -47,7 +48,7 @@ const CustomerTablePage = () => {
       <Navigation />
       <div className="content">
         <h2>Customer Table</h2>
-        <div className="search-container">
+        <div>
           <input
             type="text"
             className="search-input"
@@ -62,7 +63,12 @@ const CustomerTablePage = () => {
             Add Customer
           </button>
         </div>
-        {showAddCustomerForm && <AddCustomerForm onAdd={handleAddCustomer} />}
+        {showAddCustomerForm && (
+          <AddCustomerForm
+            setShowAddCustomerForm={setShowAddCustomerForm}
+            setCustomers={handleAddCustomer} // Pass handleAddCustomer function
+          />
+        )}
         <table>
           <thead>
             <tr>

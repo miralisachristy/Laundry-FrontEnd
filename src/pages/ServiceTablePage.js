@@ -67,16 +67,15 @@ const ServiceTablePage = () => {
         <h2>Service List</h2>
         {error && <p className="error-message">{error}</p>}
 
-        {/* Search input */}
-        <input
-          type="text"
-          placeholder="Search services..."
-          value={searchQuery}
-          onChange={handleSearch}
-          className="search-input"
-        />
+        <div>
+          <input
+            type="text"
+            placeholder="Search services..."
+            value={searchQuery}
+            onChange={handleSearch}
+            className="search-input"
+          />
 
-        <div className="add-service-container" style={{ marginTop: "20px" }}>
           <button
             className="add-button"
             onClick={() => setShowAddServiceForm(true)}
