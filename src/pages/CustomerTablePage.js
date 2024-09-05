@@ -1,4 +1,3 @@
-// src/pages/CustomerTablePage.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation"; // Adjust this path if needed
@@ -34,6 +33,15 @@ const CustomerTablePage = () => {
     customer.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleAddCustomer = (newCustomer) => {
+    setCustomers((prevCustomers) => {
+      const updatedCustomers = [...prevCustomers, newCustomer];
+      // Sort the updated list
+      return updatedCustomers.sort((a, b) => a.name.localeCompare(b.name));
+    });
+    setShowAddCustomerForm(false); // Close the form
+  };
+
   return (
     <div className="container">
       <Navigation />
@@ -54,12 +62,7 @@ const CustomerTablePage = () => {
             Add Customer
           </button>
         </div>
-        {showAddCustomerForm && (
-          <AddCustomerForm
-            setShowAddCustomerForm={setShowAddCustomerForm}
-            setCustomers={setCustomers}
-          />
-        )}
+        {showAddCustomerForm && <AddCustomerForm onAdd={handleAddCustomer} />}
         <table>
           <thead>
             <tr>

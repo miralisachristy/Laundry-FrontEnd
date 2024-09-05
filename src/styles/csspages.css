@@ -193,14 +193,17 @@ td img {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid; /* Use grid layout instead of flex */
+  grid-template-columns: repeat(3, 1fr); /* Create 3 equal-width columns */
+  gap: 20px; /* Space between items */
 }
 
 .service-icon-item {
-  width: 180px; /* Set the width of each item */
-  margin: 20px;
+  border: 1px solid #c82333; /* Optional: Border for each item */
+  border-radius: 10px; /* Optional: Rounded corners */
+  padding: 15px; /* Optional: Padding inside each item */
+  background-color: #f9f9f9; /* Optional: Background color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Shadow effect */
 }
 
 .service-box {

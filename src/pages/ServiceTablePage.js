@@ -17,8 +17,9 @@ const ServiceTablePage = () => {
       .get("http://localhost:5000/api/services")
       .then((response) => {
         if (response.status === 200) {
-          setServices(response.data);
-          setFilteredServices(response.data);
+          const fetchedServices = response.data;
+          setServices(fetchedServices);
+          setFilteredServices(fetchedServices);
         }
       })
       .catch((error) => {
@@ -55,12 +56,16 @@ const ServiceTablePage = () => {
     setShowAddServiceForm(false);
   };
 
+  const handleImageError = (e) => {
+    e.target.src = "/images/logo.png"; // Default image path
+  };
+
   return (
     <div className="container">
       <Navigation />
       <div className="content">
         <h2>Service List</h2>
-        {error && <p>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
 
         {/* Search input */}
         <input
@@ -71,12 +76,14 @@ const ServiceTablePage = () => {
           className="search-input"
         />
 
-        <button
-          className="add-button"
-          onClick={() => setShowAddServiceForm(true)}
-        >
-          Add Service
-        </button>
+        <div className="add-service-container" style={{ marginTop: "20px" }}>
+          <button
+            className="add-button"
+            onClick={() => setShowAddServiceForm(true)}
+          >
+            Add Service
+          </button>
+        </div>
 
         {showAddServiceForm && (
           <AddServiceForm
@@ -86,25 +93,30 @@ const ServiceTablePage = () => {
         )}
 
         <ul className="service-icon-list">
-          {filteredServices.map((service) => (
-            <li key={service.id_service} className="service-icon-item">
-              <div className="service-box">
-                <div className="service-icon">
-                  <img
-                    src={`http://localhost:3000/images/${service.image}`} // Ensure this path is correct
-                    alt={service.service_name}
-                    className="icon-image"
-                  />
+          {filteredServices.length > 0 ? (
+            filteredServices.map((service) => (
+              <li key={service.id_service}>
+                <div className="service-box">
+                  <div className="service-icon">
+                    <img
+                      src={`http://localhost:5000/upload/services/${service.image}`} // Ensure this path is correct
+                      alt={service.service_name}
+                      className="icon-image"
+                      onError={handleImageError} // Handle image error
+                    />
+                  </div>
+                  <div className="service-info">
+                    <h3>{service.service_name}</h3>
+                    <p>Type: {service.service_type}</p>
+                    <p>Processing Time: {service.processing_time}</p>
+                    <p>Price: Rp {service.price}</p>
+                  </div>
                 </div>
-                <div className="service-info">
-                  <h3>{service.service_name}</h3>
-                  <p>Type: {service.service_type}</p>
-                  <p>Processing Time: {service.processing_time}</p>
-                  <p>Price: Rp {service.price}</p>
-                </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          ) : (
+            <li>No services found.</li>
+          )}
         </ul>
       </div>
     </div>
