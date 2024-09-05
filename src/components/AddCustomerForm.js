@@ -91,7 +91,15 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           />
         </div>
 
-        <button type="submit">Add Customer</button>
+        <button className="add-button" type="submit">
+          Add Customer
+        </button>
+        <button
+          className="close-button"
+          onClick={() => setShowAddCustomerForm(false)}
+        >
+          Close
+        </button>
       </form>
     </div>
   );

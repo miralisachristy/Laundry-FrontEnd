@@ -57,7 +57,7 @@ const UsersTablePage = () => {
                     {new Date(user.created_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false,
+                      hour12: "2-digit",
                     })}
                   </td>
                   <td>
@@ -69,7 +69,7 @@ const UsersTablePage = () => {
                     {new Date(user.updated_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false,
+                      hour12: "2-digit",
                     })}
                   </td>
                 </tr>

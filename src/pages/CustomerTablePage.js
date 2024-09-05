@@ -48,7 +48,7 @@ const CustomerTablePage = () => {
             onChange={handleSearchChange}
           />
           <button
-            className="add-customer-button"
+            className="add-button"
             onClick={() => setShowAddCustomerForm(true)}
           >
             Add Customer
@@ -87,7 +87,7 @@ const CustomerTablePage = () => {
                     {new Date(customer.created_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false,
+                      hour12: "2-digit",
                     })}
                   </td>
                 </tr>

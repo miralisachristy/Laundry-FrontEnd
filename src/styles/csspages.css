@@ -49,6 +49,39 @@ td img {
   height: auto; /* Maintains the aspect ratio */
 }
 
+/* Add button styles for reuse */
+.add-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.close-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.close-button:hover {
+  background-color: #c82333;
+}
+
 .add-customer-box {
   padding: 20px;
   margin-top: 20px;
@@ -91,18 +124,6 @@ td img {
   background-color: #0056b3;
 }
 
-.search-container {
-  margin-bottom: 20px;
-}
-
-.search-input {
-  width: 30%; /* Updated width for the search input */
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
 .add-customer-button {
   padding: 8px 16px;
   border: none;
@@ -117,19 +138,55 @@ td img {
   background-color: #0056b3;
 }
 
-.close-button {
+.add-service-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+}
+
+.add-service-box form div {
+  margin-bottom: 10px;
+}
+
+.add-service-box form input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.add-service-box form button {
   padding: 8px 16px;
   border: none;
-  background-color: #dc3545;
+  background-color: #007bff;
   color: white;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 10px;
-  display: block;
 }
 
-.close-button:hover {
-  background-color: #c82333;
+.add-service-box form button:hover {
+  background-color: #0056b3;
+}
+
+.add-service-box form button[type="button"] {
+  background-color: #f44336; /* Red for the close button */
+  margin-left: 10px;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 30%; /* Updated width for the search input */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .service-icon-list {

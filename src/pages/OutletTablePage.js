@@ -62,7 +62,7 @@ const OutletTablePage = () => {
                     {new Date(outlet.created_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false,
+                      hour12: "2-digit",
                     })}
                   </td>
                   <td>
@@ -74,7 +74,7 @@ const OutletTablePage = () => {
                     {new Date(outlet.updated_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: false,
+                      hour12: "2-digit",
                     })}
                   </td>
                 </tr>
