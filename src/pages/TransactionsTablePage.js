@@ -13,13 +13,23 @@ const TransactionsTablePage = () => {
   useEffect(() => {
     // Fetch data from API
     axios
-      .get("http://localhost:5000/api/transactions")
+      .get("http://localhost:3000/api/transactions")
       .then((response) => {
-        // Sort transactions by created_at from newest to oldest
-        const sortedTransactions = response.data.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        );
-        setTransactions(sortedTransactions);
+        console.log(response);
+        const transactionsData = response.data.data; // Access the nested data array
+        if (Array.isArray(transactionsData)) {
+          // Sort transactions by created_at, descending order
+          const sortedTransactions =
+            transactionsData.length > 1
+              ? transactionsData.sort(
+                  (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                )
+              : transactionsData;
+          setTransactions(sortedTransactions);
+        } else {
+          console.error("Expected an array but got:", transactionsData);
+          setTransactions([]); // Set an empty array or handle this case as needed
+        }
       })
       .catch((error) => {
         console.error("Error fetching the transactions data:", error);
@@ -29,9 +39,9 @@ const TransactionsTablePage = () => {
   const handleDetailClick = (id_transaction) => {
     // Fetch specific transaction details
     axios
-      .get(`http://localhost:5000/api/transactions/${id_transaction}`)
+      .get(`http://localhost:3000/api/transactions/id/${id_transaction}`)
       .then((response) => {
-        setSelectedTransaction(response.data);
+        setSelectedTransaction(response.data.data);
         setModalIsOpen(true);
       })
       .catch((error) => {
@@ -73,7 +83,7 @@ const TransactionsTablePage = () => {
               transactions.map((transaction) => (
                 <tr key={transaction.id_transaction}>
                   <td>{transaction.transaction_code}</td>
-                  <td>{transaction.nama_outlet}</td>
+                  <td>{transaction.outlet_name}</td>
                   <td>{transaction.user_name}</td>
                   <td>{transaction.customer_name}</td>
                   <td>{transaction.customer_phone}</td>
@@ -83,10 +93,11 @@ const TransactionsTablePage = () => {
                   <td>{transaction.payment_amount}</td>
                   <td>{transaction.payment_status}</td>
                   <td>{transaction.payment_method}</td>
-                  <td>{transaction.remarks}</td>
-                  <td>{transaction.status}</td>
+                  <td>{transaction.transaction_remarks}</td>
+                  <td>{transaction.transaction_status}</td>
                   <td>
                     <button
+                      className="add-button" // Optional: add a class for styling
                       onClick={() =>
                         handleDetailClick(transaction.id_transaction)
                       }
@@ -98,7 +109,8 @@ const TransactionsTablePage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="15">No transactions found.</td>
+                <td colSpan="14">No transactions found.</td>{" "}
+                {/* Adjusted colSpan */}
               </tr>
             )}
           </tbody>

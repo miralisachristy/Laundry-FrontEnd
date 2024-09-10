@@ -9,7 +9,6 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     phone: "",
     email: "",
     address: "",
-    created_at: new Date().toISOString(),
   });
 
   const handleInputChange = (event) => {
@@ -23,15 +22,14 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   const handleAddCustomer = (event) => {
     event.preventDefault();
     axios
-      .post("http://localhost:5000/api/customers", newCustomer)
+      .post("http://localhost:3000/api/customers", newCustomer)
       .then((response) => {
-        setCustomers(response.data); // Use the updated customer data directly
+        setCustomers(response.data.data); // Use the updated customer data directly
         setNewCustomer({
           name: "",
           phone: "",
           email: "",
           address: "",
-          created_at: new Date().toISOString(),
         });
         setShowAddCustomerForm(false); // Close the form after adding customer
       })

@@ -13,6 +13,14 @@
   box-sizing: border-box; /* Includes padding and border in the element's total width and height */
 }
 
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: red;
+}
+
 h1,
 h2 {
   margin-bottom: 1.5rem; /* Adds space below the heading */
@@ -78,7 +86,7 @@ td img {
   right: 10px;
   padding: 8px 16px;
   border: none;
-  background-color: #dc3545;
+  background-color: #dc3545 !important;
   color: white;
   border-radius: 4px;
   cursor: pointer;
@@ -131,6 +139,51 @@ td img {
 }
 
 .add-customer-button:hover {
+  background-color: #0056b3;
+}
+
+.add-user-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  position: relative; /* Add this for positioning close button */
+}
+
+.add-user-box form div {
+  margin-bottom: 10px;
+}
+
+.add-user-box form input {
+  width: 100%;
+  padding: 8px;
+  margin-left: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-user-box form label {
+  margin-left: 10px;
+}
+
+.add-user-box form button:hover {
+  background-color: #0056b3;
+}
+
+.add-user-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-user-button:hover {
   background-color: #0056b3;
 }
 
@@ -193,7 +246,7 @@ td img {
   padding: 0;
   margin-top: 20px;
   display: grid; /* Use grid layout instead of flex */
-  grid-template-columns: repeat(4, 1fr); /* Create 3 equal-width columns */
+  grid-template-columns: repeat(7, 1fr); /* Create 3 equal-width columns */
   gap: 10px; /* Space between items */
 }
 
@@ -346,4 +399,49 @@ td img {
 
 .transaction-modal button:hover {
   background: #0056b3;
+}
+
+.update-user-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  position: relative; /* Add this for positioning close button */
+}
+
+.update-user-box form div {
+  margin-bottom: 10px;
+}
+
+.update-user-box form input {
+  width: 100%;
+  padding: 8px;
+  margin-left: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-user-box form label {
+  margin-left: 10px;
+}
+
+.update-user-box form button:hover {
+  background-color: #0056b3;
+}
+
+.update-user-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.update-user-button:hover {
+  background-color: #0056b3;
 }

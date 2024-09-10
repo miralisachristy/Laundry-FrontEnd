@@ -9,8 +9,8 @@ const OutletDescription = () => {
   useEffect(() => {
     const fetchOutlets = async () => {
       try {
-        const response = await axios.get("/api/laundry/outlets");
-        setOutlets(response.data);
+        const response = await axios.get("/api/outlets");
+        setOutlets(response.data.data);
       } catch (err) {
         setError(err);
       }
@@ -32,18 +32,18 @@ const OutletDescription = () => {
         <ul>
           {outlets.map((outlet) => (
             <li key={outlet.id_outlet}>
-              <h2>{outlet.nama_outlet}</h2>
+              <h2>{outlet.outlet_name}</h2>
               <p>
-                <strong>Address:</strong> {outlet.alamat}
+                <strong>Address:</strong> {outlet.address}
               </p>
               <p>
-                <strong>Phone:</strong> {outlet.telp}
+                <strong>Phone:</strong> {outlet.phone}
               </p>
               <p>
-                <strong>Description:</strong> {outlet.deskripsi}
+                <strong>Description:</strong> {outlet.describ}
               </p>
               {outlet.logo && (
-                <img src={outlet.logo} alt={`${outlet.nama_outlet} logo`} />
+                <img src={outlet.logo} alt={`${outlet.outlet_name} logo`} />
               )}
             </li>
           ))}

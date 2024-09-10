@@ -20,10 +20,12 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/auth/login`,
+        `http://localhost:3000/api/auth/login`,
         { username, password }
       );
-      setPopupMessage(`Login successful! Welcome ${response.data.username}`);
+      setPopupMessage(
+        `Login successful! Welcome ${response.data.data.role} ${response.data.data.name}`
+      );
       setPopupType("success");
       setIsPopupVisible(true);
 

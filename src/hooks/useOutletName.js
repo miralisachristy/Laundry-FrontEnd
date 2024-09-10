@@ -8,11 +8,10 @@ const useOutletName = () => {
   useEffect(() => {
     // Fetch outlet name from API when component mounts
     axios
-      .get("http://localhost:5000/api/laundry/outlets/1")
+      .get("http://localhost:3000/api/outlets/outlet/1")
       .then((response) => {
-        console.log(response.data);
         if (response.status === 200) {
-          setOutletName(response.data.nama_outlet); // Set the fetched outlet name
+          setOutletName(response.data.data.outlet_name); // Set the fetched outlet name
         }
       })
       .catch((error) => {

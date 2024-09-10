@@ -14,12 +14,21 @@ const ServiceTablePage = () => {
   // Fetch services
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/services")
+      .get("http://localhost:3000/api/services")
       .then((response) => {
         if (response.status === 200) {
-          const fetchedServices = response.data;
-          setServices(fetchedServices);
-          setFilteredServices(fetchedServices);
+          const fetchedServices = response.data.data;
+
+          // Sort services if more than one exists
+          const sortedServices =
+            fetchedServices.length > 1
+              ? fetchedServices.sort((a, b) =>
+                  a.service_name.localeCompare(b.service_name)
+                )
+              : fetchedServices;
+
+          setServices(sortedServices);
+          setFilteredServices(sortedServices);
         }
       })
       .catch((error) => {
@@ -43,13 +52,18 @@ const ServiceTablePage = () => {
     // Add the new service to the services list
     const updatedServices = [...services, newService];
 
-    // Update both services and filteredServices
-    setServices(updatedServices);
+    // Sort and apply the current search filter to the updated services list
+    const sortedServices =
+      updatedServices.length > 1
+        ? updatedServices.sort((a, b) =>
+            a.service_name.localeCompare(b.service_name)
+          )
+        : updatedServices;
 
-    // Apply the current search filter to the updated services list
-    const filtered = updatedServices.filter((service) =>
+    const filtered = sortedServices.filter((service) =>
       service.service_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    setServices(sortedServices);
     setFilteredServices(filtered);
 
     // Close the form
@@ -98,7 +112,7 @@ const ServiceTablePage = () => {
                 <div className="service-box">
                   <div className="service-icon">
                     <img
-                      src={`http://localhost:5000/upload/services/${service.image}`} // Ensure this path is correct
+                      src={`http://localhost:3000/upload/services/${service.image}`} // Ensure this path is correct
                       alt={service.service_name}
                       className="icon-image"
                       onError={handleImageError} // Handle image error

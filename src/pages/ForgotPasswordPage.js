@@ -23,10 +23,12 @@ const ForgotPasswordPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/auth/forgot-password`,
+        `http://localhost:3000/api/auth/forgot-password`,
         { email }
       );
-      setPopupMessage(`Password reset link sent to ${response.data.email}`);
+      setPopupMessage(
+        `Password reset link sent to ${response.data.data.email}`
+      );
       setPopupType("success");
       setIsPopupVisible(true);
 

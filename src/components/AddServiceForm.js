@@ -29,7 +29,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/services",
+        "http://localhost:3000/api/services",
         formData,
         {
           headers: {
@@ -37,7 +37,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
           },
         }
       );
-      onAdd(response.data);
+      onAdd(response.data.data);
       onClose();
       setNewService({
         image: "",

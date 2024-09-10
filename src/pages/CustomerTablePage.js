@@ -13,13 +13,20 @@ const CustomerTablePage = () => {
   useEffect(() => {
     // Fetch data from API
     axios
-      .get("http://localhost:5000/api/customers")
+      .get("http://localhost:3000/api/customers")
       .then((response) => {
-        // Sort customers by name A-Z
-        const sortedCustomers = response.data.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setCustomers(sortedCustomers);
+        const customersData = response.data.data; // Access the nested data array
+        if (Array.isArray(customersData)) {
+          // Sort customers by name A-Z only if there is more than one customer
+          const sortedCustomers =
+            customersData.length > 1
+              ? customersData.sort((a, b) => a.name.localeCompare(b.name))
+              : customersData;
+          setCustomers(sortedCustomers);
+        } else {
+          console.error("Expected an array but got:", customersData);
+          setCustomers([]); // Set an empty array or handle this case as needed
+        }
       })
       .catch((error) => {
         console.error("Error fetching the customer data:", error);
@@ -31,7 +38,9 @@ const CustomerTablePage = () => {
   };
 
   const filteredCustomers = customers.filter((customer) =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase())
+    [customer.name, customer.phone, customer.email, customer.address].some(
+      (field) => field.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const handleAddCustomer = (newCustomer) => {

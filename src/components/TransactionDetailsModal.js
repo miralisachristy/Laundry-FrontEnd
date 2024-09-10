@@ -12,13 +12,21 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
       className="transaction-modal"
       overlayClassName="transaction-modal-overlay"
     >
+      <button
+        className="close-button"
+        type="button"
+        aria-label="Close"
+        onClick={closeModal}
+      >
+        &times;
+      </button>
       <div>
         <h2>Transaction Details</h2>
         <p>
           <strong>Transaction Code:</strong> {transaction.transaction_code}
         </p>
         <p>
-          <strong>Outlet Name:</strong> {transaction.nama_outlet}
+          <strong>Outlet Name:</strong> {transaction.outlet_name}
         </p>
         <p>
           <strong>User Name:</strong> {transaction.user_name}
@@ -48,12 +56,11 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
           <strong>Payment Method:</strong> {transaction.payment_method}
         </p>
         <p>
-          <strong>Remarks:</strong> {transaction.remarks}
+          <strong>Remarks:</strong> {transaction.detail_remarks}
         </p>
         <p>
-          <strong>Status:</strong> {transaction.status}
+          <strong>Status:</strong> {transaction.transaction_status}
         </p>
-        <button onClick={closeModal}>Close</button>
       </div>
     </Modal>
   );

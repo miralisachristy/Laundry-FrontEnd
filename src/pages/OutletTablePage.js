@@ -9,9 +9,9 @@ const OutletTablePage = () => {
   useEffect(() => {
     // Fetch data from API
     axios
-      .get("http://localhost:5000/api/outlets")
+      .get("http://localhost:3000/api/outlets")
       .then((response) => {
-        setOutlets(response.data);
+        setOutlets(response.data.data); // Ensure this is an array of outlet objects
       })
       .catch((error) => {
         console.error("Error fetching the outlet data:", error);
@@ -31,8 +31,8 @@ const OutletTablePage = () => {
                   <h3>Logo</h3>
                   {outlet.logo ? (
                     <img
-                      src={`http://localhost:3000/images/${outlet.logo}`} // Ensure this path is correct
-                      alt={`${outlet.nama_outlet} logo`}
+                      src={`http://localhost:3000/upload/services/${outlet.logo}`} // Correct string interpolation
+                      alt={`${outlet.outlet_name} logo`} // Correct string interpolation
                       className="outlet-image"
                     />
                   ) : (
@@ -40,17 +40,15 @@ const OutletTablePage = () => {
                   )}
                 </div>
                 <div className="outlet-info-box">
-                  <h3>Nama Outlet</h3>
-                  <p>{outlet.nama_outlet}</p>
-
-                  <h3>Alamat</h3>
-                  <p>{outlet.alamat}</p>
-
-                  <h3>Telepon</h3>
-                  <p>{outlet.telp}</p>
-
-                  <h3>Deskripsi</h3>
-                  <p>{outlet.deskripsi}</p>
+                  <h3>Outlet Name</h3>
+                  <p>{outlet.outlet_name}</p>
+                  <h3>Address</h3>
+                  <p>{outlet.address}</p>
+                  <h3>Phone</h3>
+                  <p>{outlet.phone}</p>
+                  <h3>Description</h3>
+                  <p>{outlet.describ}</p>{" "}
+                  {/* Ensure the description field is `describ` as per your table */}
                 </div>
                 <div className="outlet-box no-border">
                   <div className="outlet-box">
