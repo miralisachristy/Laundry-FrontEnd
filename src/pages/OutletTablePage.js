@@ -138,6 +138,7 @@ const OutletTablePage = () => {
                   ) : (
                     <p>No Logo</p>
                   )}
+                  <p></p>
                   <input
                     type="file"
                     accept="image/*"
@@ -158,47 +159,59 @@ const OutletTablePage = () => {
                     <div>
                       <h3>Edit Outlet</h3>
                       <label>
-                        Outlet Name:
-                        <input
-                          type="text"
-                          name="outlet_name"
-                          value={formData.outlet_name}
-                          onChange={handleInputChange}
-                        />
+                        <h4>
+                          Outlet Name:
+                          <input
+                            type="text"
+                            name="outlet_name"
+                            value={formData.outlet_name}
+                            onChange={handleInputChange}
+                          />
+                        </h4>
                       </label>
                       <label>
-                        Address:
-                        <input
-                          type="text"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
-                        />
+                        <h4>
+                          Address:
+                          <input
+                            type="text"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleInputChange}
+                          />
+                        </h4>
                       </label>
                       <label>
-                        Phone:
-                        <input
-                          type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                        />
+                        <h4>
+                          Phone:
+                          <input
+                            type="text"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                          />
+                        </h4>
                       </label>
                       <label>
-                        Description:
-                        <textarea
-                          type="text"
-                          name="describ"
-                          value={formData.describ}
-                          onChange={handleInputChange}
-                        />
+                        <h4>
+                          Description:
+                          <textarea
+                            type="text"
+                            name="describ"
+                            value={formData.describ}
+                            onChange={handleInputChange}
+                          />
+                        </h4>
                       </label>
                       <button
+                        className="add-button"
                         onClick={() => handleSaveChanges(outlet.id_outlet)}
                       >
                         Save Changes
                       </button>
-                      <button onClick={() => setEditingOutlet(null)}>
+                      <button
+                        className="cancel-button"
+                        onClick={() => setEditingOutlet(null)}
+                      >
                         Cancel
                       </button>
                     </div>

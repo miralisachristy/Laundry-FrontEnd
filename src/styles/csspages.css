@@ -63,6 +63,24 @@ td img {
 }
 
 /* Add button styles for reuse */
+
+.cancel-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #cf0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cancel-button:hover {
+  background-color: #960000;
+  transform: scale(1.05);
+}
+
 .add-button {
   padding: 10px 20px;
   margin-left: 10px;
