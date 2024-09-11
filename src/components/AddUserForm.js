@@ -63,15 +63,18 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
       <form onSubmit={handleAddUser}>
         <div>
           <label>Role:</label>
-          <input
-            type="text"
+          <select
             name="role"
             value={newUser.role}
             onChange={handleInputChange}
             required
-            autoComplete="off"
-          />
+          >
+            <option value="">Select a role</option>
+            <option value="Admin">Admin</option>
+            <option value="Kasir">Kasir</option>
+          </select>
         </div>
+
         <div>
           <label>Name:</label>
           <input

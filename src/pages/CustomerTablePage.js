@@ -61,7 +61,7 @@ const CustomerTablePage = () => {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by name..."
+            placeholder="Search by name, phone, email, address"
             value={searchTerm}
             onChange={handleSearchChange}
           />

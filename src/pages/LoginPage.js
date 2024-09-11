@@ -23,25 +23,39 @@ const LoginPage = () => {
         `http://localhost:3000/api/auth/login`,
         { username, password }
       );
-      setPopupMessage(
-        `Login successful! Welcome ${response.data.data.role} ${response.data.data.name}`
-      );
+
+      const { role, name, token } = response.data.data;
+
+      // Store role and token in localStorage or sessionStorage
+      localStorage.setItem("role", role);
+      localStorage.setItem("token", token);
+
+      setPopupMessage(`Login successful! Welcome ${role} ${name}`);
       setPopupType("success");
       setIsPopupVisible(true);
 
+      // Navigate based on user role
       setTimeout(() => {
-        navigate("/home");
+        if (role === "SuperAdmin") {
+          navigate("/dashboard/superadmin"); // Replace with your SuperAdmin dashboard route
+        } else if (role === "Admin") {
+          navigate("/dashboard/admin"); // Replace with your Admin dashboard route
+        } else if (role === "Kasir") {
+          navigate("/dashboard/kasir"); // Replace with your Kasir dashboard route
+        } else {
+          navigate("/home"); // Default route
+        }
       }, 1500);
     } catch (error) {
       console.error("Error logging in:", error);
-      setPopupMessage("Username/Password salah");
+      setPopupMessage("Username/Password incorrect");
       setPopupType("error");
       setIsPopupVisible(true);
     }
   };
 
   const handleForgotPasswordClick = () => {
-    navigate("/forgot-password"); // Navigate to the Forgot Password page
+    navigate("/forgot-password");
   };
 
   const handleClosePopup = () => {
