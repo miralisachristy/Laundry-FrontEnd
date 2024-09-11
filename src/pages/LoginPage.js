@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PopupMessage from "../components/PopupMessage";
@@ -11,9 +11,34 @@ const LoginPage = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupType, setPopupType] = useState("");
+  const [logoUrl, setLogoUrl] = useState(null); // State untuk menyimpan URL logo
   const { outletName, error } = useOutletName();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/outlets");
+
+        // Ambil elemen pertama dari array data
+        const outletData = response.data.data[0];
+
+        // Asumsikan logo adalah bagian dari outletData
+        const logoPath = outletData.logo; // Sesuaikan jika ada properti logo
+
+        if (logoPath) {
+          setLogoUrl(`http://localhost:3000${logoPath}`);
+        } else {
+          console.error("Logo tidak ditemukan dalam data outlet");
+        }
+      } catch (error) {
+        console.error("Error fetching logo:", error);
+      }
+    };
+
+    fetchLogo();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,7 +51,6 @@ const LoginPage = () => {
 
       const { role, name, token } = response.data.data;
 
-      // Store role and token in localStorage or sessionStorage
       localStorage.setItem("role", role);
       localStorage.setItem("token", token);
 
@@ -34,16 +58,15 @@ const LoginPage = () => {
       setPopupType("success");
       setIsPopupVisible(true);
 
-      // Navigate based on user role
       setTimeout(() => {
         if (role === "SuperAdmin") {
-          navigate("/dashboard/superadmin"); // Replace with your SuperAdmin dashboard route
+          navigate("/dashboard/superadmin");
         } else if (role === "Admin") {
-          navigate("/dashboard/admin"); // Replace with your Admin dashboard route
+          navigate("/dashboard/admin");
         } else if (role === "Kasir") {
-          navigate("/dashboard/kasir"); // Replace with your Kasir dashboard route
+          navigate("/dashboard/kasir");
         } else {
-          navigate("/home"); // Default route
+          navigate("/home");
         }
       }, 1500);
     } catch (error) {
@@ -67,7 +90,12 @@ const LoginPage = () => {
       <form onSubmit={handleLogin}>
         <div className="form-group">
           <div className="logo-container">
-            <img src="/images/logo.png" alt="Laundry Logo" className="logo" />
+            {logoUrl ? (
+              <img src={logoUrl} alt="Laundry Logo" className="logo" />
+            ) : (
+              <img src="/images/logo.png" alt="Laundry Logo" className="logo" /> // Gambar default
+            )}
+            {console.log("logo:", logoUrl)}
           </div>
           <h2>{outletName}</h2>
           {error && <p className="error-message">{error}</p>}
