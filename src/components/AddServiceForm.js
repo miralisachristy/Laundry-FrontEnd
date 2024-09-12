@@ -9,6 +9,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
     service_type: "",
     processing_time: "",
     price: "",
+    unit: "",
   });
   const [error, setError] = useState(null);
 
@@ -45,6 +46,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
         service_type: "",
         processing_time: "",
         price: "",
+        unit: "",
       });
     } catch (error) {
       console.error(
@@ -112,6 +114,17 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             type="number"
             name="price"
             value={newService.price}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="unit">Unit:</label>
+          <input
+            id="unit"
+            type="number"
+            name="unit"
+            value={newService.unit}
             onChange={handleInputChange}
             required
           />

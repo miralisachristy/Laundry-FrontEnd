@@ -126,6 +126,9 @@ const LaundryOrderPage = () => {
               onChange={handleQuantityChange}
               className="quantity-input"
             />
+            {""}
+            {selectedService.unit}
+            <br />
             <button onClick={handleAddToOrder} className="add-to-order-button">
               Add to Order
             </button>
@@ -146,8 +149,8 @@ const LaundryOrderPage = () => {
           <ul>
             {orderDetails.map((item, index) => (
               <li key={index} className="order-summary-item">
-                {item.service_name} - {item.quantity} x {item.price} ={" "}
-                {item.total}
+                {item.service_name} - {item.quantity} {item.unit} x {item.price}{" "}
+                = {item.total}
                 <button
                   onClick={() => handleEditService(index)}
                   className="change-service-button"
@@ -158,7 +161,7 @@ const LaundryOrderPage = () => {
             ))}
           </ul>
           <div className="order-total">
-            <h4>Total Amount: {calculateTotal()}</h4>
+            <h4 className="total-amount">Total Amount: {calculateTotal()}</h4>
           </div>
           <button
             onClick={handleAddMoreServices}

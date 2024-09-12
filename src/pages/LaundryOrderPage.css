@@ -30,11 +30,14 @@
 .service-detail button,
 .order-summary button {
   margin-top: 10px;
-  padding: 5px 10px;
+  margin-left: 10px;
+  padding: 10px 15px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
+  border-radius: 4px; /* Added for rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .customer-detail button:hover,
@@ -59,17 +62,24 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 0;
+  border-bottom: 1px solid #ddd; /* Added border for separation */
+}
+
+.order-summary-item:last-child {
+  border-bottom: none; /* Remove border from the last item */
 }
 
 .change-customer-button,
 .change-service-button,
 .add-more-services-button {
   margin-top: 10px;
-  padding: 5px 10px;
+  padding: 10px 15px;
   border: none;
   background-color: #007bff;
   color: white;
   cursor: pointer;
+  border-radius: 4px; /* Added for rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition */
 }
 
 .change-customer-button:hover,
@@ -80,7 +90,23 @@
 
 .quantity-input {
   margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   padding: 5px;
   width: 55px;
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .quantity-input {
+    width: 100%; /* Make the input full-width on smaller screens */
+  }
+
+  .section {
+    padding: 10px; /* Reduce padding on smaller screens */
+  }
+}
+
+.total-amount {
+  margin-left: 10px;
 }
