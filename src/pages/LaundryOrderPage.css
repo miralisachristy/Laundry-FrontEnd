@@ -1,5 +1,7 @@
 .laundry-order-page {
   padding: 20px;
+  margin-left: 20%;
+  margin-right: 20%;
   font-family: Arial, sans-serif;
 }
 
@@ -109,4 +111,22 @@
 
 .total-amount {
   margin-left: 10px;
+}
+
+.order-summary-buttons {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.delete-service-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #dc3545 !important; /* Red color for delete */
+  color: white;
+  cursor: pointer;
+}
+
+.delete-service-button:hover {
+  background-color: #c82333 !important; /* Darker red on hover */
 }

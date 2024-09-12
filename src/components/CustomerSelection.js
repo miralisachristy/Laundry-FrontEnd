@@ -14,6 +14,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
       try {
         const response = await axios.get("http://localhost:3000/api/customers");
         const customerData = response.data.data;
+        console.log(customerData); // Check the data structure
         setCustomers(customerData);
         setFilteredCustomers(customerData);
       } catch (error) {
@@ -72,7 +73,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
             {filteredCustomers.length > 0 ? (
               filteredCustomers.map((customer) => (
                 <li
-                  key={customer.id}
+                  key={customer.id_customer} // Ensure this is unique and correct
                   onClick={() => handleCustomerSelect(customer)}
                   className="dropdown-item"
                 >

@@ -13,6 +13,7 @@ const LaundryOrderPage = () => {
   const [editingIndex, setEditingIndex] = useState(null); // Track the index of the service being edited
   const [showServiceSelection, setShowServiceSelection] = useState(true);
   const [showCustomerSelection, setShowCustomerSelection] = useState(true);
+  const [quantityLimits, setQuantityLimits] = useState({ min: 1, max: 100 }); // Default limits
 
   // Handle customer selection
   const handleSelectCustomer = (customer) => {
@@ -24,14 +25,38 @@ const LaundryOrderPage = () => {
   // Handle service selection
   const handleSelectService = (service) => {
     setSelectedService(service);
-    setQuantity("");
+    setQuantity(""); // Reset quantity when a new service is selected
     setIsServiceSelected(true);
     setShowServiceSelection(false);
+
+    // Set quantity limits based on the unit of the service
+    let min, max;
+    switch (service.unit) {
+      case "kg":
+        min = 3;
+        max = 100;
+        break;
+      case "meter":
+        min = 1;
+        max = 100;
+        break;
+      case "piece":
+        min = 1;
+        max = 100;
+        break;
+      default:
+        min = 1;
+        max = 100;
+    }
+    setQuantityLimits({ min, max });
   };
 
   // Handle quantity change
   const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
+    const value = e.target.value;
+    if (value >= quantityLimits.min && value <= quantityLimits.max) {
+      setQuantity(value);
+    }
   };
 
   // Add selected service to the order details
@@ -85,6 +110,17 @@ const LaundryOrderPage = () => {
     setShowServiceSelection(false);
   };
 
+  // Handle deleting a service
+  const handleDeleteService = (index) => {
+    const updatedOrderDetails = orderDetails.filter((_, i) => i !== index);
+    setOrderDetails(updatedOrderDetails);
+
+    // Show service selection if no services are left in the order summary
+    if (updatedOrderDetails.length === 0) {
+      setShowServiceSelection(true);
+    }
+  };
+
   // Calculate the total amount
   const calculateTotal = () => {
     return orderDetails.reduce((sum, item) => sum + item.total, 0);
@@ -125,8 +161,9 @@ const LaundryOrderPage = () => {
               value={quantity}
               onChange={handleQuantityChange}
               className="quantity-input"
+              min={quantityLimits.min}
+              max={quantityLimits.max}
             />
-            {""}
             {selectedService.unit}
             <br />
             <button onClick={handleAddToOrder} className="add-to-order-button">
@@ -151,15 +188,24 @@ const LaundryOrderPage = () => {
               <li key={index} className="order-summary-item">
                 {item.service_name} - {item.quantity} {item.unit} x {item.price}{" "}
                 = {item.total}
-                <button
-                  onClick={() => handleEditService(index)}
-                  className="change-service-button"
-                >
-                  Change Service
-                </button>
+                <div className="order-summary-buttons">
+                  <button
+                    onClick={() => handleEditService(index)}
+                    className="change-service-button"
+                  >
+                    Change Service
+                  </button>
+                  <button
+                    onClick={() => handleDeleteService(index)}
+                    className="delete-service-button"
+                  >
+                    Delete Service
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
+
           <div className="order-total">
             <h4 className="total-amount">Total Amount: {calculateTotal()}</h4>
           </div>
