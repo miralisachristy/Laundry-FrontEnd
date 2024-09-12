@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import axios from "axios";
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css"; // Ensure you have appropriate styling
@@ -11,20 +10,23 @@ const LaundryOrderPage = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
   const [isServiceSelected, setIsServiceSelected] = useState(false);
-  const [showServiceSelection, setShowServiceSelection] = useState(true); // State to toggle service selection visibility
+  const [editingIndex, setEditingIndex] = useState(null); // Track the index of the service being edited
+  const [showServiceSelection, setShowServiceSelection] = useState(true);
+  const [showCustomerSelection, setShowCustomerSelection] = useState(true);
 
   // Handle customer selection
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
-    setIsCustomerSelected(true); // Close customer dropdown
+    setIsCustomerSelected(true);
+    setShowCustomerSelection(false);
   };
 
   // Handle service selection
   const handleSelectService = (service) => {
     setSelectedService(service);
-    setQuantity(""); // Reset quantity when a new service is selected
-    setIsServiceSelected(true); // Close service dropdown after adding
-    setShowServiceSelection(false); // Hide service selection
+    setQuantity("");
+    setIsServiceSelected(true);
+    setShowServiceSelection(false);
   };
 
   // Handle quantity change
@@ -41,19 +43,46 @@ const LaundryOrderPage = () => {
         total: selectedService.price * parseInt(quantity, 10),
       };
 
-      setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
-      // Reset selected service and quantity
+      if (editingIndex !== null) {
+        // Update the existing service in orderDetails
+        const updatedOrderDetails = [...orderDetails];
+        updatedOrderDetails[editingIndex] = newOrderDetail;
+        setOrderDetails(updatedOrderDetails);
+        setEditingIndex(null); // Clear editing index after update
+      } else {
+        // Add new service to orderDetails
+        setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
+      }
+
       setSelectedService(null);
       setQuantity("");
-      setIsServiceSelected(false); // Close service dropdown after adding
-    } else {
-      // Show error message or handle invalid input
+      setIsServiceSelected(false);
+      setShowServiceSelection(false);
     }
   };
 
   // Toggle service selection visibility
   const handleAddMoreServices = () => {
-    setShowServiceSelection((prev) => !prev); // Toggle visibility
+    setShowServiceSelection((prev) => !prev);
+  };
+
+  // Toggle customer selection visibility
+  const handleChangeCustomer = () => {
+    if (isCustomerSelected) {
+      setSelectedCustomer(null);
+      setIsCustomerSelected(false);
+    }
+    setShowCustomerSelection((prev) => !prev);
+  };
+
+  // Handle editing an existing service
+  const handleEditService = (index) => {
+    const serviceToEdit = orderDetails[index];
+    setSelectedService(serviceToEdit);
+    setQuantity(serviceToEdit.quantity);
+    setEditingIndex(index); // Set the index for editing
+    setIsServiceSelected(true);
+    setShowServiceSelection(false);
   };
 
   // Calculate the total amount
@@ -64,27 +93,25 @@ const LaundryOrderPage = () => {
   return (
     <div className="laundry-order-page">
       <div className="section customer-selection">
-        {/* <h2>Select Customer</h2> */}
-        {!isCustomerSelected && (
+        {!isCustomerSelected && showCustomerSelection && (
           <CustomerSelection onSelectCustomer={handleSelectCustomer} />
         )}
         {selectedCustomer && (
           <div className="customer-detail">
             <h3>Selected Customer</h3>
-            <button
-              onClick={() => setIsCustomerSelected(false)}
-              className="change-customer-button"
-            >
-              Change Customer
-            </button>
             <p>Name: {selectedCustomer.name}</p>
             <p>Phone: {selectedCustomer.phone}</p>
+            <button
+              onClick={handleChangeCustomer}
+              className="change-customer-button"
+            >
+              {showCustomerSelection ? "Cancel" : "Change Customer"}
+            </button>
           </div>
         )}
       </div>
 
       <div className="section service-selection">
-        {/* <h2>Select Service</h2> */}
         {showServiceSelection && !isServiceSelected && (
           <ServiceSelection onSelectService={handleSelectService} />
         )}
@@ -95,7 +122,6 @@ const LaundryOrderPage = () => {
             <p>Price: {selectedService.price}</p>
             <input
               type="number"
-              placeholder="Enter quantity"
               value={quantity}
               onChange={handleQuantityChange}
               className="quantity-input"
@@ -123,11 +149,7 @@ const LaundryOrderPage = () => {
                 {item.service_name} - {item.quantity} x {item.price} ={" "}
                 {item.total}
                 <button
-                  onClick={() => {
-                    setSelectedService(item);
-                    setIsServiceSelected(true);
-                    setShowServiceSelection(false); // Hide service dropdown when changing a service
-                  }}
+                  onClick={() => handleEditService(index)}
                   className="change-service-button"
                 >
                   Change Service
