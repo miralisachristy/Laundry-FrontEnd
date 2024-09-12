@@ -115,8 +115,8 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           />
         </div>
 
-        <button type="submit" className="add-button">
-          Update User
+        <button type="submit" className="save-button">
+          Submit
         </button>
       </form>
     </div>

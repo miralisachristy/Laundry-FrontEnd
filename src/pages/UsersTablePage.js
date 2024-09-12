@@ -191,7 +191,7 @@ const UsersTablePage = () => {
                   </td>
                   <td>
                     <button
-                      className="add-button"
+                      className="update-button"
                       onClick={() => handleUpdateClick(user)}
                     >
                       Update

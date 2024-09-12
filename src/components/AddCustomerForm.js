@@ -92,8 +92,8 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           />
         </div>
 
-        <button type="submit" className="add-button">
-          Add Customer
+        <button type="submit" className="save-button">
+          Submit
         </button>
       </form>
     </div>

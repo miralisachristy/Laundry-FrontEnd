@@ -11,6 +11,7 @@ import OutletTablePage from "./pages/OutletTablePage"; // Ensure this path is co
 import UserTablePage from "./pages/UsersTablePage"; // Ensure this path is correct
 import OrderTablePage from "./pages/TransactionsTablePage"; // Ensure this path is correct
 import ServiceTablePage from "./pages/ServiceTablePage"; // Ensure this path is correct
+import LaundryOrderPage from "./pages/LaundryOrderPage.js";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
         />
 
         {/* Public Routes */}
+        <Route path="/cart-table" element={<LaundryOrderPage />} />
         <Route path="/customer-table" element={<CustomerTablePage />} />
         <Route path="/outlet-table" element={<OutletTablePage />} />
         <Route path="/users-table" element={<UserTablePage />} />

@@ -130,8 +130,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
             autoComplete="tel"
           />
         </div>
-        <button type="submit" className="add-button">
-          Add User
+        <button type="submit" className="save-button">
+          Submit
         </button>
       </form>
       {success && <p className="success-message">{success}</p>}

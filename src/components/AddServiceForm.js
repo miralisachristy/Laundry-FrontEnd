@@ -128,7 +128,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             required
           />
         </div>
-        <button className="add-button" type="submit">
+        <button type="submit" className="save-button">
           Submit
         </button>
       </form>

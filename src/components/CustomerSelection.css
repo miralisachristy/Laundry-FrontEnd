@@ -1,0 +1,46 @@
+.customer-selection-container {
+  position: relative;
+  width: 30%;
+}
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background-color: white;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: block; /* Menampilkan dropdown secara langsung */
+}
+
+.dropdown-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.no-results {
+  padding: 8px;
+  text-align: center;
+  color: #999;
+}

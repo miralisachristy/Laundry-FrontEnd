@@ -147,7 +147,7 @@ const OutletTablePage = () => {
                     } // Pass outlet ID
                   />
                   <button
-                    className="add-button"
+                    className="update-button"
                     onClick={() => handleLogoUpload(outlet.id_outlet)} // Pass outlet ID
                   >
                     Update Logo
@@ -203,10 +203,10 @@ const OutletTablePage = () => {
                         </h4>
                       </label>
                       <button
-                        className="add-button"
+                        className="save-button"
                         onClick={() => handleSaveChanges(outlet.id_outlet)}
                       >
-                        Save Changes
+                        Submit
                       </button>
                       <button
                         className="cancel-button"
@@ -226,7 +226,7 @@ const OutletTablePage = () => {
                       <h3>Description</h3>
                       <p>{outlet.describ}</p>
                       <button
-                        className="add-button"
+                        className="update-button"
                         onClick={() => handleEditOutlet(outlet)}
                       >
                         Update Outlet
