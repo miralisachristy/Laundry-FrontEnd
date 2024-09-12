@@ -1,0 +1,50 @@
+.transaction-detail-page {
+  padding: 20px;
+}
+
+.invoice-details,
+.customer-details,
+.order-summary,
+.payment-method,
+.order-status {
+  margin-bottom: 20px;
+}
+
+h2,
+h3,
+h4 {
+  margin: 10px 0;
+}
+
+.invoice-details p,
+.customer-details p {
+  margin: 5px 0;
+}
+
+.order-summary ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.order-summary li {
+  margin: 5px 0;
+}
+
+.payment-method select,
+.order-status select {
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.confirm-order-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirm-order-button:hover {
+  background-color: #45a049;
+}

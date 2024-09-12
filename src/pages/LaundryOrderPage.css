@@ -99,6 +99,22 @@
   box-sizing: border-box;
 }
 
+.remark-input {
+  width: calc(30% - 20px); /* Full width minus padding */
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.remark-input {
+  height: 80px; /* Adjust height as needed */
+  resize: vertical; /* Allow vertical resizing */
+}
+
 @media (max-width: 768px) {
   .quantity-input {
     width: 100%; /* Make the input full-width on smaller screens */
@@ -110,7 +126,7 @@
 }
 
 .total-amount {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 .order-summary-buttons {

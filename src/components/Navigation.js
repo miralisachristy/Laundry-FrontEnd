@@ -89,7 +89,7 @@ const Navigation = () => {
           {role === "Kasir" && (
             <>
               <li>
-                <Link to="/cart-table">New Transaction</Link>
+                <Link to="/laundry-order">New Transaction</Link>
               </li>
               <li>
                 <Link to="/order-table">Transaction List</Link>
