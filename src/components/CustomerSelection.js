@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./CustomerSelection.css";
 
@@ -7,6 +7,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
   const [filteredCustomers, setFilteredCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -20,6 +21,17 @@ const CustomerSelection = ({ onSelectCustomer }) => {
       }
     };
     fetchCustomers();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSearch = (e) => {
@@ -42,7 +54,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
   };
 
   return (
-    <div className="customer-selection-container">
+    <div className="customer-selection-container" ref={dropdownRef}>
       <h3>Select Customer</h3>
 
       <div className="custom-dropdown">

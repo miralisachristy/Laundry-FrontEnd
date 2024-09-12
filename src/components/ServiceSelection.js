@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./ServiceSelection.css";
 
@@ -7,6 +7,7 @@ const ServiceSelection = ({ onSelectService }) => {
   const [filteredServices, setFilteredServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -20,6 +21,17 @@ const ServiceSelection = ({ onSelectService }) => {
       }
     };
     fetchServices();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSearch = (e) => {
@@ -40,7 +52,7 @@ const ServiceSelection = ({ onSelectService }) => {
   };
 
   return (
-    <div className="service-selection-container">
+    <div className="service-selection-container" ref={dropdownRef}>
       <h3>Select Service</h3>
 
       <div className="custom-dropdown">

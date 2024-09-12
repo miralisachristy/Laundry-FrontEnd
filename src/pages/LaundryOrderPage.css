@@ -1,0 +1,86 @@
+.laundry-order-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+.customer-selection h2,
+.service-selection h2,
+.order-summary h2 {
+  margin-top: 0;
+}
+
+.customer-detail,
+.service-detail,
+.order-summary-customer {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.customer-detail button,
+.service-detail button,
+.order-summary button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.customer-detail button:hover,
+.service-detail button:hover,
+.order-summary button:hover {
+  background-color: #0056b3;
+}
+
+.order-summary {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #fff;
+}
+
+.order-summary-customer {
+  margin-bottom: 10px;
+}
+
+.order-summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.change-customer-button,
+.change-service-button,
+.add-more-services-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.change-customer-button:hover,
+.change-service-button:hover,
+.add-more-services-button:hover {
+  background-color: #0056b3;
+}
+
+.quantity-input {
+  margin-top: 10px;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
