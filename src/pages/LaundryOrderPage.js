@@ -11,6 +11,7 @@ const LaundryOrderPage = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
   const [isServiceSelected, setIsServiceSelected] = useState(false);
+  const [showServiceSelection, setShowServiceSelection] = useState(true); // State to toggle service selection visibility
 
   // Handle customer selection
   const handleSelectCustomer = (customer) => {
@@ -22,7 +23,8 @@ const LaundryOrderPage = () => {
   const handleSelectService = (service) => {
     setSelectedService(service);
     setQuantity(""); // Reset quantity when a new service is selected
-    setIsServiceSelected(true); // Close service dropdown
+    setIsServiceSelected(true); // Close service dropdown after adding
+    setShowServiceSelection(false); // Hide service selection
   };
 
   // Handle quantity change
@@ -43,10 +45,15 @@ const LaundryOrderPage = () => {
       // Reset selected service and quantity
       setSelectedService(null);
       setQuantity("");
-      setIsServiceSelected(false); // Allow adding more services
+      setIsServiceSelected(false); // Close service dropdown after adding
     } else {
       // Show error message or handle invalid input
     }
+  };
+
+  // Toggle service selection visibility
+  const handleAddMoreServices = () => {
+    setShowServiceSelection((prev) => !prev); // Toggle visibility
   };
 
   // Calculate the total amount
@@ -64,21 +71,21 @@ const LaundryOrderPage = () => {
         {selectedCustomer && (
           <div className="customer-detail">
             <h3>Selected Customer</h3>
-            <p>Name: {selectedCustomer.name}</p>
-            <p>Phone: {selectedCustomer.phone}</p>
             <button
               onClick={() => setIsCustomerSelected(false)}
               className="change-customer-button"
             >
               Change Customer
             </button>
+            <p>Name: {selectedCustomer.name}</p>
+            <p>Phone: {selectedCustomer.phone}</p>
           </div>
         )}
       </div>
 
       <div className="section service-selection">
         {/* <h2>Select Service</h2> */}
-        {!isServiceSelected && (
+        {showServiceSelection && !isServiceSelected && (
           <ServiceSelection onSelectService={handleSelectService} />
         )}
         {selectedService && (
@@ -119,6 +126,7 @@ const LaundryOrderPage = () => {
                   onClick={() => {
                     setSelectedService(item);
                     setIsServiceSelected(true);
+                    setShowServiceSelection(false); // Hide service dropdown when changing a service
                   }}
                   className="change-service-button"
                 >
@@ -131,10 +139,10 @@ const LaundryOrderPage = () => {
             <h4>Total Amount: {calculateTotal()}</h4>
           </div>
           <button
-            onClick={() => setIsServiceSelected(false)}
+            onClick={handleAddMoreServices}
             className="add-more-services-button"
           >
-            Add More Services
+            {showServiceSelection ? "Cancel" : "Add More Services"}
           </button>
         </div>
       )}
