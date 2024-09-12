@@ -1,54 +1,44 @@
 import React, { useState } from "react";
-import CustomerSelection from "../components/CustomerSelection";
-import ServiceSelection from "../components/ServiceSelection";
-import Cart from "../components/Cart";
-import TransactionDetails from "../components/TransactionDetails";
+import CustomerSelection from "../components/CustomerSelection"; // Adjust the path if necessary
+import ServiceSelection from "../components/ServiceSelection"; // Adjust the path if necessary
 
 const LaundryOrderPage = () => {
-  const [customer, setCustomer] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
-  const [isTransactionDetailVisible, setIsTransactionDetailVisible] =
-    useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
 
-  const handleAddToCart = (service) => {
-    setCartItems([...cartItems, service]);
+  const handleSelectCustomer = (customer) => {
+    setSelectedCustomer(customer);
   };
 
-  const handleRemoveFromCart = (index) => {
-    const newCart = [...cartItems];
-    newCart.splice(index, 1);
-    setCartItems(newCart);
-  };
-
-  const handleTransactionSubmit = (transaction) => {
-    console.log("Final Transaction:", transaction);
-    // You can send the transaction data to your backend here
+  const handleSelectService = (service) => {
+    setSelectedService(service);
   };
 
   return (
     <div>
-      {!isTransactionDetailVisible ? (
-        <>
-          <CustomerSelection onSelectCustomer={setCustomer} />
-          {customer && (
-            <>
-              <ServiceSelection onAddToCart={handleAddToCart} />
-              <Cart cartItems={cartItems} onRemove={handleRemoveFromCart} />
-              {cartItems.length > 0 && (
-                <button onClick={() => setIsTransactionDetailVisible(true)}>
-                  Proceed to Transaction Details
-                </button>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        <TransactionDetails
-          cartItems={cartItems}
-          customer={customer}
-          onSubmit={handleTransactionSubmit}
-        />
+      <h1>Create Laundry Order</h1>
+
+      <CustomerSelection onSelectCustomer={handleSelectCustomer} />
+
+      {selectedCustomer && (
+        <div>
+          <h2>Selected Customer</h2>
+          <p>Name: {selectedCustomer.name}</p>
+          <p>Phone: {selectedCustomer.phone}</p>
+        </div>
       )}
+
+      <ServiceSelection onSelectService={handleSelectService} />
+
+      {selectedService && (
+        <div>
+          <h2>Selected Service</h2>
+          <p>Name: {selectedService.service_name}</p>
+          <p>Price: {selectedService.price}</p>
+        </div>
+      )}
+
+      {/* Additional logic for order creation */}
     </div>
   );
 };

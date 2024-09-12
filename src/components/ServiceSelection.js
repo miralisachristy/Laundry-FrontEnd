@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./ServiceSelection.css";
 
-const ServiceSelection = ({ onAddToCart }) => {
+const ServiceSelection = ({ onSelectService }) => {
   const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/services");
-        setServices(response.data);
+        const serviceData = response.data.data;
+        setServices(serviceData);
+        setFilteredServices(serviceData);
       } catch (error) {
         console.error("Error fetching services:", error);
       }
@@ -18,40 +22,55 @@ const ServiceSelection = ({ onAddToCart }) => {
     fetchServices();
   }, []);
 
-  const handleAddToCart = () => {
-    if (selectedService && quantity > 0) {
-      onAddToCart({ ...selectedService, quantity });
-      setQuantity(1);
-    }
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchTerm(searchValue);
+
+    const filtered = services.filter((service) =>
+      service.service_name.toLowerCase().includes(searchValue)
+    );
+    setFilteredServices(filtered);
+    setIsDropdownOpen(true);
+  };
+
+  const handleServiceSelect = (service) => {
+    setSearchTerm(service.service_name);
+    setIsDropdownOpen(false);
+    onSelectService(service);
   };
 
   return (
-    <div>
+    <div className="service-selection-container">
       <h3>Select Service</h3>
-      <select
-        value={selectedService?.id || ""}
-        onChange={(e) =>
-          setSelectedService(
-            services.find((s) => s.id === parseInt(e.target.value))
-          )
-        }
-      >
-        <option value="" disabled>
-          Select a service
-        </option>
-        {services.map((service) => (
-          <option key={service.id} value={service.id}>
-            {service.service_name} - {service.price} per {service.unit}
-          </option>
-        ))}
-      </select>
-      <input
-        type="number"
-        value={quantity}
-        onChange={(e) => setQuantity(parseInt(e.target.value))}
-        min="1"
-      />
-      <button onClick={handleAddToCart}>Add to Cart</button>
+
+      <div className="custom-dropdown">
+        <input
+          type="text"
+          placeholder="Search by service name"
+          value={searchTerm}
+          onChange={handleSearch}
+          onFocus={() => setIsDropdownOpen(true)}
+          className="search-input"
+        />
+
+        {isDropdownOpen && (
+          <ul className="dropdown-list">
+            {filteredServices.length > 0 ? (
+              filteredServices.map((service) => (
+                <li
+                  key={service.id_service}
+                  onClick={() => handleServiceSelect(service)}
+                  className="dropdown-item"
+                >
+                  {service.service_name} - {service.price}
+                </li>
+              ))
+            ) : (
+              <div className="dropdown-item no-results">No results found</div>
+            )}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
