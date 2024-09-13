@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css";
@@ -15,6 +16,28 @@ const LaundryOrderPage = () => {
   const [showServiceSelection, setShowServiceSelection] = useState(true);
   const [showCustomerSelection, setShowCustomerSelection] = useState(true);
   const [quantityLimits, setQuantityLimits] = useState({ min: 1, max: 100 });
+
+  const [currentOutlet, setCurrentOutlet] = useState(""); // Outlet state
+  const [currentUser, setCurrentUser] = useState(""); // Current user state
+
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Fetch outlet and user data from localStorage or other source
+  useEffect(() => {
+    const outlet = localStorage.getItem("outlet"); // Example outlet
+    const user = localStorage.getItem("user_name"); // Example current user name
+    const address = localStorage.getItem("address"); // Example current user name
+    const phone = localStorage.getItem("phone"); // Example current user name
+    const capacity = localStorage.getItem("capacity"); // Example current user name
+    const quota = localStorage.getItem("quota"); // Example current user name
+
+    setCurrentOutlet(outlet || "Unknown Outlet");
+    setCurrentUser(user || "Unknown User");
+    setCurrentUser(address || "Unknown address");
+    setCurrentUser(phone || "Unknown phone");
+    setCurrentUser(capacity || "Unknown capacity");
+    setCurrentUser(quota || "Unknown quota");
+  }, []);
 
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
@@ -118,6 +141,24 @@ const LaundryOrderPage = () => {
     }
   };
 
+  const handleNavigateToTransactionDetail = () => {
+    // Add your logic for transaction details here
+    // Example of navigating to the TransactionDetailPage with state
+    navigate("/transaction-detail", {
+      state: {
+        orderDetails,
+        selectedCustomer,
+        currentOutlet,
+        currentUser,
+      },
+    });
+    console.log("Ini detail ordernya : ", orderDetails);
+    console.log("Ini selected customer : ", selectedCustomer);
+    console.log("Ini selected service : ", selectedService);
+    console.log("Ini outlet : ", currentOutlet);
+    console.log("Ini nama user : ", currentUser);
+  };
+
   const calculateTotal = () => {
     return orderDetails.reduce((sum, item) => sum + item.total, 0);
   };
@@ -190,9 +231,13 @@ const LaundryOrderPage = () => {
           <ul style={{ marginLeft: "50px" }}>
             {orderDetails.map((item, index) => (
               <li key={index} className="order-summary-item">
-                {item.service_name} - {item.quantity} {item.unit} x {item.price}{" "}
-                = {item.total}
-                <p>Remark: {item.remark}</p> {/* Display the remark */}
+                <div className="service-type">
+                  {item.service_name} - {item.quantity} {item.unit} x{" "}
+                  {item.price} = {item.total}
+                </div>
+                <div className="remark">
+                  <p>Remark: {item.remark}</p>
+                </div>
                 <div className="order-summary-buttons">
                   <button
                     onClick={() => handleEditService(index)}
@@ -220,6 +265,12 @@ const LaundryOrderPage = () => {
             className="add-more-services-button"
           >
             {showServiceSelection ? "Cancel" : "Add More Services"}
+          </button>
+          <button
+            onClick={handleNavigateToTransactionDetail} // Add the navigate button
+            className="navigate-to-transaction-button"
+          >
+            Go to Transaction Details
           </button>
         </div>
       )}

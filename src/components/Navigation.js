@@ -31,9 +31,12 @@ const Navigation = () => {
   }, []);
 
   const handleLogout = () => {
-    // Clear the localStorage
-    localStorage.removeItem("role");
-    localStorage.removeItem("token");
+    // // Clear the localStorage
+    // localStorage.removeItem("outlet address");
+    // localStorage.removeItem("outlet phone");
+    // localStorage.removeItem("outlet capacity");
+    // localStorage.removeItem("outlet quota");
+    localStorage.clear();
 
     // Redirect to login page
     navigate("/");

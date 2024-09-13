@@ -67,6 +67,20 @@
   border-bottom: 1px solid #ddd; /* Added border for separation */
 }
 
+.order-summary-item .service-type {
+  flex: 2; /* Takes up more space */
+}
+
+.order-summary-item .remark {
+  flex: 3; /* Takes up more space */
+  text-align: left; /* Aligns text to the left */
+}
+
+.order-summary-item .order-summary-buttons {
+  flex: 1; /* Takes up less space */
+  text-align: right; /* Aligns buttons to the right */
+}
+
 .order-summary-item:last-child {
   border-bottom: none; /* Remove border from the last item */
 }

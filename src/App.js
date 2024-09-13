@@ -20,7 +20,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
-
         {/* Protected Dashboard Routes */}
         <Route
           path="/dashboard/superadmin"
@@ -46,7 +45,6 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-
         {/* Public Routes */}
         <Route path="/laundry-order" element={<LaundryOrderPage />} />
         <Route path="/customer-table" element={<CustomerTablePage />} />
@@ -54,7 +52,7 @@ const App = () => {
         <Route path="/users-table" element={<UserTablePage />} />
         <Route path="/order-table" element={<OrderTablePage />} />
         <Route path="/service-table" element={<ServiceTablePage />} />
-        <Route path="/transaction-detail" component={TransactionDetailPage} />
+        <Route path="/transaction-detail" element={<TransactionDetailPage />} />
       </Routes>
     </Router>
   );

@@ -52,19 +52,33 @@ const LoginPage = () => {
       const { role, name, token } = response.data.data;
 
       localStorage.setItem("role", role);
+      localStorage.setItem("user_name", name);
+      localStorage.setItem("outlet", outletName);
       localStorage.setItem("token", token);
 
       setPopupMessage(`Login successful! Welcome ${role} ${name}`);
       setPopupType("success");
       setIsPopupVisible(true);
 
-      setTimeout(() => {
+      setTimeout(async () => {
         if (role === "SuperAdmin") {
           navigate("/dashboard/superadmin");
         } else if (role === "Admin") {
           navigate("/dashboard/admin");
         } else if (role === "Kasir") {
           navigate("/dashboard/kasir");
+
+          const response2 = await axios.get(
+            "http://localhost:3000/api/outlets"
+          );
+
+          const { address, phone, capacity, quota } = response2.data.data[0];
+          console.log("ini data response2 :", response2);
+
+          localStorage.setItem("address", address);
+          localStorage.setItem("phone", phone);
+          localStorage.setItem("capacity", capacity.toString()); // Pastikan tipe datanya string
+          localStorage.setItem("quota", quota.toString());
         } else {
           navigate("/home");
         }
@@ -95,7 +109,6 @@ const LoginPage = () => {
             ) : (
               <img src="/images/logo.png" alt="Laundry Logo" className="logo" /> // Gambar default
             )}
-            {console.log("logo:", logoUrl)}
           </div>
           <h2>{outletName}</h2>
           {error && <p className="error-message">{error}</p>}
