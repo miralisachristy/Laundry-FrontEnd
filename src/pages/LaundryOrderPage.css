@@ -160,3 +160,29 @@
 .delete-service-button:hover {
   background-color: #c82333 !important; /* Darker red on hover */
 }
+
+.error-message {
+  color: rgb(193, 116, 116);
+  font-size: 0.8em;
+  margin-top: 4px;
+}
+
+.confirm-service-button {
+  background-color: #007bff; /* Default button color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-service-button:disabled {
+  background-color: #cccccc; /* Greyed-out color */
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.confirm-service-button:hover:not(:disabled) {
+  background-color: #0056b3; /* Darker color on hover */
+}

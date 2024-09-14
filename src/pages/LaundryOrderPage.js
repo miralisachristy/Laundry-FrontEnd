@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css";
@@ -11,105 +10,98 @@ const LaundryOrderPage = () => {
   const [quantity, setQuantity] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
   const [remark, setRemark] = useState("");
-  const [isCustomerSelected, setIsCustomerSelected] = useState(false);
-  const [isServiceSelected, setIsServiceSelected] = useState(false);
-  const [editingIndex, setEditingIndex] = useState(null);
   const [showServiceSelection, setShowServiceSelection] = useState(true);
   const [showCustomerSelection, setShowCustomerSelection] = useState(true);
-  const [quantityLimits, setQuantityLimits] = useState({ min: 1, max: 100 });
-  const [capacity, setCapacity] = useState(0);
-  const [quota, setQuota] = useState(0);
-  const [quotaUsedToday, setQuotaUsedToday] = useState(0);
-
-  const [currentUser, setCurrentUser] = useState("");
-  const [outlet_name, setOutletName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-
-  const navigate = useNavigate();
+  const [quota, setQuota] = useState({
+    max_quota: 0,
+    qty_satuan_per_quota: 1,
+    qty_kiloan_per_quota: 1,
+  });
+  const [quotaUsed, setQuotaUsed] = useState(0);
+  const [errors, setErrors] = useState({}); // To track validation errors
 
   useEffect(() => {
+    // Fetch quota data
     const fetchQuotaData = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/quotas");
         const quotaData = response.data.data[0];
-        const { capacity, quota, today } = quotaData;
-
-        const user = localStorage.getItem("user_name");
-        setCurrentUser(user || "Unknown User");
-
-        setCapacity(capacity);
-        setQuota(quota);
-        setQuotaUsedToday(today);
+        setQuota({
+          max_quota: quotaData.max_quota,
+          qty_satuan_per_quota: quotaData.qty_satuan_per_quota,
+          qty_kiloan_per_quota: quotaData.qty_kiloan_per_quota,
+        });
       } catch (error) {
         console.error("Error fetching quota data:", error);
       }
     };
 
-    const fetchOutletData = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/outlets");
-        const outletData = response.data.data[0];
-        const { outlet_name, address, phone } = outletData;
-
-        setOutletName(outlet_name);
-        setAddress(address);
-        setPhone(phone);
-      } catch (error) {
-        console.error("Error fetching outlet data:", error);
-      }
-    };
-
     fetchQuotaData();
-    fetchOutletData();
-  }, [orderDetails]);
+  }, []);
+
+  useEffect(() => {
+    // Calculate quota used based on selected service and quantity
+    if (selectedService) {
+      let usedQuota = 0;
+      if (selectedService.service_type === "Kiloan") {
+        usedQuota = quantity / quota.qty_kiloan_per_quota;
+      } else if (selectedService.service_type === "Satuan") {
+        usedQuota = quantity / quota.qty_satuan_per_quota;
+      }
+      setQuotaUsed(Math.ceil(usedQuota)); // Round up the quota used
+    } else {
+      setQuotaUsed(0);
+    }
+  }, [quantity, selectedService, quota]);
+
+  useEffect(() => {
+    // Validate input quantity when service is selected
+    if (selectedService) {
+      const minQty = selectedService.service_type === "Kiloan" ? 3 : 1;
+      const maxQty =
+        selectedService.service_type === "Kiloan"
+          ? quota.max_quota * quota.qty_kiloan_per_quota
+          : quota.max_quota * quota.qty_satuan_per_quota;
+      const errors = {};
+
+      if (quantity === "") {
+        return; // Do not show errors initially
+      }
+
+      if (quantity < minQty) {
+        errors.min = `Minimum quantity is ${minQty} ${
+          selectedService.service_type === "Kiloan" ? "kg" : "pcs"
+        }`;
+      }
+      if (quantity > maxQty) {
+        errors.max = `Maximum quantity is ${maxQty} ${
+          selectedService.service_type === "Kiloan" ? "kg" : "pcs"
+        }`;
+      }
+
+      setErrors(errors);
+    }
+  }, [quantity, selectedService, quota]);
 
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
-    setIsCustomerSelected(true);
     setShowCustomerSelection(false);
   };
 
   const handleSelectService = (service) => {
     setSelectedService(service);
-    setQuantity("");
-    setRemark("");
-    setIsServiceSelected(true);
     setShowServiceSelection(false);
-
-    let min, max;
-    switch (service.unit) {
-      case "kg":
-        min = 3;
-        max = 100;
-        break;
-      case "meter":
-        min = 1;
-        max = 100;
-        break;
-      case "piece":
-        min = 1;
-        max = 100;
-        break;
-      default:
-        min = 1;
-        max = 100;
-    }
-    setQuantityLimits({ min, max });
+    setQuantity(""); // Reset quantity
+    setRemark(""); // Reset remark
+    setErrors({}); // Reset errors
   };
 
-  const handleQuantityChange = (e) => {
-    const value = e.target.value;
-    if (value >= quantityLimits.min && value <= quantityLimits.max) {
-      setQuantity(value);
-    }
+  const handleChangeCustomer = () => {
+    setSelectedCustomer(null);
+    setShowCustomerSelection(true);
   };
 
-  const handleRemarkChange = (e) => {
-    setRemark(e.target.value);
-  };
-
-  const handleAddToOrder = () => {
+  const handleConfirmService = () => {
     if (selectedService && quantity) {
       const newOrderDetail = {
         ...selectedService,
@@ -117,85 +109,27 @@ const LaundryOrderPage = () => {
         total: selectedService.price * parseInt(quantity, 10),
         remark: remark,
       };
-
-      if (editingIndex !== null) {
-        const updatedOrderDetails = [...orderDetails];
-        updatedOrderDetails[editingIndex] = newOrderDetail;
-        setOrderDetails(updatedOrderDetails);
-        setEditingIndex(null);
-      } else {
-        setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
-      }
-
+      setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
       setSelectedService(null);
       setQuantity("");
       setRemark("");
-      setIsServiceSelected(false);
-      setShowServiceSelection(false);
+      setShowServiceSelection(true); // Back to service selection
     }
   };
 
-  const handleAddMoreServices = () => {
-    setShowServiceSelection((prev) => !prev);
+  const getUnitLabel = () => {
+    if (!selectedService) return "";
+    return selectedService.service_type === "Kiloan" ? "kg" : "pcs";
   };
 
-  const handleChangeCustomer = () => {
-    if (isCustomerSelected) {
-      setSelectedCustomer(null);
-      setIsCustomerSelected(false);
-    }
-    setShowCustomerSelection((prev) => !prev);
+  const isConfirmButtonDisabled = () => {
+    return !quantity || Object.keys(errors).length > 0;
   };
-
-  const handleEditService = (index) => {
-    const serviceToEdit = orderDetails[index];
-    setSelectedService(serviceToEdit);
-    setQuantity(serviceToEdit.quantity);
-    setRemark(serviceToEdit.remark || "");
-    setEditingIndex(index);
-    setIsServiceSelected(true);
-    setShowServiceSelection(false);
-  };
-
-  const handleDeleteService = (index) => {
-    const updatedOrderDetails = orderDetails.filter((_, i) => i !== index);
-    setOrderDetails(updatedOrderDetails);
-
-    if (updatedOrderDetails.length === 0) {
-      setShowServiceSelection(true);
-    }
-  };
-
-  const handleNavigateToTransactionDetail = () => {
-    navigate("/transaction-detail", {
-      state: {
-        orderDetails,
-        selectedCustomer,
-        currentUser,
-        address,
-        outlet_name,
-        phone,
-        capacity,
-        quota,
-      },
-    });
-  };
-
-  const calculateTotal = () => {
-    return orderDetails.reduce((sum, item) => sum + item.total, 0);
-  };
-
-  // Calculate remaining capacity and quota used for today
-  const remainingCapacity = capacity - quotaUsedToday;
-  const quotaUsedTodayTotal = orderDetails.reduce(
-    (acc, item) => acc + item.quantity,
-    0
-  );
 
   return (
     <div className="laundry-order-page">
       <div className="section customer-selection">
-        {!isCustomerSelected && showCustomerSelection && (
+        {!selectedCustomer && showCustomerSelection && (
           <CustomerSelection onSelectCustomer={handleSelectCustomer} />
         )}
         {selectedCustomer && (
@@ -207,41 +141,47 @@ const LaundryOrderPage = () => {
               onClick={handleChangeCustomer}
               className="change-customer-button"
             >
-              {showCustomerSelection ? "Cancel" : "Change Customer"}
+              Change Customer
             </button>
           </div>
         )}
       </div>
 
       <div className="section service-selection">
-        {showServiceSelection && !isServiceSelected && (
+        {showServiceSelection && !selectedService && (
           <ServiceSelection onSelectService={handleSelectService} />
         )}
         {selectedService && (
           <div className="service-detail">
-            <h3 style={{ marginLeft: "10px" }}>Selected Service</h3>
+            <h3 style={{ marginLeft: "10px" }}>Add Service</h3>
             <p>Service: {selectedService.service_name}</p>
             <p>Price: {selectedService.price}</p>
             <input
               type="number"
               value={quantity}
-              onChange={handleQuantityChange}
+              onChange={(e) => setQuantity(e.target.value)}
               className="quantity-input"
-              min={quantityLimits.min}
-              max={quantityLimits.max}
+              min="1"
+              placeholder="Enter quantity"
             />
-            {selectedService.unit}
+            <span>{getUnitLabel()}</span>
             <br />
+            {errors.min && <p className="error-message">{errors.min}</p>}
+            {errors.max && <p className="error-message">{errors.max}</p>}
             <textarea
               value={remark}
-              onChange={handleRemarkChange}
+              onChange={(e) => setRemark(e.target.value)}
               className="remark-input"
               placeholder="Add a remark for this service"
-              maxLength={30}
             />
             <br />
-            <button onClick={handleAddToOrder} className="add-to-order-button">
-              Add to Order
+            <p>Quota Used: {quotaUsed}</p>
+            <button
+              onClick={handleConfirmService}
+              className="confirm-service-button"
+              disabled={isConfirmButtonDisabled()}
+            >
+              Confirm
             </button>
           </div>
         )}
@@ -257,12 +197,6 @@ const LaundryOrderPage = () => {
               <p>Phone: {selectedCustomer.phone}</p>
             </div>
           )}
-          <div className="order-summary-outlet">
-            <h3>Outlet Details</h3>
-            <p>Outlet Name: {outlet_name}</p>
-            <p>Address: {address}</p>
-            <p>Phone: {phone}</p>
-          </div>
           <table>
             <thead>
               <tr>
@@ -270,7 +204,6 @@ const LaundryOrderPage = () => {
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Remark</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -278,55 +211,17 @@ const LaundryOrderPage = () => {
                 <tr key={index}>
                   <td>{detail.service_name}</td>
                   <td>
-                    {detail.quantity} {detail.unit}
+                    {detail.quantity}{" "}
+                    {detail.service_type === "Kiloan" ? "kg" : "pcs"}
                   </td>
                   <td>{detail.total}</td>
                   <td>{detail.remark}</td>
-                  <td>
-                    <button
-                      onClick={() => handleEditService(index)}
-                      className="edit-button"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteService(index)}
-                      className="delete-button"
-                    >
-                      Delete
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="order-summary-total">
-            <h3>Total: {calculateTotal()}</h3>
-          </div>
-          <button
-            onClick={handleNavigateToTransactionDetail}
-            className="confirm-order-button"
-          >
-            Confirm Order
-          </button>
         </div>
       )}
-
-      <div className="section service-actions">
-        <button
-          onClick={handleAddMoreServices}
-          className="add-more-services-button"
-        >
-          {showServiceSelection
-            ? "Add More Services"
-            : "Back to Service Selection"}
-        </button>
-      </div>
-
-      <div className="section capacity-info">
-        <h3>Remaining Capacity for Today: {remainingCapacity}</h3>
-        <h3>Quota Used Today: {quotaUsedToday + quotaUsedTodayTotal}</h3>
-      </div>
     </div>
   );
 };

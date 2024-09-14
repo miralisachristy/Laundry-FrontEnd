@@ -53,7 +53,7 @@ const ServiceSelection = ({ onSelectService }) => {
 
   return (
     <div className="service-selection-container" ref={dropdownRef}>
-      <h3>Select Service</h3>
+      <h3>Add Service</h3>
 
       <div className="custom-dropdown">
         <input
