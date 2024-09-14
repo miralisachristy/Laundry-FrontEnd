@@ -3,6 +3,7 @@ import axios from "axios";
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css";
+import { formatDate } from "../utils/dateHelper";
 
 const LaundryOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -18,7 +19,9 @@ const LaundryOrderPage = () => {
     qty_kiloan_per_quota: 1,
   });
   const [quotaUsed, setQuotaUsed] = useState(0);
-  const [errors, setErrors] = useState({}); // To track validation errors
+  const [errors, setErrors] = useState({});
+  const [quotaDailyHistoryState, setQuotaDailyHistoryState] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     // Fetch quota data
@@ -38,6 +41,35 @@ const LaundryOrderPage = () => {
 
     fetchQuotaData();
   }, []);
+
+  useEffect(() => {
+    // Fetch quota daily history from today onwards
+    const fetchQuotaDailyHistory = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/quotas-daily-history/from-today"
+        );
+        const data = response.data.data;
+
+        if (data.length > 0) {
+          setQuotaDailyHistoryState(data);
+        } else {
+          // No data found, create new record for today
+          const today = new Date().toISOString().split("T")[0];
+          const newHistory = {
+            date: today,
+            used: 0,
+            remaining: quota.max_quota,
+          };
+          setQuotaDailyHistoryState([newHistory]);
+        }
+      } catch (error) {
+        console.error("Error fetching quota daily history:", error);
+      }
+    };
+
+    fetchQuotaDailyHistory();
+  }, [quota]);
 
   useEffect(() => {
     // Calculate quota used based on selected service and quantity
@@ -65,6 +97,7 @@ const LaundryOrderPage = () => {
       const errors = {};
 
       if (quantity === "") {
+        setSelectedDate(null); // Clear selectedDate if quantity is empty
         return; // Do not show errors initially
       }
 
@@ -72,16 +105,55 @@ const LaundryOrderPage = () => {
         errors.min = `Minimum quantity is ${minQty} ${
           selectedService.service_type === "Kiloan" ? "kg" : "pcs"
         }`;
+        setSelectedDate(null); // Clear selectedDate if quantity is invalid
       }
       if (quantity > maxQty) {
         errors.max = `Maximum quantity is ${maxQty} ${
           selectedService.service_type === "Kiloan" ? "kg" : "pcs"
         }`;
+        setSelectedDate(null); // Clear selectedDate if quantity is invalid
       }
 
       setErrors(errors);
     }
   }, [quantity, selectedService, quota]);
+
+  useEffect(() => {
+    // Check quotaDailyHistoryState for a date with enough remaining quota
+    if (quotaUsed > 0 && Object.keys(errors).length === 0) {
+      let availableDate = null;
+
+      for (let history of quotaDailyHistoryState) {
+        if (history.remaining >= quotaUsed) {
+          availableDate = history.date;
+          break;
+        }
+      }
+
+      // If no available date, create a new entry for the next date
+      if (!availableDate) {
+        const nextDate = getNextDate(quotaDailyHistoryState);
+        const newHistory = {
+          date: nextDate,
+          used: 0,
+          remaining: quota.max_quota,
+        };
+        setQuotaDailyHistoryState((prevState) => [...prevState, newHistory]);
+        availableDate = nextDate;
+      }
+
+      setSelectedDate(availableDate);
+    } else {
+      setSelectedDate(null); // Clear selectedDate if errors exist
+    }
+  }, [quotaUsed, quotaDailyHistoryState, errors]);
+
+  const getNextDate = (history) => {
+    const lastDate = new Date(history[history.length - 1].date);
+    const nextDate = new Date(lastDate);
+    nextDate.setDate(lastDate.getDate() + 1);
+    return nextDate.toISOString().split("T")[0];
+  };
 
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
@@ -103,13 +175,31 @@ const LaundryOrderPage = () => {
 
   const handleConfirmService = () => {
     if (selectedService && quantity) {
+      // Update quotaDailyHistoryState for the selected date
+      const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
+        if (history.date === selectedDate) {
+          // Reduce the remaining quota for the selected date
+          return {
+            ...history,
+            remaining: history.remaining - quotaUsed,
+          };
+        }
+        return history;
+      });
+
+      setQuotaDailyHistoryState(updatedQuotaHistory); // Update the state with the new history
+
+      // Add the new service to the orderDetails, including the selected date
       const newOrderDetail = {
         ...selectedService,
         quantity: parseInt(quantity, 10),
         total: selectedService.price * parseInt(quantity, 10),
         remark: remark,
+        date: selectedDate, // Save the selected date (quota date)
       };
       setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
+
+      // Reset form for the next service
       setSelectedService(null);
       setQuantity("");
       setRemark("");
@@ -166,8 +256,16 @@ const LaundryOrderPage = () => {
             />
             <span>{getUnitLabel()}</span>
             <br />
-            {errors.min && <p className="error-message">{errors.min}</p>}
-            {errors.max && <p className="error-message">{errors.max}</p>}
+            {errors.min && (
+              <p className="error-message" style={{ fontSize: "12px" }}>
+                {errors.min}
+              </p>
+            )}
+            {errors.max && (
+              <p className="error-message" style={{ fontSize: "12px" }}>
+                {errors.max}
+              </p>
+            )}
             <textarea
               value={remark}
               onChange={(e) => setRemark(e.target.value)}
@@ -176,10 +274,17 @@ const LaundryOrderPage = () => {
             />
             <br />
             <p>Quota Used: {quotaUsed}</p>
+            {selectedDate && (
+              <p>Date for Quota Usage: {formatDate(selectedDate)}</p>
+            )}
+
             <button
               onClick={handleConfirmService}
               className="confirm-service-button"
               disabled={isConfirmButtonDisabled()}
+              style={{
+                backgroundColor: isConfirmButtonDisabled() ? "#ccc" : "#28a745",
+              }}
             >
               Confirm
             </button>
