@@ -60,25 +60,13 @@ const LoginPage = () => {
       setPopupType("success");
       setIsPopupVisible(true);
 
-      setTimeout(async () => {
+      setTimeout(() => {
         if (role === "SuperAdmin") {
           navigate("/dashboard/superadmin");
         } else if (role === "Admin") {
           navigate("/dashboard/admin");
         } else if (role === "Kasir") {
           navigate("/dashboard/kasir");
-
-          const response2 = await axios.get(
-            "http://localhost:3000/api/outlets"
-          );
-
-          const { address, phone, capacity, quota } = response2.data.data[0];
-          console.log("ini data response2 :", response2);
-
-          localStorage.setItem("address", address);
-          localStorage.setItem("phone", phone);
-          localStorage.setItem("capacity", capacity.toString()); // Pastikan tipe datanya string
-          localStorage.setItem("quota", quota.toString());
         } else {
           navigate("/home");
         }

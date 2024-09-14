@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css";
@@ -9,35 +10,59 @@ const LaundryOrderPage = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [quantity, setQuantity] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
-  const [remark, setRemark] = useState(""); // State for remarks
+  const [remark, setRemark] = useState("");
   const [isCustomerSelected, setIsCustomerSelected] = useState(false);
   const [isServiceSelected, setIsServiceSelected] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [showServiceSelection, setShowServiceSelection] = useState(true);
   const [showCustomerSelection, setShowCustomerSelection] = useState(true);
   const [quantityLimits, setQuantityLimits] = useState({ min: 1, max: 100 });
+  const [capacity, setCapacity] = useState(0);
+  const [quota, setQuota] = useState(0);
+  const [quotaUsedToday, setQuotaUsedToday] = useState(0);
 
-  const [currentOutlet, setCurrentOutlet] = useState(""); // Outlet state
-  const [currentUser, setCurrentUser] = useState(""); // Current user state
+  const [currentUser, setCurrentUser] = useState("");
+  const [outlet_name, setOutletName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Fetch outlet and user data from localStorage or other source
   useEffect(() => {
-    const outlet = localStorage.getItem("outlet"); // Example outlet
-    const user = localStorage.getItem("user_name"); // Example current user name
-    const address = localStorage.getItem("address"); // Example current user name
-    const phone = localStorage.getItem("phone"); // Example current user name
-    const capacity = localStorage.getItem("capacity"); // Example current user name
-    const quota = localStorage.getItem("quota"); // Example current user name
+    const fetchQuotaData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/quotas");
+        const quotaData = response.data.data[0];
+        const { capacity, quota, today } = quotaData;
 
-    setCurrentOutlet(outlet || "Unknown Outlet");
-    setCurrentUser(user || "Unknown User");
-    setCurrentUser(address || "Unknown address");
-    setCurrentUser(phone || "Unknown phone");
-    setCurrentUser(capacity || "Unknown capacity");
-    setCurrentUser(quota || "Unknown quota");
-  }, []);
+        const user = localStorage.getItem("user_name");
+        setCurrentUser(user || "Unknown User");
+
+        setCapacity(capacity);
+        setQuota(quota);
+        setQuotaUsedToday(today);
+      } catch (error) {
+        console.error("Error fetching quota data:", error);
+      }
+    };
+
+    const fetchOutletData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/outlets");
+        const outletData = response.data.data[0];
+        const { outlet_name, address, phone } = outletData;
+
+        setOutletName(outlet_name);
+        setAddress(address);
+        setPhone(phone);
+      } catch (error) {
+        console.error("Error fetching outlet data:", error);
+      }
+    };
+
+    fetchQuotaData();
+    fetchOutletData();
+  }, [orderDetails]);
 
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
@@ -48,7 +73,7 @@ const LaundryOrderPage = () => {
   const handleSelectService = (service) => {
     setSelectedService(service);
     setQuantity("");
-    setRemark(""); // Clear remark when a new service is selected
+    setRemark("");
     setIsServiceSelected(true);
     setShowServiceSelection(false);
 
@@ -90,7 +115,7 @@ const LaundryOrderPage = () => {
         ...selectedService,
         quantity: parseInt(quantity, 10),
         total: selectedService.price * parseInt(quantity, 10),
-        remark: remark, // Add remark to order detail
+        remark: remark,
       };
 
       if (editingIndex !== null) {
@@ -104,7 +129,7 @@ const LaundryOrderPage = () => {
 
       setSelectedService(null);
       setQuantity("");
-      setRemark(""); // Clear remark
+      setRemark("");
       setIsServiceSelected(false);
       setShowServiceSelection(false);
     }
@@ -126,7 +151,7 @@ const LaundryOrderPage = () => {
     const serviceToEdit = orderDetails[index];
     setSelectedService(serviceToEdit);
     setQuantity(serviceToEdit.quantity);
-    setRemark(serviceToEdit.remark || ""); // Set remark for editing
+    setRemark(serviceToEdit.remark || "");
     setEditingIndex(index);
     setIsServiceSelected(true);
     setShowServiceSelection(false);
@@ -142,26 +167,30 @@ const LaundryOrderPage = () => {
   };
 
   const handleNavigateToTransactionDetail = () => {
-    // Add your logic for transaction details here
-    // Example of navigating to the TransactionDetailPage with state
     navigate("/transaction-detail", {
       state: {
         orderDetails,
         selectedCustomer,
-        currentOutlet,
         currentUser,
+        address,
+        outlet_name,
+        phone,
+        capacity,
+        quota,
       },
     });
-    console.log("Ini detail ordernya : ", orderDetails);
-    console.log("Ini selected customer : ", selectedCustomer);
-    console.log("Ini selected service : ", selectedService);
-    console.log("Ini outlet : ", currentOutlet);
-    console.log("Ini nama user : ", currentUser);
   };
 
   const calculateTotal = () => {
     return orderDetails.reduce((sum, item) => sum + item.total, 0);
   };
+
+  // Calculate remaining capacity and quota used for today
+  const remainingCapacity = capacity - quotaUsedToday;
+  const quotaUsedTodayTotal = orderDetails.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
 
   return (
     <div className="laundry-order-page">
@@ -228,52 +257,76 @@ const LaundryOrderPage = () => {
               <p>Phone: {selectedCustomer.phone}</p>
             </div>
           )}
-          <ul style={{ marginLeft: "50px" }}>
-            {orderDetails.map((item, index) => (
-              <li key={index} className="order-summary-item">
-                <div className="service-type">
-                  {item.service_name} - {item.quantity} {item.unit} x{" "}
-                  {item.price} = {item.total}
-                </div>
-                <div className="remark">
-                  <p>Remark: {item.remark}</p>
-                </div>
-                <div className="order-summary-buttons">
-                  <button
-                    onClick={() => handleEditService(index)}
-                    className="change-service-button"
-                  >
-                    Change Service
-                  </button>
-                  <button
-                    onClick={() => handleDeleteService(index)}
-                    className="delete-service-button"
-                  >
-                    Delete Service
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div className="order-total">
-            <h4 className="total-amount">Total Amount: {calculateTotal()}</h4>
+          <div className="order-summary-outlet">
+            <h3>Outlet Details</h3>
+            <p>Outlet Name: {outlet_name}</p>
+            <p>Address: {address}</p>
+            <p>Phone: {phone}</p>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Remark</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderDetails.map((detail, index) => (
+                <tr key={index}>
+                  <td>{detail.service_name}</td>
+                  <td>
+                    {detail.quantity} {detail.unit}
+                  </td>
+                  <td>{detail.total}</td>
+                  <td>{detail.remark}</td>
+                  <td>
+                    <button
+                      onClick={() => handleEditService(index)}
+                      className="edit-button"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteService(index)}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="order-summary-total">
+            <h3>Total: {calculateTotal()}</h3>
           </div>
           <button
-            style={{ marginLeft: "20px" }}
-            onClick={handleAddMoreServices}
-            className="add-more-services-button"
+            onClick={handleNavigateToTransactionDetail}
+            className="confirm-order-button"
           >
-            {showServiceSelection ? "Cancel" : "Add More Services"}
-          </button>
-          <button
-            onClick={handleNavigateToTransactionDetail} // Add the navigate button
-            className="navigate-to-transaction-button"
-          >
-            Go to Transaction Details
+            Confirm Order
           </button>
         </div>
       )}
+
+      <div className="section service-actions">
+        <button
+          onClick={handleAddMoreServices}
+          className="add-more-services-button"
+        >
+          {showServiceSelection
+            ? "Add More Services"
+            : "Back to Service Selection"}
+        </button>
+      </div>
+
+      <div className="section capacity-info">
+        <h3>Remaining Capacity for Today: {remainingCapacity}</h3>
+        <h3>Quota Used Today: {quotaUsedToday + quotaUsedTodayTotal}</h3>
+      </div>
     </div>
   );
 };

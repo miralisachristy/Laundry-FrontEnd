@@ -14,7 +14,6 @@ const CustomerSelection = ({ onSelectCustomer }) => {
       try {
         const response = await axios.get("http://localhost:3000/api/customers");
         const customerData = response.data.data;
-        console.log(customerData); // Check the data structure
         setCustomers(customerData);
         setFilteredCustomers(customerData);
       } catch (error) {
