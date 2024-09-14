@@ -10,7 +10,7 @@ const LaundryOrderPage = () => {
   const [selectedService, setSelectedService] = useState(null);
   const [quantity, setQuantity] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
-  const [remark, setRemark] = useState("");
+  const [description, setDescription] = useState("");
   const [showServiceSelection, setShowServiceSelection] = useState(true);
   const [showCustomerSelection, setShowCustomerSelection] = useState(true);
   const [quota, setQuota] = useState({
@@ -164,7 +164,7 @@ const LaundryOrderPage = () => {
     setSelectedService(service);
     setShowServiceSelection(false);
     setQuantity(""); // Reset quantity
-    setRemark(""); // Reset remark
+    setDescription(""); // Reset description
     setErrors({}); // Reset errors
   };
 
@@ -194,7 +194,7 @@ const LaundryOrderPage = () => {
         ...selectedService,
         quantity: parseInt(quantity, 10),
         total: selectedService.price * parseInt(quantity, 10),
-        remark: remark,
+        description: description,
         date: selectedDate, // Save the selected date (quota date)
       };
       setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
@@ -202,7 +202,7 @@ const LaundryOrderPage = () => {
       // Reset form for the next service
       setSelectedService(null);
       setQuantity("");
-      setRemark("");
+      setDescription("");
       setShowServiceSelection(true); // Back to service selection
     }
   };
@@ -267,10 +267,10 @@ const LaundryOrderPage = () => {
               </p>
             )}
             <textarea
-              value={remark}
-              onChange={(e) => setRemark(e.target.value)}
-              className="remark-input"
-              placeholder="Add a remark for this service"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="description-input"
+              placeholder="Add description"
             />
             <br />
             <p>Quota Used: {quotaUsed}</p>
@@ -308,7 +308,7 @@ const LaundryOrderPage = () => {
                 <th>Service</th>
                 <th>Quantity</th>
                 <th>Total</th>
-                <th>Remark</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
@@ -320,7 +320,7 @@ const LaundryOrderPage = () => {
                     {detail.service_type === "Kiloan" ? "kg" : "pcs"}
                   </td>
                   <td>{detail.total}</td>
-                  <td>{detail.remark}</td>
+                  <td>{detail.description}</td>
                 </tr>
               ))}
             </tbody>

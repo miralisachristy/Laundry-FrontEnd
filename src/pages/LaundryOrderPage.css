@@ -71,7 +71,7 @@
   flex: 2; /* Takes up more space */
 }
 
-.order-summary-item .remark {
+.order-summary-item .description {
   flex: 3; /* Takes up more space */
   text-align: left; /* Aligns text to the left */
 }
@@ -113,7 +113,7 @@
   box-sizing: border-box;
 }
 
-.remark-input {
+.description-input {
   width: calc(30% - 20px); /* Full width minus padding */
   padding: 10px;
   margin-top: 10px;
@@ -122,9 +122,6 @@
   border-radius: 4px;
   font-size: 16px;
   margin-bottom: 10px;
-}
-
-.remark-input {
   height: 80px; /* Adjust height as needed */
   resize: vertical; /* Allow vertical resizing */
 }
