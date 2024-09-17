@@ -285,6 +285,40 @@ td img {
   margin-left: 10px;
 }
 
+.filter-menu {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  background-color: #f5f5f5; /* Light gray background */
+  border: none; /* Remove default border */
+  border-radius: 50px; /* Fully rounded button */
+  padding: 10px 20px; /* Add spacing */
+  font-size: 14px; /* Font size */
+  font-weight: bold; /* Bold text */
+  color: #333; /* Dark gray text */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  margin: 0 5px; /* Spacing between buttons */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.filter-button.active {
+  background-color: #007bff; /* Blue background for active state */
+  color: white; /* White text for active state */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Darker shadow for active state */
+}
+
+.filter-button:hover {
+  background-color: #e0e0e0; /* Slightly darker gray on hover */
+}
+
+.filter-button.active:hover {
+  background-color: #0056b3; /* Darker blue for active button on hover */
+}
+
 .search-input {
   width: 30% !important; /* Updated width for the search input */
   padding: 8px;
@@ -495,5 +529,51 @@ td img {
 }
 
 .update-user-button:hover {
+  background-color: #0056b3;
+}
+
+.update-customer-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  position: relative; /* Add this for positioning close button */
+}
+
+.update-customer-box form div {
+  margin-bottom: 10px;
+}
+
+.update-customer-box form input,
+.update-customer-box form select {
+  width: 100%;
+  padding: 8px;
+  margin-left: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.update-customer-box form label {
+  margin-left: 10px;
+}
+
+.update-customer-box form button:hover {
+  background-color: #0056b3;
+}
+
+.update-customer-button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.update-customer-button:hover {
   background-color: #0056b3;
 }

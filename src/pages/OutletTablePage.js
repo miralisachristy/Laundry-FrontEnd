@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navigation from "../components/Navigation"; // Adjust this path if needed
 import "../styles/csspages.css"; // Import the global CSS file
@@ -13,6 +14,8 @@ const OutletTablePage = () => {
     phone: "",
     describ: "",
   }); // State for storing form data
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     // Function to fetch outlet data
@@ -65,6 +68,7 @@ const OutletTablePage = () => {
         );
         setEditingOutlet(null); // Close the edit form after saving
         alert("Outlet updated successfully!");
+        navigate("/"); // Navigate to the Forgot Password page
         window.location.reload(); // This will reload the entire page
       })
       .catch((error) => {
@@ -107,10 +111,6 @@ const OutletTablePage = () => {
         }));
         // Re-fetch the latest outlet data after successful upload
         window.location.reload(); // This will reload the entire page
-      })
-      .then((response) => {
-        setOutlets(response.data.data); // Update outlets with the latest data
-        alert("Logo updated successfully!");
       })
       .catch((error) => {
         console.error("Error uploading the logo:", error);

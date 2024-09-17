@@ -111,13 +111,13 @@ const UpdateCustomerForm = ({
         <button type="submit" className="update-button">
           Update
         </button>
-        <button
+        {/* <button
           type="button"
           className="cancel-button"
           onClick={() => setShowUpdateCustomerForm(false)}
         >
           Cancel
-        </button>
+        </button> */}
       </form>
     </div>
   );

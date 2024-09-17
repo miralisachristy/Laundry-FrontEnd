@@ -35,8 +35,22 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     }));
   };
 
+  const validatePhoneNumber = (phone) => {
+    // Regular expression for Indonesian phone number validation
+    const phoneRegex = /^(?:\+62|0)8[1-9]\d{7,12}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleAddCustomer = async (event) => {
     event.preventDefault();
+
+    // Check for phone number validity
+    if (!validatePhoneNumber(newCustomer.phone)) {
+      setError(
+        "Invalid phone number. Please enter a valid Indonesian phone number."
+      );
+      return;
+    }
 
     // Check for duplicates
     const isEmailDuplicate = existingCustomers.some(

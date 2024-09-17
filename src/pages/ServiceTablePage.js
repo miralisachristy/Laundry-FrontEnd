@@ -10,6 +10,36 @@ const ServiceTablePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [showAddServiceForm, setShowAddServiceForm] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  // Function to sort and group services
+  const sortAndGroupServices = (services) => {
+    const kiloanServices = services.filter(
+      (service) => service.service_type.toLowerCase() === "kiloan"
+    );
+    const satuanServices = services.filter(
+      (service) => service.service_type.toLowerCase() === "satuan"
+    );
+
+    const sortedKiloanServices = kiloanServices.sort((a, b) =>
+      a.service_name.localeCompare(b.service_name)
+    );
+    const sortedSatuanServices = satuanServices.sort((a, b) =>
+      a.service_name.localeCompare(b.service_name)
+    );
+
+    return [...sortedKiloanServices, ...sortedSatuanServices];
+  };
+
+  // Function to filter services based on selected category
+  const filterByCategory = (services, category) => {
+    if (category === "all") {
+      return sortAndGroupServices(services);
+    }
+    return sortAndGroupServices(services).filter(
+      (service) => service.service_type.toLowerCase() === category
+    );
+  };
 
   // Fetch services
   useEffect(() => {
@@ -19,31 +49,29 @@ const ServiceTablePage = () => {
         if (response.status === 200) {
           const fetchedServices = response.data.data;
 
-          // Sort services if more than one exists
-          const sortedServices =
-            fetchedServices.length > 1
-              ? fetchedServices.sort((a, b) =>
-                  a.service_name.localeCompare(b.service_name)
-                )
-              : fetchedServices;
+          // Filter and sort services based on selected category
+          const filteredGroupedServices = filterByCategory(
+            fetchedServices,
+            selectedCategory
+          );
 
-          setServices(sortedServices);
-          setFilteredServices(sortedServices);
+          setServices(fetchedServices);
+          setFilteredServices(filteredGroupedServices);
         }
       })
       .catch((error) => {
         console.error("Error fetching services:", error);
         setError("Failed to load services");
       });
-  }, []);
+  }, [selectedCategory]);
 
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
 
-    // Filter services based on the search query
-    const filtered = services.filter((service) =>
-      service.service_name.toLowerCase().includes(query)
+    // Filter services based on the search query and selected category
+    const filtered = filterByCategory(services, selectedCategory).filter(
+      (service) => service.service_name.toLowerCase().includes(query)
     );
     setFilteredServices(filtered);
   };
@@ -52,22 +80,24 @@ const ServiceTablePage = () => {
     // Add the new service to the services list
     const updatedServices = [...services, newService];
 
-    // Sort and apply the current search filter to the updated services list
-    const sortedServices =
-      updatedServices.length > 1
-        ? updatedServices.sort((a, b) =>
-            a.service_name.localeCompare(b.service_name)
-          )
-        : updatedServices;
+    // Filter and sort the updated services list
+    const filteredGroupedServices = filterByCategory(
+      updatedServices,
+      selectedCategory
+    );
 
-    const filtered = sortedServices.filter((service) =>
+    const filtered = filteredGroupedServices.filter((service) =>
       service.service_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-    setServices(sortedServices);
+    setServices(updatedServices);
     setFilteredServices(filtered);
 
     // Close the form
     setShowAddServiceForm(false);
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
   };
 
   const handleImageError = (e) => {
@@ -80,6 +110,33 @@ const ServiceTablePage = () => {
       <div className="content">
         <h2>Service List</h2>
         {error && <p className="error-message">{error}</p>}
+
+        <div className="filter-menu">
+          <button
+            className={`filter-button ${
+              selectedCategory === "all" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("all")}
+          >
+            All Services
+          </button>
+          <button
+            className={`filter-button ${
+              selectedCategory === "kiloan" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("kiloan")}
+          >
+            Kiloan
+          </button>
+          <button
+            className={`filter-button ${
+              selectedCategory === "satuan" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("satuan")}
+          >
+            Satuan
+          </button>
+        </div>
 
         <div>
           <input
