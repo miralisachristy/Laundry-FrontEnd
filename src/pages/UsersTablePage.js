@@ -20,9 +20,18 @@ const UsersTablePage = () => {
         const response = await axios.get("http://localhost:3000/api/users");
         const usersData = response.data.data;
         if (Array.isArray(usersData)) {
-          const sortedUsers = usersData.sort((a, b) =>
-            a.name.localeCompare(b.name)
-          );
+          const sortedUsers = usersData.sort((a, b) => {
+            // Move SuperAdmin to the top
+            if (a.role === "SuperAdmin" && b.role !== "SuperAdmin") {
+              return -1;
+            }
+            if (a.role !== "SuperAdmin" && b.role === "SuperAdmin") {
+              return 1;
+            }
+            // Otherwise, sort alphabetically by name
+            return a.name.localeCompare(b.name);
+          });
+
           setUsers(sortedUsers);
         } else {
           console.error("Expected an array but got:", usersData);
@@ -160,11 +169,15 @@ const UsersTablePage = () => {
               filteredUsers.map((user) => (
                 <tr key={user.id_user}>
                   <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.includes(user.id_user)}
-                      onChange={() => handleSelectUser(user.id_user)}
-                    />
+                    {user.role !== "SuperAdmin" ? (
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(user.id_user)}
+                        onChange={() => handleSelectUser(user.id_user)}
+                      />
+                    ) : (
+                      <span>--</span> // Display a placeholder like a dash or empty cell
+                    )}
                   </td>
                   <td>{user.role}</td>
                   <td>{user.name}</td>

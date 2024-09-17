@@ -286,7 +286,7 @@ td img {
 }
 
 .search-input {
-  width: 30%; /* Updated width for the search input */
+  width: 30% !important; /* Updated width for the search input */
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;

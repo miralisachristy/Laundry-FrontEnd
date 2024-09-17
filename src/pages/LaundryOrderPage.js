@@ -175,35 +175,73 @@ const LaundryOrderPage = () => {
 
   const handleConfirmService = () => {
     if (selectedService && quantity) {
-      // Update quotaDailyHistoryState for the selected date
-      const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
-        if (history.date === selectedDate) {
-          // Reduce the remaining quota for the selected date
-          return {
-            ...history,
-            remaining: history.remaining - quotaUsed,
-          };
+      // Menghitung sisa kuota dari orderDetails yang sudah ada
+      let remainingQuota = quota.max_quota;
+
+      orderDetails.forEach((detail) => {
+        let serviceQuotaUsed = 0;
+        if (detail.service_type === "Kiloan") {
+          serviceQuotaUsed = detail.quantity / quota.qty_kiloan_per_quota;
+        } else if (detail.service_type === "Satuan") {
+          serviceQuotaUsed = detail.quantity / quota.qty_satuan_per_quota;
         }
-        return history;
+        remainingQuota -= serviceQuotaUsed;
       });
 
-      setQuotaDailyHistoryState(updatedQuotaHistory); // Update the state with the new history
+      // Menghitung kuota yang digunakan untuk layanan baru
+      let newQuotaUsed = 0;
+      if (selectedService.service_type === "Kiloan") {
+        newQuotaUsed = quantity / quota.qty_kiloan_per_quota;
+      } else if (selectedService.service_type === "Satuan") {
+        newQuotaUsed = quantity / quota.qty_satuan_per_quota;
+      }
+      newQuotaUsed = Math.ceil(newQuotaUsed);
 
-      // Add the new service to the orderDetails, including the selected date
-      const newOrderDetail = {
-        ...selectedService,
-        quantity: parseInt(quantity, 10),
-        total: selectedService.price * parseInt(quantity, 10),
-        description: description,
-        date: selectedDate, // Save the selected date (quota date)
-      };
-      setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
+      if (remainingQuota >= newQuotaUsed) {
+        // Update quotaDailyHistoryState untuk tanggal yang dipilih
+        const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
+          if (history.date === selectedDate) {
+            return {
+              ...history,
+              remaining: history.remaining - newQuotaUsed,
+            };
+          }
+          return history;
+        });
 
-      // Reset form for the next service
-      setSelectedService(null);
-      setQuantity("");
-      setDescription("");
-      setShowServiceSelection(true); // Back to service selection
+        setQuotaDailyHistoryState(updatedQuotaHistory); // Update state dengan history baru
+
+        // Hitung estimasi tanggal selesai berdasarkan processing_time (dalam jam)
+        const selectedDateObj = new Date(selectedDate);
+        const estimatedCompletionDate = new Date(
+          selectedDateObj.getTime() +
+            selectedService.processing_time * 60 * 60 * 1000
+        );
+
+        const formattedCompletionDate = estimatedCompletionDate
+          .toISOString()
+          .split("T")[0];
+
+        const newOrderDetail = {
+          ...selectedService,
+          quantity: parseInt(quantity, 10),
+          total: selectedService.price * parseInt(quantity, 10),
+          description: description,
+          date: selectedDate, // Simpan tanggal yang dipilih
+          estimatedCompletionDate: formattedCompletionDate, // Tambahkan estimasi tanggal selesai
+        };
+
+        setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
+
+        // Reset form untuk layanan berikutnya
+        setSelectedService(null);
+        setQuantity("");
+        setDescription("");
+        setShowServiceSelection(true); // Kembali ke pemilihan layanan
+      } else {
+        // Jika kuota tidak mencukupi, peringatkan pengguna
+        alert("Kuota tidak mencukupi untuk layanan yang dipilih.");
+      }
     }
   };
 
@@ -309,6 +347,7 @@ const LaundryOrderPage = () => {
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Description</th>
+                <th>Date Quota</th>
               </tr>
             </thead>
             <tbody>
@@ -321,6 +360,12 @@ const LaundryOrderPage = () => {
                   </td>
                   <td>{detail.total}</td>
                   <td>{detail.description}</td>
+                  <td>
+                    {detail.date ? formatDate(detail.date) : ""} <br />
+                    {detail.estimatedCompletionDate
+                      ? formatDate(detail.estimatedCompletionDate)
+                      : ""}
+                  </td>
                 </tr>
               ))}
             </tbody>
