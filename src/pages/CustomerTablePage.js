@@ -47,15 +47,6 @@ const CustomerTablePage = () => {
     )
   );
 
-  const handleAddCustomer = (newCustomer) => {
-    setCustomers((prevCustomers) => {
-      const updatedCustomers = [...prevCustomers, newCustomer];
-      // Sort the updated list
-      return updatedCustomers.sort((a, b) => a.name.localeCompare(b.name));
-    });
-    setShowAddCustomerForm(false); // Close the form after adding the customer
-  };
-
   const handleUpdateCustomer = async (updatedCustomer) => {
     try {
       await axios.put(
@@ -63,7 +54,7 @@ const CustomerTablePage = () => {
         updatedCustomer
       );
       fetchCustomers(); // Refresh the customer list
-      setShowUpdateCustomerForm(false);
+      // setShowUpdateCustomerForm(false);
       window.location.reload(); // This will reload the entire page
     } catch (error) {
       console.error("Error updating customer:", error);
@@ -140,7 +131,7 @@ const CustomerTablePage = () => {
           <UpdateCustomerForm
             setShowUpdateCustomerForm={setShowUpdateCustomerForm}
             customer={selectedCustomer}
-            onUpdate={handleUpdateCustomer}
+            onUpdateCustomer={handleUpdateCustomer} // Update prop name to match expected name
           />
         )}
         <table>

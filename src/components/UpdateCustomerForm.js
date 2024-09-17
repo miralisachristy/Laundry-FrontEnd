@@ -1,4 +1,3 @@
-// src/components/UpdateCustomerForm.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/csspages.css";
@@ -6,7 +5,7 @@ import "../styles/csspages.css";
 const UpdateCustomerForm = ({
   setShowUpdateCustomerForm,
   customer,
-  onUpdateCustomer,
+  onUpdateCustomer, // Use onUpdateCustomer as the prop name
 }) => {
   const [updatedCustomer, setUpdatedCustomer] = useState({
     name: "",
@@ -37,13 +36,18 @@ const UpdateCustomerForm = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.put(
-        `http://localhost:3000/api/customers/id/${customer.id_customer}`,
-        updatedCustomer
-      );
-      console.log("Customer updated successfully:", response.data);
-      onUpdateCustomer(response.data); // Pass the updated customer back to the parent
-      setShowUpdateCustomerForm(false); // Close the form after updating customer
+      const url = `http://localhost:3000/api/customers/id/${customer.id_customer}`;
+      console.log("Updating customer at:", url); // Log the URL
+      const response = await axios.put(url, updatedCustomer);
+      console.log("Customer updated successfully:", response.data.data);
+
+      if (typeof onUpdateCustomer === "function") {
+        onUpdateCustomer(response.data.data); // Pass the updated customer back to the parent
+      } else {
+        console.error("onUpdateCustomer is not a function");
+      }
+      // setShowUpdateCustomerForm(false); // Close the form after updating customer
+      window.location.reload(); // This will reload the entire page
     } catch (error) {
       console.error("Error updating customer:", error);
     }
