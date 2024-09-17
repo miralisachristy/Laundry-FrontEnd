@@ -1,39 +1,41 @@
 // src/pages/CustomerTablePage.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navigation from "../components/Navigation"; // Adjust this path if needed
-import AddCustomerForm from "../components/AddCustomerForm"; // Import the AddCustomerForm component
-import "../styles/csspages.css"; // Import the global CSS file
+import Navigation from "../components/Navigation";
+import AddCustomerForm from "../components/AddCustomerForm";
+import UpdateCustomerForm from "../components/UpdateCustomerForm";
+import "../styles/csspages.css";
 
 const CustomerTablePage = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddCustomerForm, setShowAddCustomerForm] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]); // State for selected customer IDs
-  const [selectAll, setSelectAll] = useState(false); // State for 'Select All' checkbox
+  const [showUpdateCustomerForm, setShowUpdateCustomerForm] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
-    // Fetch data from API
-    axios
-      .get("http://localhost:3000/api/customers")
-      .then((response) => {
-        const customersData = response.data.data; // Access the nested data array
-        if (Array.isArray(customersData)) {
-          // Sort customers by name A-Z only if there is more than one customer
-          const sortedCustomers =
-            customersData.length > 1
-              ? customersData.sort((a, b) => a.name.localeCompare(b.name))
-              : customersData;
-          setCustomers(sortedCustomers);
-        } else {
-          console.error("Expected an array but got:", customersData);
-          setCustomers([]); // Set an empty array or handle this case as needed
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching the customer data:", error);
-      });
+    fetchCustomers();
   }, []);
+
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/customers");
+      const customersData = response.data.data;
+      if (Array.isArray(customersData)) {
+        const sortedCustomers = customersData.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCustomers(sortedCustomers);
+      } else {
+        console.error("Expected an array but got:", customersData);
+        setCustomers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching the customer data:", error);
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -41,7 +43,7 @@ const CustomerTablePage = () => {
 
   const filteredCustomers = customers.filter((customer) =>
     [customer.name, customer.phone, customer.email, customer.address].some(
-      (field) => field.toLowerCase().includes(searchTerm.toLowerCase())
+      (field) => field && field.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
@@ -51,7 +53,26 @@ const CustomerTablePage = () => {
       // Sort the updated list
       return updatedCustomers.sort((a, b) => a.name.localeCompare(b.name));
     });
-    setShowAddCustomerForm(false); // Close the form
+    setShowAddCustomerForm(false); // Close the form after adding the customer
+  };
+
+  const handleUpdateCustomer = async (updatedCustomer) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/api/customers/${updatedCustomer.id_customer}`,
+        updatedCustomer
+      );
+      fetchCustomers(); // Refresh the customer list
+      setShowUpdateCustomerForm(false);
+      window.location.reload(); // This will reload the entire page
+    } catch (error) {
+      console.error("Error updating customer:", error);
+    }
+  };
+
+  const handleUpdateClick = (customer) => {
+    setSelectedCustomer(customer);
+    setShowUpdateCustomerForm(true);
   };
 
   const handleSelectCustomer = (customerId) => {
@@ -73,16 +94,10 @@ const CustomerTablePage = () => {
 
   const handleDeleteSelected = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/customers/delete",
-        { ids: selectedIds }
-      );
-      console.log("Deleted customers:", response.data.deletedCustomers);
-      setCustomers((prevCustomers) =>
-        prevCustomers.filter(
-          (customer) => !selectedIds.includes(customer.id_customer)
-        )
-      );
+      await axios.post("http://localhost:3000/api/customers/delete", {
+        ids: selectedIds,
+      });
+      fetchCustomers(); // Refresh the customer list
       setSelectedIds([]);
       setSelectAll(false);
     } catch (error) {
@@ -118,7 +133,14 @@ const CustomerTablePage = () => {
         {showAddCustomerForm && (
           <AddCustomerForm
             setShowAddCustomerForm={setShowAddCustomerForm}
-            setCustomers={handleAddCustomer} // Pass handleAddCustomer function
+            setCustomers={setCustomers} // Pass setCustomers here
+          />
+        )}
+        {showUpdateCustomerForm && (
+          <UpdateCustomerForm
+            setShowUpdateCustomerForm={setShowUpdateCustomerForm}
+            customer={selectedCustomer}
+            onUpdate={handleUpdateCustomer}
           />
         )}
         <table>
@@ -136,6 +158,7 @@ const CustomerTablePage = () => {
               <th>Email</th>
               <th>Address</th>
               <th>Created At</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -167,11 +190,19 @@ const CustomerTablePage = () => {
                       hour12: "2-digit",
                     })}
                   </td>
+                  <td>
+                    <button
+                      className="update-button"
+                      onClick={() => handleUpdateClick(customer)}
+                    >
+                      Update
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6">No customers found.</td>
+                <td colSpan="7">No customers found.</td>
               </tr>
             )}
           </tbody>

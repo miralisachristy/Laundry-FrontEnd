@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/csspages.css"; // Import the global CSS file
 
+// src/components/AddCustomerForm.js
+
 const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   const [newCustomer, setNewCustomer] = useState({
     name: "",
@@ -24,14 +26,18 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     axios
       .post("http://localhost:3000/api/customers", newCustomer)
       .then((response) => {
-        setCustomers(response.data.data); // Use the updated customer data directly
+        setCustomers((prevCustomers) => [
+          ...prevCustomers,
+          response.data.data, // Update the customer list
+        ]);
         setNewCustomer({
           name: "",
           phone: "",
           email: "",
           address: "",
-        });
-        setShowAddCustomerForm(false); // Close the form after adding customer
+        }); // Reset form fields
+        // setShowAddCustomerForm(false); // Close the form
+        window.location.reload(); // This will reload the entire page
       })
       .catch((error) => {
         console.error("Error adding new customer:", error);
@@ -41,11 +47,10 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   return (
     <div className="add-customer-box">
       <h3>Add New Customer</h3>
-
       <button
         className="close-button"
         type="button"
-        onClick={() => setShowAddCustomerForm(false)} // Correctly close the form
+        onClick={() => setShowAddCustomerForm(false)}
         aria-label="Close"
       >
         &times;
@@ -91,7 +96,6 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
             required
           />
         </div>
-
         <button type="submit" className="save-button">
           Submit
         </button>
