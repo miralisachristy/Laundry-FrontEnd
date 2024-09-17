@@ -64,7 +64,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
           value={searchTerm}
           onChange={handleSearch}
           onFocus={() => setIsDropdownOpen(true)}
-          className="search-input"
+          className="search-input-input"
         />
 
         {isDropdownOpen && (

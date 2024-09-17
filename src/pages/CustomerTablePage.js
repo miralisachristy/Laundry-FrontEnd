@@ -9,6 +9,8 @@ const CustomerTablePage = () => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddCustomerForm, setShowAddCustomerForm] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]); // State for selected customer IDs
+  const [selectAll, setSelectAll] = useState(false); // State for 'Select All' checkbox
 
   useEffect(() => {
     // Fetch data from API
@@ -52,6 +54,42 @@ const CustomerTablePage = () => {
     setShowAddCustomerForm(false); // Close the form
   };
 
+  const handleSelectCustomer = (customerId) => {
+    setSelectedIds((prevSelectedIds) =>
+      prevSelectedIds.includes(customerId)
+        ? prevSelectedIds.filter((id) => id !== customerId)
+        : [...prevSelectedIds, customerId]
+    );
+  };
+
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      setSelectedIds(filteredCustomers.map((customer) => customer.id_customer));
+    } else {
+      setSelectedIds([]);
+    }
+    setSelectAll(event.target.checked);
+  };
+
+  const handleDeleteSelected = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/customers/delete",
+        { ids: selectedIds }
+      );
+      console.log("Deleted customers:", response.data.deletedCustomers);
+      setCustomers((prevCustomers) =>
+        prevCustomers.filter(
+          (customer) => !selectedIds.includes(customer.id_customer)
+        )
+      );
+      setSelectedIds([]);
+      setSelectAll(false);
+    } catch (error) {
+      console.error("Error deleting selected customers:", error);
+    }
+  };
+
   return (
     <div className="container">
       <Navigation />
@@ -71,6 +109,11 @@ const CustomerTablePage = () => {
           >
             Add Customer
           </button>
+          {selectedIds.length > 0 && (
+            <button className="add-button" onClick={handleDeleteSelected}>
+              Delete
+            </button>
+          )}
         </div>
         {showAddCustomerForm && (
           <AddCustomerForm
@@ -81,6 +124,13 @@ const CustomerTablePage = () => {
         <table>
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAll}
+                />
+              </th>
               <th>Name</th>
               <th>Phone</th>
               <th>Email</th>
@@ -92,6 +142,15 @@ const CustomerTablePage = () => {
             {filteredCustomers.length > 0 ? (
               filteredCustomers.map((customer) => (
                 <tr key={customer.id_customer}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(customer.id_customer)}
+                      onChange={() =>
+                        handleSelectCustomer(customer.id_customer)
+                      }
+                    />
+                  </td>
                   <td>{customer.name}</td>
                   <td>{customer.phone}</td>
                   <td>{customer.email}</td>
@@ -112,7 +171,7 @@ const CustomerTablePage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5">No customers found.</td>
+                <td colSpan="6">No customers found.</td>
               </tr>
             )}
           </tbody>
