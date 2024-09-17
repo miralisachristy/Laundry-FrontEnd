@@ -1,9 +1,6 @@
-// src/components/AddCustomerForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/csspages.css"; // Import the global CSS file
-
-// src/components/AddCustomerForm.js
+import "../styles/csspages.css";
 
 const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   const [newCustomer, setNewCustomer] = useState({
@@ -13,6 +10,23 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     address: "",
   });
 
+  const [error, setError] = useState(""); // State to hold error messages
+  const [existingCustomers, setExistingCustomers] = useState([]); // State to hold existing customers
+
+  useEffect(() => {
+    // Fetch existing customers on component mount
+    const fetchExistingCustomers = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/customers");
+        setExistingCustomers(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching existing customers:", error);
+      }
+    };
+
+    fetchExistingCustomers();
+  }, []);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setNewCustomer((prev) => ({
@@ -21,27 +35,44 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
     }));
   };
 
-  const handleAddCustomer = (event) => {
+  const handleAddCustomer = async (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:3000/api/customers", newCustomer)
-      .then((response) => {
-        setCustomers((prevCustomers) => [
-          ...prevCustomers,
-          response.data.data, // Update the customer list
-        ]);
-        setNewCustomer({
-          name: "",
-          phone: "",
-          email: "",
-          address: "",
-        }); // Reset form fields
-        // setShowAddCustomerForm(false); // Close the form
-        window.location.reload(); // This will reload the entire page
-      })
-      .catch((error) => {
-        console.error("Error adding new customer:", error);
+
+    // Check for duplicates
+    const isEmailDuplicate = existingCustomers.some(
+      (customer) => customer.email === newCustomer.email
+    );
+    const isPhoneDuplicate = existingCustomers.some(
+      (customer) => customer.phone === newCustomer.phone
+    );
+
+    if (isEmailDuplicate) {
+      setError("Email is already registered.");
+      return;
+    }
+    if (isPhoneDuplicate) {
+      setError("Phone number is already registered.");
+      return;
+    }
+
+    setError(""); // Clear any previous errors
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/customers",
+        newCustomer
+      );
+      setCustomers((prevCustomers) => [...prevCustomers, response.data.data]);
+      setNewCustomer({
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
       });
+      setShowAddCustomerForm(false); // Close the form
+    } catch (error) {
+      console.error("Error adding new customer:", error);
+    }
   };
 
   return (
@@ -96,6 +127,8 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
             required
           />
         </div>
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Display error message */}
         <button type="submit" className="save-button">
           Submit
         </button>
