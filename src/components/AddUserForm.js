@@ -61,7 +61,7 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
         &times;
       </button>
       <form onSubmit={handleAddUser}>
-        <div>
+        <div className="select-container">
           <label>Role:</label>
           <select
             name="role"

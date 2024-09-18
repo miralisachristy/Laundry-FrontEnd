@@ -55,6 +55,7 @@ td {
 th {
   background-color: #f4f4f4; /* Light background for table headers */
   font-weight: bold; /* Makes the header text bold */
+  text-align: center; /* Center text in th */
 }
 
 td img {
@@ -147,6 +148,33 @@ td img {
 
 .close-button:hover {
   background-color: #c82333;
+}
+
+.delete-button {
+  background-color: #e74c3c; /* Red color for delete action */
+  margin-left: 10px;
+  color: white; /* Text color */
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+.delete-button:active {
+  background-color: #b03a2e; /* Even darker red on click */
+  transform: scale(0.98); /* Slightly shrink button on click */
+}
+
+.delete-button:disabled {
+  background-color: #d5d8dc; /* Gray color when disabled */
+  color: #aab7b8; /* Light gray text color */
+  cursor: not-allowed; /* Change cursor to not-allowed */
 }
 
 .add-customer-box {
@@ -575,5 +603,108 @@ td img {
 }
 
 .update-customer-button:hover {
+  background-color: #0056b3;
+}
+/* Container for the select dropdown */
+.select-container {
+  margin-bottom: 15px;
+  width: 50%;
+}
+
+/* Label styling */
+.select-container label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  margin-left: 10px; /* Added left margin */
+}
+
+/* Custom style for the select dropdown */
+.select-container select {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding for better space */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background */
+  font-size: 16px; /* Font size for readability */
+  color: #333; /* Text color */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  transition: border-color 0.3s ease; /* Smooth border transition */
+  margin-left: 10px; /* Added left margin */
+}
+
+/* On focus, change border color */
+.select-container select:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Style for select option text */
+.select-container select option {
+  padding: 10px; /* Padding for better spacing */
+}
+
+/* Hover effect for the dropdown */
+.select-container select:hover {
+  background-color: #f0f0f0; /* Slightly darker background on hover */
+}
+
+/* Disabled option style */
+.select-container select option:disabled {
+  color: #888; /* Greyed-out color for disabled options */
+}
+/* Container box for updating the service */
+.update-service-box {
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  width: 50%; /* Set the width to 50% */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+  position: relative; /* Add this for positioning close button */
+}
+
+/* Style for each form field container */
+.update-service-box form div {
+  margin-bottom: 10px;
+}
+
+/* Input and select field styling */
+.update-service-box form input,
+.update-service-box form select {
+  width: 100%;
+  padding: 8px;
+  margin-left: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Label styling */
+.update-service-box form label {
+  margin-left: 10px;
+}
+
+/* Hover effect for buttons */
+.update-service-box form button:hover {
+  background-color: #0056b3;
+}
+
+/* Update button styling */
+.update-service-button {
+  padding: 8px 16px;
+  margin-left: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Hover effect for update button */
+.update-service-button:hover {
   background-color: #0056b3;
 }

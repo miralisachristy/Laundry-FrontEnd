@@ -133,7 +133,7 @@ const UsersTablePage = () => {
             Add User
           </button>
           {selectedIds.length > 0 && (
-            <button className="add-button" onClick={handleDeleteSelected}>
+            <button className="delete-button" onClick={handleDeleteSelected}>
               Delete
             </button>
           )}
@@ -142,6 +142,13 @@ const UsersTablePage = () => {
           <AddUserForm
             setShowAddUserForm={setShowAddUserForm}
             onAddUser={handleAddUser}
+          />
+        )}
+        {showUpdateUserForm && (
+          <UpdateUserForm
+            setShowUpdateUserForm={setShowUpdateUserForm}
+            user={selectedUser}
+            onUpdate={handleUpdate}
           />
         )}
         <table>
@@ -219,13 +226,6 @@ const UsersTablePage = () => {
             )}
           </tbody>
         </table>
-        {showUpdateUserForm && (
-          <UpdateUserForm
-            setShowUpdateUserForm={setShowUpdateUserForm}
-            user={selectedUser}
-            onUpdate={handleUpdate}
-          />
-        )}
       </div>
     </div>
   );

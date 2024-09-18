@@ -116,7 +116,7 @@ const CustomerTablePage = () => {
             Add Customer
           </button>
           {selectedIds.length > 0 && (
-            <button className="add-button" onClick={handleDeleteSelected}>
+            <button className="delete-button" onClick={handleDeleteSelected}>
               Delete
             </button>
           )}

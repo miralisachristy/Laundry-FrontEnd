@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navigation from "../components/Navigation"; // Adjust this path if needed
-import "../styles/csspages.css"; // Import the global CSS file
-import AddServiceForm from "../components/AddServiceForm"; // Import the AddServiceForm component
+import Navigation from "../components/Navigation";
+import AddServiceForm from "../components/AddServiceForm";
+import "../styles/csspages.css";
 
 const ServiceTablePage = () => {
   const [services, setServices] = useState([]);
@@ -10,7 +10,9 @@ const ServiceTablePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [showAddServiceForm, setShowAddServiceForm] = useState(false);
+  const [showEditServiceForm, setShowEditServiceForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedServices, setSelectedServices] = useState([]);
 
   // Function to sort and group services
   const sortAndGroupServices = (services) => {
@@ -104,6 +106,28 @@ const ServiceTablePage = () => {
     e.target.src = "/images/logo.png"; // Default image path
   };
 
+  const handleSelectService = (serviceId) => {
+    setSelectedServices((prevSelectedServices) =>
+      prevSelectedServices.includes(serviceId)
+        ? prevSelectedServices.filter((id) => id !== serviceId)
+        : [...prevSelectedServices, serviceId]
+    );
+  };
+
+  const handleDeleteSelected = () => {
+    // Remove selected services
+    const updatedServices = services.filter(
+      (service) => !selectedServices.includes(service.id_service)
+    );
+    setServices(updatedServices);
+    setFilteredServices(
+      filterByCategory(updatedServices, selectedCategory).filter((service) =>
+        service.service_name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+    setSelectedServices([]);
+  };
+
   return (
     <div className="container">
       <Navigation />
@@ -153,12 +177,25 @@ const ServiceTablePage = () => {
           >
             Add Service
           </button>
+          <button
+            className={`add-button ${
+              selectedServices.length > 0 ? "active" : ""
+            }`}
+            onClick={() => setShowEditServiceForm(!showEditServiceForm)}
+          >
+            {showEditServiceForm ? "Hide" : "Edit"}
+          </button>
+          {showEditServiceForm && selectedServices.length > 0 && (
+            <button className="delete-button" onClick={handleDeleteSelected}>
+              Delete Selected
+            </button>
+          )}
         </div>
 
         {showAddServiceForm && (
           <AddServiceForm
             onClose={() => setShowAddServiceForm(false)}
-            onAdd={handleOnAddFinished} // Pass the handler here
+            onAdd={handleOnAddFinished}
           />
         )}
 
@@ -167,6 +204,14 @@ const ServiceTablePage = () => {
             filteredServices.map((service) => (
               <li key={service.id_service}>
                 <div className="service-box">
+                  {showEditServiceForm && (
+                    <input
+                      type="checkbox"
+                      checked={selectedServices.includes(service.id_service)}
+                      onChange={() => handleSelectService(service.id_service)}
+                      className="select-checkbox"
+                    />
+                  )}
                   <div className="service-icon">
                     <img
                       src={`http://localhost:3000/upload/services/${service.image}`} // Ensure this path is correct

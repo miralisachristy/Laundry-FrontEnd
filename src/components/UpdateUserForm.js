@@ -61,6 +61,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
             name="role"
             value={updatedUser.role}
             onChange={handleInputChange}
+            disabled
             required
           />
         </div>
