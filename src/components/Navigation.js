@@ -4,7 +4,6 @@ import "./Navigation.css";
 
 const Navigation = () => {
   const [outletName, setOutletName] = useState("...");
-  const [error, setError] = useState(null);
   const [role, setRole] = useState(null); // To store user role
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
@@ -12,11 +11,7 @@ const Navigation = () => {
   useEffect(() => {
     // Get the outlet name from localStorage
     const storedOutletName = localStorage.getItem("outlet");
-    if (storedOutletName) {
-      setOutletName(storedOutletName);
-    } else {
-      setOutletName("Outlet not set"); // Default value if no outlet name is found
-    }
+    setOutletName(storedOutletName || "Outlet not set");
 
     // Fetch the user role from localStorage
     const userRole = localStorage.getItem("role");
@@ -32,7 +27,7 @@ const Navigation = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">{error ? error : outletName}</div>
+      <div className="navbar-brand">{outletName}</div>
       <ul className="navbar-menu">
         {role && (
           <li>
@@ -71,6 +66,16 @@ const Navigation = () => {
             </li>
             <li>
               <Link
+                to="/customer-table"
+                className={
+                  location.pathname === "/customer-table" ? "active" : ""
+                }
+              >
+                Customer
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/service-table"
                 className={
                   location.pathname === "/service-table" ? "active" : ""
@@ -81,20 +86,20 @@ const Navigation = () => {
             </li>
             <li>
               <Link
-                to="/order-table"
-                className={location.pathname === "/order-table" ? "active" : ""}
+                to="/inventory-table"
+                className={
+                  location.pathname === "/inventory-table" ? "active" : ""
+                }
               >
-                Order
+                Inventory
               </Link>
             </li>
             <li>
               <Link
-                to="/customer-table"
-                className={
-                  location.pathname === "/customer-table" ? "active" : ""
-                }
+                to="/order-table"
+                className={location.pathname === "/order-table" ? "active" : ""}
               >
-                Customer
+                Order
               </Link>
             </li>
           </>
@@ -104,6 +109,16 @@ const Navigation = () => {
           <>
             <li>
               <Link
+                to="/inventory-table"
+                className={
+                  location.pathname === "/inventory-table" ? "active" : ""
+                }
+              >
+                Inventory
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/service-table"
                 className={
                   location.pathname === "/service-table" ? "active" : ""
@@ -118,16 +133,6 @@ const Navigation = () => {
                 className={location.pathname === "/order-table" ? "active" : ""}
               >
                 Order
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/customer-table"
-                className={
-                  location.pathname === "/customer-table" ? "active" : ""
-                }
-              >
-                Customer
               </Link>
             </li>
           </>
@@ -143,6 +148,16 @@ const Navigation = () => {
                 }
               >
                 New Transaction
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/customer-table"
+                className={
+                  location.pathname === "/customer-table" ? "active" : ""
+                }
+              >
+                Customer
               </Link>
             </li>
             <li>

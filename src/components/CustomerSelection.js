@@ -14,8 +14,14 @@ const CustomerSelection = ({ onSelectCustomer }) => {
       try {
         const response = await axios.get("http://localhost:3000/api/customers");
         const customerData = response.data.data;
-        setCustomers(customerData);
-        setFilteredCustomers(customerData);
+
+        // Sort customers alphabetically by name A-Z
+        const sortedCustomers = customerData.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+
+        setCustomers(sortedCustomers);
+        setFilteredCustomers(sortedCustomers);
       } catch (error) {
         console.error("Error fetching customers:", error);
       }
@@ -38,11 +44,15 @@ const CustomerSelection = ({ onSelectCustomer }) => {
     const searchValue = e.target.value.toLowerCase();
     setSearchTerm(searchValue);
 
-    const filtered = customers.filter(
-      (customer) =>
-        customer.name.toLowerCase().includes(searchValue) ||
-        customer.phone.toLowerCase().includes(searchValue)
-    );
+    // Filter and sort customers based on the search input
+    const filtered = customers
+      .filter(
+        (customer) =>
+          customer.name.toLowerCase().includes(searchValue) ||
+          customer.phone.toLowerCase().includes(searchValue)
+      )
+      .sort((a, b) => a.name.localeCompare(b.name)); // Ensure filtered results are also sorted
+
     setFilteredCustomers(filtered);
     setIsDropdownOpen(true);
   };

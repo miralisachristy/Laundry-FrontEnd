@@ -3,7 +3,9 @@ import axios from "axios";
 import CustomerSelection from "../components/CustomerSelection";
 import ServiceSelection from "../components/ServiceSelection";
 import "./LaundryOrderPage.css";
+import AddCustomerForm from "../components/AddCustomerForm";
 import { formatDate } from "../utils/dateHelper";
+import Navigation from "../components/Navigation";
 
 const LaundryOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -22,6 +24,8 @@ const LaundryOrderPage = () => {
   const [errors, setErrors] = useState({});
   const [quotaDailyHistoryState, setQuotaDailyHistoryState] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [showAddCustomerForm, setShowAddCustomerForm] = useState(false);
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     // Fetch quota data
@@ -123,6 +127,7 @@ const LaundryOrderPage = () => {
     if (quotaUsed > 0 && Object.keys(errors).length === 0) {
       let availableDate = null;
 
+      // Loop through quotaDailyHistoryState to find a date with enough remaining quota
       for (let history of quotaDailyHistoryState) {
         if (history.remaining >= quotaUsed) {
           availableDate = history.date;
@@ -132,19 +137,21 @@ const LaundryOrderPage = () => {
 
       // If no available date, create a new entry for the next date
       if (!availableDate) {
-        const nextDate = getNextDate(quotaDailyHistoryState);
+        const nextDate = getNextDate(quotaDailyHistoryState); // Mendapatkan tanggal berikutnya
         const newHistory = {
           date: nextDate,
           used: 0,
-          remaining: quota.max_quota,
+          remaining: quota.max_quota, // Set remaining to max_quota
         };
+
+        // Update state quotaDailyHistoryState dengan tanggal baru
         setQuotaDailyHistoryState((prevState) => [...prevState, newHistory]);
-        availableDate = nextDate;
+        availableDate = nextDate; // Set availableDate ke tanggal baru yang dibuat
       }
 
-      setSelectedDate(availableDate);
+      setSelectedDate(availableDate); // Simpan tanggal yang dipilih atau dibuat
     } else {
-      setSelectedDate(null); // Clear selectedDate if errors exist
+      setSelectedDate(null); // Clear selectedDate jika ada error
     }
   }, [quotaUsed, quotaDailyHistoryState, errors]);
 
@@ -178,6 +185,7 @@ const LaundryOrderPage = () => {
       // Menghitung sisa kuota dari orderDetails yang sudah ada
       let remainingQuota = quota.max_quota;
 
+      // Loop untuk mengurangi sisa kuota berdasarkan layanan yang sudah ada
       orderDetails.forEach((detail) => {
         let serviceQuotaUsed = 0;
         if (detail.service_type === "Kiloan") {
@@ -195,10 +203,19 @@ const LaundryOrderPage = () => {
       } else if (selectedService.service_type === "Satuan") {
         newQuotaUsed = quantity / quota.qty_satuan_per_quota;
       }
-      newQuotaUsed = Math.ceil(newQuotaUsed);
+      newQuotaUsed = Math.ceil(newQuotaUsed); // Pembulatan ke atas
 
-      if (remainingQuota >= newQuotaUsed) {
-        // Update quotaDailyHistoryState untuk tanggal yang dipilih
+      // Cek apakah kuota pada tanggal yang dipilih mencukupi
+      let availableDate = selectedDate;
+      let historyForSelectedDate = quotaDailyHistoryState.find(
+        (history) => history.date === selectedDate
+      );
+
+      if (
+        historyForSelectedDate &&
+        historyForSelectedDate.remaining >= newQuotaUsed
+      ) {
+        // Update kuota pada tanggal yang sudah ada
         const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
           if (history.date === selectedDate) {
             return {
@@ -209,39 +226,69 @@ const LaundryOrderPage = () => {
           return history;
         });
 
-        setQuotaDailyHistoryState(updatedQuotaHistory); // Update state dengan history baru
-
-        // Hitung estimasi tanggal selesai berdasarkan processing_time (dalam jam)
-        const selectedDateObj = new Date(selectedDate);
-        const estimatedCompletionDate = new Date(
-          selectedDateObj.getTime() +
-            selectedService.processing_time * 60 * 60 * 1000
-        );
-
-        const formattedCompletionDate = estimatedCompletionDate
-          .toISOString()
-          .split("T")[0];
-
-        const newOrderDetail = {
-          ...selectedService,
-          quantity: parseInt(quantity, 10),
-          total: selectedService.price * parseInt(quantity, 10),
-          description: description,
-          date: selectedDate, // Simpan tanggal yang dipilih
-          estimatedCompletionDate: formattedCompletionDate, // Tambahkan estimasi tanggal selesai
-        };
-
-        setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
-
-        // Reset form untuk layanan berikutnya
-        setSelectedService(null);
-        setQuantity("");
-        setDescription("");
-        setShowServiceSelection(true); // Kembali ke pemilihan layanan
+        setQuotaDailyHistoryState(updatedQuotaHistory); // Update state dengan data kuota yang diperbarui
       } else {
-        // Jika kuota tidak mencukupi, peringatkan pengguna
-        alert("Kuota tidak mencukupi untuk layanan yang dipilih.");
+        // Jika tidak ada kuota yang mencukupi, buat entri untuk tanggal berikutnya
+        if (
+          !availableDate ||
+          !historyForSelectedDate ||
+          historyForSelectedDate.remaining < newQuotaUsed
+        ) {
+          const nextDate = getNextDate(quotaDailyHistoryState); // Mendapatkan tanggal berikutnya
+          const newHistory = {
+            date: nextDate,
+            used: 0,
+            remaining: quota.max_quota,
+          };
+
+          setQuotaDailyHistoryState((prevState) => [...prevState, newHistory]);
+          availableDate = nextDate;
+        }
+
+        // Set remaining untuk kuota baru yang digunakan
+        const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
+          if (history.date === availableDate) {
+            return {
+              ...history,
+              remaining: history.remaining - newQuotaUsed,
+            };
+          }
+          return history;
+        });
+
+        setQuotaDailyHistoryState(updatedQuotaHistory); // Update dengan entri baru
       }
+
+      // Hitung estimasi tanggal selesai berdasarkan processing_time (dalam jam)
+      const selectedDateObj = new Date(availableDate);
+      const estimatedCompletionDate = new Date(
+        selectedDateObj.getTime() +
+          selectedService.processing_time * 60 * 60 * 1000
+      );
+      const formattedCompletionDate = estimatedCompletionDate
+        .toISOString()
+        .split("T")[0];
+
+      // Tambahkan layanan baru ke orderDetails
+      const newOrderDetail = {
+        ...selectedService,
+        quantity: parseInt(quantity, 10),
+        total: selectedService.price * parseInt(quantity, 10),
+        description: description,
+        date: availableDate, // Simpan tanggal yang dipilih atau yang baru dibuat
+        estimatedCompletionDate: formattedCompletionDate, // Tambahkan estimasi tanggal selesai
+      };
+
+      setOrderDetails((prevDetails) => [...prevDetails, newOrderDetail]);
+
+      // Reset form untuk layanan berikutnya
+      setSelectedService(null);
+      setQuantity("");
+      setDescription("");
+      setShowServiceSelection(true); // Kembali ke pemilihan layanan
+    } else {
+      // Jika kuota tidak mencukupi, peringatkan pengguna
+      alert("Kuota tidak mencukupi untuk layanan yang dipilih.");
     }
   };
 
@@ -254,12 +301,58 @@ const LaundryOrderPage = () => {
     return !quantity || Object.keys(errors).length > 0;
   };
 
+  const handleDeleteService = (index) => {
+    const deletedService = orderDetails[index];
+
+    // Restore the quota used by the deleted service
+    let deletedQuotaUsed = 0;
+    if (deletedService.service_type === "Kiloan") {
+      deletedQuotaUsed = deletedService.quantity / quota.qty_kiloan_per_quota;
+    } else if (deletedService.service_type === "Satuan") {
+      deletedQuotaUsed = deletedService.quantity / quota.qty_satuan_per_quota;
+    }
+    deletedQuotaUsed = Math.ceil(deletedQuotaUsed);
+
+    // Update quotaDailyHistoryState for the date the service was assigned
+    const updatedQuotaHistory = quotaDailyHistoryState.map((history) => {
+      if (history.date === deletedService.date) {
+        return {
+          ...history,
+          remaining: history.remaining + deletedQuotaUsed,
+        };
+      }
+      return history;
+    });
+
+    // Remove the service from the orderDetails array
+    const updatedOrderDetails = orderDetails.filter(
+      (detail, idx) => idx !== index
+    );
+
+    // Update state
+    setOrderDetails(updatedOrderDetails);
+    setQuotaDailyHistoryState(updatedQuotaHistory);
+  };
+
   return (
     <div className="laundry-order-page">
+      <Navigation />
       <div className="section customer-selection">
         {!selectedCustomer && showCustomerSelection && (
-          <CustomerSelection onSelectCustomer={handleSelectCustomer} />
+          <>
+            <CustomerSelection onSelectCustomer={handleSelectCustomer} />
+            <div>
+              <p>---- OR ----</p>
+              <button
+                className="add-button"
+                onClick={() => setShowAddCustomerForm(true)}
+              >
+                Add Customer
+              </button>
+            </div>
+          </>
         )}
+
         {selectedCustomer && (
           <div className="customer-detail">
             <h3 style={{ marginLeft: "10px" }}>Selected Customer</h3>
@@ -274,6 +367,12 @@ const LaundryOrderPage = () => {
           </div>
         )}
       </div>
+      {showAddCustomerForm && (
+        <AddCustomerForm
+          setShowAddCustomerForm={setShowAddCustomerForm}
+          setCustomers={setCustomers} // Pass setCustomers here
+        />
+      )}
 
       <div className="section service-selection">
         {showServiceSelection && !selectedService && (
@@ -282,6 +381,22 @@ const LaundryOrderPage = () => {
         {selectedService && (
           <div className="service-detail">
             <h3 style={{ marginLeft: "10px" }}>Add Service</h3>
+            {/* Tambahkan informasi tentang Quota yang tersisa */}
+            {selectedDate && (
+              <p>Date for Quota Usage: {formatDate(selectedDate)}</p>
+            )}
+            {selectedDate && (
+              <p>
+                Available Quota:{" "}
+                {
+                  quotaDailyHistoryState.find(
+                    (history) => history.date === selectedDate
+                  )?.remaining
+                }{" "}
+                / {quota.max_quota}
+              </p>
+            )}
+
             <p>Service: {selectedService.service_name}</p>
             <p>Price: {selectedService.price}</p>
             <input
@@ -312,9 +427,6 @@ const LaundryOrderPage = () => {
             />
             <br />
             <p>Quota Used: {quotaUsed}</p>
-            {selectedDate && (
-              <p>Date for Quota Usage: {formatDate(selectedDate)}</p>
-            )}
 
             <button
               onClick={handleConfirmService}
@@ -348,6 +460,7 @@ const LaundryOrderPage = () => {
                 <th>Total</th>
                 <th>Description</th>
                 <th>Date Quota</th>
+                <th>Actions</th> {/* Add Actions column */}
               </tr>
             </thead>
             <tbody>
@@ -365,6 +478,14 @@ const LaundryOrderPage = () => {
                     {detail.estimatedCompletionDate
                       ? formatDate(detail.estimatedCompletionDate)
                       : ""}
+                  </td>
+                  <td>
+                    <button
+                      className="delete-service-button"
+                      onClick={() => handleDeleteService(index)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

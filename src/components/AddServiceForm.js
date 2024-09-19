@@ -80,6 +80,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             id="service_name"
             type="text"
             name="service_name"
+            placeholder="service name - processing time"
             value={newService.service_name}
             onChange={handleInputChange}
             required

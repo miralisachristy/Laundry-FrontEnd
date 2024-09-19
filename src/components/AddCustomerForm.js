@@ -84,6 +84,7 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
         address: "",
       });
       setShowAddCustomerForm(false); // Close the form
+      window.location.reload(); // This will reload the entire page
     } catch (error) {
       console.error("Error adding new customer:", error);
     }

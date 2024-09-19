@@ -12,7 +12,9 @@ import UserTablePage from "./pages/UsersTablePage"; // Ensure this path is corre
 import OrderTablePage from "./pages/TransactionsTablePage"; // Ensure this path is correct
 import ServiceTablePage from "./pages/ServiceTablePage"; // Ensure this path is correct
 import LaundryOrderPage from "./pages/LaundryOrderPage.js";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.js";
 import TransactionDetailPage from "./pages/TransactionDetailPage.js";
+import InventoryTablePage from "./pages/InventoryTablePage.js";
 
 const App = () => {
   return (
@@ -20,6 +22,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         {/* Protected Dashboard Routes */}
         <Route
           path="/dashboard/superadmin"
@@ -48,6 +51,7 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/laundry-order" element={<LaundryOrderPage />} />
         <Route path="/customer-table" element={<CustomerTablePage />} />
+        <Route path="/inventory-table" element={<InventoryTablePage />} />
         <Route path="/outlet-table" element={<OutletTablePage />} />
         <Route path="/users-table" element={<UserTablePage />} />
         <Route path="/order-table" element={<OrderTablePage />} />
