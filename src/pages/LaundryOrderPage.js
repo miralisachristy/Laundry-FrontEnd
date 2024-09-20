@@ -6,6 +6,7 @@ import "./LaundryOrderPage.css";
 import AddCustomerForm from "../components/AddCustomerForm";
 import { formatDate } from "../utils/dateHelper";
 import Navigation from "../components/Navigation";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const LaundryOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -26,6 +27,11 @@ const LaundryOrderPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [showAddCustomerForm, setShowAddCustomerForm] = useState(false);
   const [customers, setCustomers] = useState([]);
+  const [discount, setDiscount] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
+
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     // Fetch quota data
@@ -162,6 +168,26 @@ const LaundryOrderPage = () => {
     return nextDate.toISOString().split("T")[0];
   };
 
+  const handleDiscountChange = (e) => {
+    setDiscount(e.target.value);
+  };
+
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
+  const handlePaymentStatusChange = (e) => {
+    setPaymentStatus(e.target.value);
+  };
+
+  const calculateTotalAfterDiscount = () => {
+    const totalBeforeDiscount = orderDetails.reduce(
+      (sum, detail) => sum + detail.total,
+      0
+    );
+    return totalBeforeDiscount - (totalBeforeDiscount * discount) / 100;
+  };
+
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
     setShowCustomerSelection(false);
@@ -178,6 +204,14 @@ const LaundryOrderPage = () => {
   const handleChangeCustomer = () => {
     setSelectedCustomer(null);
     setShowCustomerSelection(true);
+  };
+
+  const calculateDiscountAmount = () => {
+    const totalBeforeDiscount = orderDetails.reduce(
+      (sum, detail) => sum + detail.total,
+      0
+    );
+    return (totalBeforeDiscount * discount) / 100;
   };
 
   const handleConfirmService = () => {
@@ -334,6 +368,23 @@ const LaundryOrderPage = () => {
     setQuotaDailyHistoryState(updatedQuotaHistory);
   };
 
+  const handleContinue = () => {
+    // Navigate to TransactionDetailPage
+    navigate("/transaction-detail");
+  };
+
+  const isButtonDisabled = () => {
+    return (
+      discount > 100 ||
+      discount < 0 ||
+      paymentStatus === "Belum Lunas" ||
+      !selectedCustomer ||
+      !selectedService ||
+      quantity === "" ||
+      Object.keys(errors).length > 0
+    );
+  };
+
   return (
     <div className="laundry-order-page">
       <Navigation />
@@ -342,7 +393,7 @@ const LaundryOrderPage = () => {
           <>
             <CustomerSelection onSelectCustomer={handleSelectCustomer} />
             <div>
-              <p>---- OR ----</p>
+              <h3 style={{ fontWeight: "normal" }}>------- OR --------</h3>
               <button
                 className="add-button"
                 onClick={() => setShowAddCustomerForm(true)}
@@ -452,45 +503,101 @@ const LaundryOrderPage = () => {
               <p>Phone: {selectedCustomer.phone}</p>
             </div>
           )}
-          <table>
-            <thead>
-              <tr>
-                <th>Service</th>
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Description</th>
-                <th>Date Quota</th>
-                <th>Actions</th> {/* Add Actions column */}
-              </tr>
-            </thead>
-            <tbody>
-              {orderDetails.map((detail, index) => (
-                <tr key={index}>
-                  <td>{detail.service_name}</td>
-                  <td>
-                    {detail.quantity}{" "}
-                    {detail.service_type === "Kiloan" ? "kg" : "pcs"}
-                  </td>
-                  <td>{detail.total}</td>
-                  <td>{detail.description}</td>
-                  <td>
-                    {detail.date ? formatDate(detail.date) : ""} <br />
-                    {detail.estimatedCompletionDate
-                      ? formatDate(detail.estimatedCompletionDate)
-                      : ""}
-                  </td>
-                  <td>
-                    <button
-                      className="delete-service-button"
-                      onClick={() => handleDeleteService(index)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="order-summary-customer">
+            <table>
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Description</th>
+                  <th>Date Quota</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orderDetails.map((detail, index) => (
+                  <tr key={index}>
+                    <td>{detail.service_name}</td>
+                    <td>
+                      {detail.quantity}{" "}
+                      {detail.service_type === "Kiloan" ? "kg" : "pcs"}
+                    </td>
+                    <td>{detail.total}</td>
+                    <td>{detail.description}</td>
+                    <td>
+                      {detail.date ? formatDate(detail.date) : ""} <br />
+                      {detail.estimatedCompletionDate
+                        ? formatDate(detail.estimatedCompletionDate)
+                        : ""}
+                    </td>
+                    <td>
+                      <button
+                        className="delete-service-button"
+                        onClick={() => handleDeleteService(index)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Add discount input */}
+            <div className="discount-section">
+              <h3>Discount</h3>
+              <p>
+                <input
+                  type="number"
+                  value={discount}
+                  onChange={handleDiscountChange}
+                  placeholder="Enter discount (%)"
+                  min="0"
+                  max="100"
+                />{" "}
+                %
+              </p>
+              <p>Discount Amount: Rp {calculateDiscountAmount()}</p>
+              <h3>Total after discount: {calculateTotalAfterDiscount()}</h3>
+            </div>
+          </div>
+
+          <div className="order-summary-customer">
+            {/* Add payment method selection */}
+            <div className="payment-method-section">
+              <h3>Payment Method</h3>
+              <select
+                value={paymentMethod}
+                onChange={handlePaymentMethodChange}
+              >
+                <option value="">Select payment method</option>
+                <option value="Tunai">Tunai</option>
+                <option value="QRIS">QRIS</option>
+                <option value="Transfer">Transfer</option>
+              </select>
+            </div>
+
+            {/* Add payment status selection */}
+            <div className="payment-status-section">
+              <h3>Payment Status</h3>
+              <select
+                value={paymentStatus}
+                onChange={handlePaymentStatusChange}
+              >
+                <option value="">Select payment status</option>
+                <option value="Lunas">Lunas</option>
+                <option value="Belum Lunas">Belum Lunas</option>
+              </select>
+            </div>
+            <button
+              className="continue-button"
+              onClick={handleContinue}
+              disabled={isButtonDisabled()}
+            >
+              Continue
+            </button>
+          </div>
         </div>
       )}
     </div>
