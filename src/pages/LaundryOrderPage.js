@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 const LaundryOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
+  const [detail, setDetail] = useState([]);
+  const [index, setIndex] = useState(0);
   const [quantity, setQuantity] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
   const [description, setDescription] = useState("");
@@ -369,19 +371,38 @@ const LaundryOrderPage = () => {
   };
 
   const handleContinue = () => {
-    // Navigate to TransactionDetailPage
-    navigate("/transaction-detail");
+    console.log("Continue button clicked!");
+
+    // Calculate the discount amount and total after discount
+    const discountAmount = calculateDiscountAmount();
+    const totalAfterDiscount = calculateTotalAfterDiscount();
+
+    // Navigate to the TransactionDetailPage while passing the required data
+    navigate("/transaction-detail", {
+      state: {
+        selectedCustomer,
+        orderDetails,
+        index,
+        discountAmount, // Use calculated discount amount
+        totalAfterDiscount, // Use calculated total after discount
+        paymentMethod,
+        paymentStatus,
+      },
+    });
+    console.log("napa tu index :  ", index);
   };
 
   const isButtonDisabled = () => {
     return (
       discount > 100 ||
       discount < 0 ||
-      paymentStatus === "Belum Lunas" ||
+      paymentStatus === "Belum Lunas" || // Ensure correct case
       !selectedCustomer ||
+      Object.keys(selectedCustomer).length === 0 || // Check for empty object
       !selectedService ||
-      quantity === "" ||
-      Object.keys(errors).length > 0
+      Object.keys(selectedService).length === 0 || // Check for empty object
+      quantity === "" || // Ensure this is appropriate for how you handle quantity
+      Object.keys(errors).length > 0 // Ensure errors object is handled properly
     );
   };
 
@@ -593,7 +614,7 @@ const LaundryOrderPage = () => {
             <button
               className="continue-button"
               onClick={handleContinue}
-              disabled={isButtonDisabled()}
+              // disabled={isButtonDisabled()}
             >
               Continue
             </button>

@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-// const { orderDetails, selectedCustomer, selectedService } =
-//   location.state || {};
+import { useLocation, useNavigate } from "react-router-dom";
 import "./TransactionDetailPage.css"; // Ensure you have appropriate styling
 
 const TransactionDetailPage = () => {
   const location = useLocation();
-  const { orderDetails = [], selectedCustomer = {} } = location.state || {};
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [status, setStatus] = useState("Not paid");
+  const navigate = useNavigate(); // Add navigation to handle redirection after confirmation
+
+  const {
+    selectedCustomer = {},
+    orderDetails = [], // Renamed from 'detail' to 'orderDetails' for clarity
+    discountAmount = 0,
+    totalAfterDiscount = 0, // Use the passed value from state
+    paymentMethod: initialPaymentMethod = "",
+    paymentStatus: initialPaymentStatus = "Not paid",
+  } = location.state || {};
+
+  const [paymentMethod, setPaymentMethod] = useState(initialPaymentMethod);
+  const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
+  const [status, setStatus] = useState(initialPaymentStatus);
 
   const generateInvoiceCode = () => {
     const now = new Date();
@@ -22,7 +31,22 @@ const TransactionDetailPage = () => {
   };
 
   const handleStatusChange = (e) => {
-    setStatus(e.target.value);
+    setPaymentStatus(e.target.value);
+  };
+
+  const handleConfirmOrder = () => {
+    // Logic for confirming order (e.g., saving to backend, navigating to another page)
+    console.log("Order Confirmed");
+    navigate("/order-confirmation", {
+      state: {
+        invoiceCode: generateInvoiceCode(),
+        paymentMethod,
+        status,
+        selectedCustomer,
+        orderDetails,
+        totalAfterDiscount,
+      },
+    });
   };
 
   return (
@@ -46,9 +70,9 @@ const TransactionDetailPage = () => {
           <h3>Order Summary</h3>
           <ul>
             {orderDetails.length > 0 ? (
-              orderDetails.map((item, index) => (
-                <li key={index}>
-                  {item.service_name} - {item.quantity} {item.unit} x{" "}
+              orderDetails.map((item, idx) => (
+                <li key={idx}>
+                  {item.service_name} - {item.quantity} {item.unit || "pcs"} x{" "}
                   {item.price} = {item.total}
                 </li>
               ))
@@ -57,30 +81,28 @@ const TransactionDetailPage = () => {
             )}
           </ul>
           <h4>
-            Total Amount:{" "}
+            Total Before Discount: Rp{" "}
             {orderDetails.reduce((sum, item) => sum + item.total, 0)}
           </h4>
+          <h4>Discount: Rp {discountAmount}</h4>
+          <h4>Total After Discount: Rp {totalAfterDiscount}</h4>
         </div>
 
         <div className="payment-method">
-          <h3>Payment Method</h3>
-          <select value={paymentMethod} onChange={handlePaymentMethodChange}>
-            <option value="">Select Payment Method</option>
-            <option value="Cash">Cash</option>
-            <option value="Transfer">Transfer</option>
-            <option value="QRIS">QRIS</option>
-          </select>
+          <h3>Payment Method: {paymentMethod}</h3>
         </div>
 
         <div className="order-status">
-          <h3>Order Status</h3>
-          <select value={status} onChange={handleStatusChange}>
-            <option value="Paid">Paid</option>
-            <option value="Not paid">Not paid</option>
-          </select>
+          <h3>Payment Status : {paymentStatus}</h3>
         </div>
 
-        <button className="confirm-order-button">Confirm Order</button>
+        <button
+          className="confirm-order-button"
+          onClick={handleConfirmOrder}
+          disabled={!paymentMethod || status === "Not paid"}
+        >
+          Confirm Order
+        </button>
       </div>
     </div>
   );

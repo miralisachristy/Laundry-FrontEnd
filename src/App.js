@@ -23,6 +23,7 @@ const App = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
         {/* Protected Dashboard Routes */}
         <Route
           path="/dashboard/superadmin"
