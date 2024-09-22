@@ -23,7 +23,7 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
       <div>
         <h2>Transaction Details</h2>
         <p>
-          <strong>Transaction Code:</strong> {transaction.transaction_code}
+          <strong>Invoice Code:</strong> {transaction.invoice_code}
         </p>
         <p>
           <strong>Outlet Name:</strong> {transaction.outlet_name}
@@ -32,34 +32,28 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
           <strong>User Name:</strong> {transaction.user_name}
         </p>
         <p>
-          <strong>Customer Name:</strong> {transaction.customer_name}
+          <strong>Customer Name:</strong>{" "}
+          {transaction.selectedCustomer?.name || "N/A"}
         </p>
         <p>
-          <strong>Customer Phone:</strong> {transaction.customer_phone}
+          <strong>Customer Phone:</strong>{" "}
+          {transaction.selectedCustomer?.phone || "N/A"}
         </p>
         <p>
-          <strong>Customer Address:</strong> {transaction.customer_address}
+          <strong>Total Amount:</strong> Rp {transaction.totalAfterDiscount}
         </p>
         <p>
-          <strong>Total Amount:</strong> {transaction.total_amount}
+          <strong>Discount:</strong> Rp {transaction.discountAmount}
         </p>
         <p>
-          <strong>Discount:</strong> {transaction.discount}
+          <strong>Payment Status:</strong> {transaction.paymentStatus}
         </p>
         <p>
-          <strong>Payment Amount:</strong> {transaction.payment_amount}
+          <strong>Payment Method:</strong> {transaction.paymentMethod}
         </p>
         <p>
-          <strong>Payment Status:</strong> {transaction.payment_status}
-        </p>
-        <p>
-          <strong>Payment Method:</strong> {transaction.payment_method}
-        </p>
-        <p>
-          <strong>Remarks:</strong> {transaction.detail_remarks}
-        </p>
-        <p>
-          <strong>Status:</strong> {transaction.transaction_status}
+          <strong>Order Details:</strong>{" "}
+          {JSON.stringify(transaction.orderDetails) || "N/A"}
         </p>
       </div>
     </Modal>

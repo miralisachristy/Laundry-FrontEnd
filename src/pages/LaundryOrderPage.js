@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 const LaundryOrderPage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
-  const [detail, setDetail] = useState([]);
+  // const [detail, setDetail] = useState([]);
   const [index, setIndex] = useState(0);
   const [quantity, setQuantity] = useState("");
   const [orderDetails, setOrderDetails] = useState([]);
@@ -585,32 +585,6 @@ const LaundryOrderPage = () => {
           </div>
 
           <div className="order-summary-customer">
-            {/* Add payment method selection */}
-            <div className="payment-method-section">
-              <h3>Payment Method</h3>
-              <select
-                value={paymentMethod}
-                onChange={handlePaymentMethodChange}
-              >
-                <option value="">Select payment method</option>
-                <option value="Tunai">Tunai</option>
-                <option value="QRIS">QRIS</option>
-                <option value="Transfer">Transfer</option>
-              </select>
-            </div>
-
-            {/* Add payment status selection */}
-            <div className="payment-status-section">
-              <h3>Payment Status</h3>
-              <select
-                value={paymentStatus}
-                onChange={handlePaymentStatusChange}
-              >
-                <option value="">Select payment status</option>
-                <option value="Lunas">Lunas</option>
-                <option value="Belum Lunas">Belum Lunas</option>
-              </select>
-            </div>
             <button
               className="continue-button"
               onClick={handleContinue}
