@@ -20,7 +20,7 @@ const InventoryTablePage = () => {
       const inventoryData = response.data.data;
       if (Array.isArray(inventoryData)) {
         const sortedInventory = inventoryData.sort((a, b) =>
-          a.name.localeCompare(b.name)
+          a.item_name.localeCompare(b.item_name)
         );
         setInventory(sortedInventory);
       } else {
@@ -37,7 +37,7 @@ const InventoryTablePage = () => {
   };
 
   const filteredInventory = inventory.filter((item) =>
-    [item.name, item.category, item.supplier].some(
+    [item.item_name, item.item_type, item.supplier_name].some(
       (field) => field && field.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
@@ -52,7 +52,7 @@ const InventoryTablePage = () => {
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
-      setSelectedIds(filteredInventory.map((item) => item.id_inventory));
+      setSelectedIds(filteredInventory.map((item) => item.id));
     } else {
       setSelectedIds([]);
     }
@@ -81,7 +81,7 @@ const InventoryTablePage = () => {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by name, category, supplier"
+            placeholder="Search by name, type, supplier"
             value={searchTerm}
             onChange={handleSearchChange}
           />
@@ -101,40 +101,40 @@ const InventoryTablePage = () => {
                   onChange={handleSelectAll}
                 />
               </th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Supplier</th>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>Item Type</th>
+              <th>Supplier Name</th>
               <th>Quantity</th>
-              <th>Price</th>
-              <th>Created At</th>
+              <th>Updated At</th>
             </tr>
           </thead>
           <tbody>
             {filteredInventory.length > 0 ? (
               filteredInventory.map((item) => (
-                <tr key={item.id_inventory}>
+                <tr key={item.id}>
                   <td>
                     <input
                       type="checkbox"
-                      checked={selectedIds.includes(item.id_inventory)}
-                      onChange={() => handleSelectItem(item.id_inventory)}
+                      checked={selectedIds.includes(item.id)}
+                      onChange={() => handleSelectItem(item.id)}
                     />
                   </td>
-                  <td>{item.name}</td>
-                  <td>{item.category}</td>
-                  <td>{item.supplier}</td>
+                  <td>{item.item_code}</td>
+                  <td>{item.item_name}</td>
+                  <td>{item.item_type}</td>
+                  <td>{item.supplier_name}</td>
                   <td>{item.quantity}</td>
-                  <td>{item.price}</td>
                   <td>
-                    {new Date(item.created_at).toLocaleDateString("id-ID", {
+                    {new Date(item.updated_at).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
                       year: "numeric",
                     })}{" "}
-                    {new Date(item.created_at).toLocaleTimeString("id-ID", {
+                    {new Date(item.updated_at).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
-                      hour12: "2-digit",
+                      hour12: false,
                     })}
                   </td>
                 </tr>

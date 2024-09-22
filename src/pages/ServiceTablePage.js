@@ -183,7 +183,7 @@ const ServiceTablePage = () => {
             }`}
             onClick={() => setShowEditServiceForm(!showEditServiceForm)}
           >
-            {showEditServiceForm ? "Hide" : "Edit"}
+            {showEditServiceForm ? "Hide" : "Select"}
           </button>
           {showEditServiceForm && selectedServices.length > 0 && (
             <button className="delete-button" onClick={handleDeleteSelected}>

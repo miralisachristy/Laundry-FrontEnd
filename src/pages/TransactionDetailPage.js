@@ -72,7 +72,7 @@ const TransactionDetailPage = () => {
       );
       console.log("Transaction saved:", response.data);
 
-      navigate("/order-confirmation", {
+      navigate("/order-table", {
         state: {
           invoiceCode: generateInvoiceCode(),
           selectedCustomer,

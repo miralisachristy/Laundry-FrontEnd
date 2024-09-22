@@ -2,8 +2,100 @@
 import React from "react";
 import Modal from "react-modal";
 import "../styles/csspages.css"; // Import the global CSS file for styling the modal
-
 const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
+  const renderCustomerDetails = (customerData) => {
+    if (!customerData) return <p>No Customer Details</p>;
+
+    if (typeof customerData === "string") {
+      try {
+        const customer = JSON.parse(customerData);
+        return (
+          <div className="customer-details" key={customer.id_customer}>
+            <h4>Customer Details</h4>
+            <p>
+              <strong>ID Customer:</strong> {customer.id_customer}
+            </p>
+            <p>
+              <strong>Name:</strong> {customer.name}
+            </p>
+            <p>
+              <strong>Phone:</strong> {customer.phone}
+            </p>
+            <p>
+              <strong>Email:</strong> {customer.email}
+            </p>
+            <p>
+              <strong>Address:</strong> {customer.address}
+            </p>
+          </div>
+        );
+      } catch (error) {
+        console.error("Error parsing selected_customer:", error);
+        return <p>Error parsing customer data</p>;
+      }
+    } else if (typeof customerData === "object" && customerData !== null) {
+      return (
+        <div className="customer-details" key={customerData.id_customer}>
+          <h4>Customer Details</h4>
+          <p>
+            <strong>ID Customer:</strong> {customerData.id_customer}
+          </p>
+          <p>
+            <strong>Name:</strong> {customerData.name}
+          </p>
+          <p>
+            <strong>Phone:</strong> {customerData.phone}
+          </p>
+          <p>
+            <strong>Email:</strong> {customerData.email}
+          </p>
+          <p>
+            <strong>Address:</strong> {customerData.address}
+          </p>
+        </div>
+      );
+    } else {
+      return <p>Invalid customer data</p>;
+    }
+  };
+
+  const renderOrderDetails = (orderDetails) => {
+    if (!orderDetails) {
+      return <p>No Order Details</p>;
+    }
+
+    if (typeof orderDetails === "string") {
+      try {
+        orderDetails = JSON.parse(orderDetails);
+      } catch (error) {
+        console.error("Error parsing order details:", error);
+        return <p>Invalid order details data</p>;
+      }
+    }
+
+    if (!Array.isArray(orderDetails) || orderDetails.length === 0) {
+      return <p>No Order Details</p>;
+    }
+
+    return (
+      <div className="order-details">
+        <h4>Order Details</h4>
+        <ul>
+          {orderDetails.map((order) => (
+            <li key={order.id_service} className="order-item">
+              <strong>Service:</strong> {order.service_name} |
+              <strong> Quantity:</strong> {order.quantity} |
+              <strong> Price:</strong> Rp {order.price} |
+              <strong> Total:</strong> Rp {order.total} |
+              <strong> Estimated Completion:</strong>{" "}
+              {new Date(order.estimatedCompletionDate).toLocaleDateString()}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -12,50 +104,13 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
       className="transaction-modal"
       overlayClassName="transaction-modal-overlay"
     >
-      <button
-        className="close-button"
-        type="button"
-        aria-label="Close"
-        onClick={closeModal}
-      >
+      <button className="close-button" type="button" onClick={closeModal}>
         &times;
       </button>
-      <div>
-        <h2>Transaction Details</h2>
-        <p>
-          <strong>Invoice Code:</strong> {transaction.invoice_code}
-        </p>
-        <p>
-          <strong>Outlet Name:</strong> {transaction.outlet_name}
-        </p>
-        <p>
-          <strong>User Name:</strong> {transaction.user_name}
-        </p>
-        <p>
-          <strong>Customer Name:</strong>{" "}
-          {transaction.selectedCustomer?.name || "N/A"}
-        </p>
-        <p>
-          <strong>Customer Phone:</strong>{" "}
-          {transaction.selectedCustomer?.phone || "N/A"}
-        </p>
-        <p>
-          <strong>Total Amount:</strong> Rp {transaction.totalAfterDiscount}
-        </p>
-        <p>
-          <strong>Discount:</strong> Rp {transaction.discountAmount}
-        </p>
-        <p>
-          <strong>Payment Status:</strong> {transaction.paymentStatus}
-        </p>
-        <p>
-          <strong>Payment Method:</strong> {transaction.paymentMethod}
-        </p>
-        <p>
-          <strong>Order Details:</strong>{" "}
-          {JSON.stringify(transaction.orderDetails) || "N/A"}
-        </p>
-      </div>
+      <h2>Transaction Details</h2>
+
+      {renderCustomerDetails(transaction.selected_customer)}
+      {renderOrderDetails(transaction.order_details)}
     </Modal>
   );
 };

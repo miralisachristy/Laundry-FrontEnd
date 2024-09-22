@@ -29,5 +29,9 @@ export const formatDate = (dateString) => {
   const monthName = monthNames[date.getMonth()];
   const year = date.getFullYear();
 
-  return `${dayName}, ${day} ${monthName} ${year}`;
+  // Format time as HH:MM
+  const hours = String(date.getHours()).padStart(2, "0"); // pad with leading zero if needed
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${dayName}, ${day} ${monthName} ${year} ${hours}:${minutes}`;
 };
