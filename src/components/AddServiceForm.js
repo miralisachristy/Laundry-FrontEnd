@@ -6,10 +6,10 @@ const AddServiceForm = ({ onClose, onAdd }) => {
   const [newService, setNewService] = useState({
     image: "",
     service_name: "",
-    service_type: "",
+    service_type: "Kiloan", // Set default value
     processing_time: "",
     price: "",
-    unit: "",
+    unit: "kg", // Set default value
   });
   const [error, setError] = useState(null);
 
@@ -43,10 +43,10 @@ const AddServiceForm = ({ onClose, onAdd }) => {
       setNewService({
         image: "",
         service_name: "",
-        service_type: "",
+        service_type: "Kiloan", // Reset to default value
         processing_time: "",
         price: "",
-        unit: "",
+        unit: "kg", // Reset to default value
       });
     } catch (error) {
       console.error(
@@ -88,14 +88,17 @@ const AddServiceForm = ({ onClose, onAdd }) => {
         </div>
         <div>
           <label htmlFor="service_type">Service Type:</label>
-          <input
+          <select
             id="service_type"
-            type="text"
             name="service_type"
             value={newService.service_type}
             onChange={handleInputChange}
             required
-          />
+            style={{ marginLeft: "10px" }} // Margin-left
+          >
+            <option value="Kiloan">Kiloan</option>
+            <option value="Satuan">Satuan</option>
+          </select>
         </div>
         <div>
           <label htmlFor="processing_time">Processing Time:</label>
@@ -121,14 +124,17 @@ const AddServiceForm = ({ onClose, onAdd }) => {
         </div>
         <div>
           <label htmlFor="unit">Unit:</label>
-          <input
+          <select
             id="unit"
-            type="number"
             name="unit"
             value={newService.unit}
             onChange={handleInputChange}
             required
-          />
+            style={{ marginLeft: "10px" }} // Margin-left
+          >
+            <option value="kg">kg</option>
+            <option value="pcs">pcs</option>
+          </select>
         </div>
         <div>
           <label htmlFor="image">Image:</label>

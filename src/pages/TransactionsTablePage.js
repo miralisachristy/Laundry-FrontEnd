@@ -240,8 +240,23 @@ const TransactionsTablePage = () => {
                 <tr key={transaction.id_transaction}>
                   <td>{transaction.invoice_code}</td>
                   <td>
-                    {formatDate(transaction.transaction_date)}
-
+                    {new Date(transaction.transaction_date).toLocaleDateString(
+                      "id-ID",
+                      {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )}{" "}
+                    {new Date(transaction.transaction_date).toLocaleTimeString(
+                      "id-ID",
+                      {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      }
+                    )}
+                    {/* {formatDate(transaction.transaction_date)} */}
                     {/* {new Date(transaction.transaction_date).toLocaleString()} */}
                   </td>
                   {/* <td>{transaction.outlet_name}</td> */}
@@ -251,8 +266,27 @@ const TransactionsTablePage = () => {
                   </td>
                   <td>{renderOrderDetails(transaction.order_details)}</td> */}
                   {/* <td>{transaction.total_before_discount}</td> */}
-                  <td>{transaction.discount_amount}</td>
-                  <td>{transaction.total_after_discount}</td>
+                  <td>
+                    Rp{" "}
+                    {Number(transaction.discount_amount).toLocaleString(
+                      "id-ID",
+                      {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }
+                    )}
+                  </td>
+                  <td>
+                    Rp{" "}
+                    {Number(transaction.total_after_discount).toLocaleString(
+                      "id-ID",
+                      {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }
+                    )}
+                  </td>
+
                   <td>{transaction.payment_method}</td>
                   <td>{transaction.payment_status}</td>
                   <td>
