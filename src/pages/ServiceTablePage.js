@@ -114,18 +114,29 @@ const ServiceTablePage = () => {
     );
   };
 
-  const handleDeleteSelected = () => {
-    // Remove selected services
-    const updatedServices = services.filter(
-      (service) => !selectedServices.includes(service.id_service)
-    );
-    setServices(updatedServices);
-    setFilteredServices(
-      filterByCategory(updatedServices, selectedCategory).filter((service) =>
-        service.service_name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
-    setSelectedServices([]);
+  const handleDeleteSelected = async () => {
+    try {
+      // Send a request to delete the selected services
+      await axios.post("http://localhost:3000/api/services/delete", {
+        ids: selectedServices,
+      });
+
+      // Filter out the deleted services from the state
+      const updatedServices = services.filter(
+        (service) => !selectedServices.includes(service.id_service)
+      );
+
+      setServices(updatedServices);
+      setFilteredServices(
+        filterByCategory(updatedServices, selectedCategory).filter((service) =>
+          service.service_name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+      setSelectedServices([]);
+    } catch (error) {
+      console.error("Error deleting services:", error);
+      setError("Failed to delete services");
+    }
   };
 
   return (

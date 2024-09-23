@@ -304,7 +304,8 @@ const TransactionsTablePage = () => {
                   </td>
                   <td>
                     <button
-                      className="add-button"
+                      className="update-button"
+                      style={{ marginBottom: "10px" }} // Margin-left
                       onClick={() => handleDetailClick(transaction.id)}
                     >
                       Detail

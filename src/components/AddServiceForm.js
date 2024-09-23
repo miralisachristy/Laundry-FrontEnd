@@ -80,7 +80,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             id="service_name"
             type="text"
             name="service_name"
-            placeholder="service name - processing time"
+            placeholder="Service Name - Processing Time"
             value={newService.service_name}
             onChange={handleInputChange}
             required
@@ -105,6 +105,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
           <input
             id="processing_time"
             type="text"
+            placeholder="Example: 24"
             name="processing_time"
             value={newService.processing_time}
             onChange={handleInputChange}
@@ -117,6 +118,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             id="price"
             type="number"
             name="price"
+            placeholder="Example: 25000"
             value={newService.price}
             onChange={handleInputChange}
             required

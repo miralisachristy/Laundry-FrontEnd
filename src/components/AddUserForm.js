@@ -22,31 +22,65 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
     }));
   };
 
-  const handleAddUser = (event) => {
+  const handleAddUser = async (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:3000/api/users", newUser)
-      .then((response) => {
-        // Directly handle the success case
-        onAddUser(response.data.data); // Update the user list
-        setNewUser({
-          role: "",
-          name: "",
-          username: "",
-          password: "",
-          email: "",
-          phone: "",
-        });
-        setShowAddUserForm(false); // Close the form
-        setSuccess("User created successfully!"); // Set success message
-      })
-      .catch((error) => {
-        // Handle errors with fallback
-        setError(
-          "Error adding new user: " +
-            (error.response?.data?.message || error.message)
-        );
+
+    // Validate that username and password do not contain spaces
+    if (/\s/.test(newUser.username)) {
+      setError("Username cannot contain spaces.");
+      return;
+    }
+    if (/\s/.test(newUser.password)) {
+      setError("Password cannot contain spaces.");
+      return;
+    }
+
+    try {
+      // Check if phone number and email already exist
+      const response = await axios.get("http://localhost:3000/api/users");
+      const existingUsers = response.data.data;
+
+      const isPhoneTaken = existingUsers.some(
+        (user) => user.phone === newUser.phone
+      );
+      if (isPhoneTaken) {
+        setError("Phone number is already registered.");
+        return;
+      }
+
+      const isEmailTaken = existingUsers.some(
+        (user) => user.email === newUser.email
+      );
+      if (isEmailTaken) {
+        setError("Email is already registered.");
+        return;
+      }
+
+      // Proceed to add the new user
+      const addUserResponse = await axios.post(
+        "http://localhost:3000/api/users",
+        newUser
+      );
+      onAddUser(addUserResponse.data.data); // Update the user list
+      setNewUser({
+        role: "",
+        name: "",
+        username: "",
+        password: "",
+        email: "",
+        phone: "",
       });
+      // setShowAddUserForm(false); // Close the form
+      window.location.reload(); // This will reload the entire page
+      setSuccess("User created successfully!"); // Set success message
+      setError(""); // Clear any previous error messages
+    } catch (error) {
+      // Handle errors with fallback
+      setError(
+        "Error adding new user: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
   };
 
   return (

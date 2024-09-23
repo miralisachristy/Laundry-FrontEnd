@@ -1,7 +1,7 @@
-// src/pages/InventoryTablePage.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation";
+import AddInventoryForm from "../components/AddInventoryForm"; // Ensure this component exists
 import "../styles/csspages.css";
 
 const InventoryTablePage = () => {
@@ -9,6 +9,7 @@ const InventoryTablePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [showAddInventoryForm, setShowAddInventoryForm] = useState(false);
 
   useEffect(() => {
     fetchInventory();
@@ -37,8 +38,8 @@ const InventoryTablePage = () => {
   };
 
   const filteredInventory = inventory.filter((item) =>
-    [item.item_name, item.item_type, item.supplier_name].some(
-      (field) => field && field.toLowerCase().includes(searchTerm.toLowerCase())
+    [item.item_name, item.item_type, item.supplier_name].some((field) =>
+      field.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
@@ -51,25 +52,29 @@ const InventoryTablePage = () => {
   };
 
   const handleSelectAll = (event) => {
-    if (event.target.checked) {
-      setSelectedIds(filteredInventory.map((item) => item.id));
-    } else {
-      setSelectedIds([]);
-    }
-    setSelectAll(event.target.checked);
+    const checked = event.target.checked;
+    setSelectAll(checked);
+    setSelectedIds(checked ? filteredInventory.map((item) => item.id) : []);
   };
 
   const handleDeleteSelected = async () => {
-    try {
-      await axios.post("http://localhost:3000/api/inventory/delete", {
-        ids: selectedIds,
-      });
-      fetchInventory(); // Refresh the inventory list
-      setSelectedIds([]);
-      setSelectAll(false);
-    } catch (error) {
-      console.error("Error deleting selected inventory items:", error);
+    if (window.confirm("Are you sure you want to delete the selected items?")) {
+      try {
+        await axios.post("http://localhost:3000/api/inventory/delete", {
+          ids: selectedIds,
+        });
+        fetchInventory(); // Refresh the inventory list
+        setSelectedIds([]);
+        setSelectAll(false);
+      } catch (error) {
+        console.error("Error deleting selected inventory items:", error);
+      }
     }
+  };
+
+  const handleOnAddFinished = (newInventory) => {
+    setInventory((prevInventory) => [...prevInventory, newInventory]);
+    setShowAddInventoryForm(false);
   };
 
   return (
@@ -85,6 +90,19 @@ const InventoryTablePage = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <button
+            className="add-button"
+            onClick={() => setShowAddInventoryForm(true)}
+          >
+            Add Inventory Item
+          </button>
+
+          {showAddInventoryForm && (
+            <AddInventoryForm
+              onClose={() => setShowAddInventoryForm(false)}
+              onAdd={handleOnAddFinished}
+            />
+          )}
           {selectedIds.length > 0 && (
             <button className="delete-button" onClick={handleDeleteSelected}>
               Delete

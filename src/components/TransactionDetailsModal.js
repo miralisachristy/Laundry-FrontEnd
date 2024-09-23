@@ -13,9 +13,6 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
           <div className="customer-details" key={customer.id_customer}>
             <h4>Customer Details</h4>
             <p>
-              <strong>ID Customer:</strong> {customer.id_customer}
-            </p>
-            <p>
               <strong>Name:</strong> {customer.name}
             </p>
             <p>
@@ -37,9 +34,6 @@ const TransactionDetailsModal = ({ isOpen, closeModal, transaction }) => {
       return (
         <div className="customer-details" key={customerData.id_customer}>
           <h4>Customer Details</h4>
-          <p>
-            <strong>ID Customer:</strong> {customerData.id_customer}
-          </p>
           <p>
             <strong>Name:</strong> {customerData.name}
           </p>

@@ -171,7 +171,12 @@ const LaundryOrderPage = () => {
   };
 
   const handleDiscountChange = (e) => {
-    setDiscount(e.target.value);
+    const value = e.target.value;
+
+    // Menggunakan regex untuk memastikan hanya angka 0-100 yang dapat diinputkan
+    if (/^\d*$/.test(value) && (value === "" || (value >= 0 && value <= 100))) {
+      setDiscount(value);
+    }
   };
 
   const handlePaymentMethodChange = (e) => {
@@ -387,6 +392,7 @@ const LaundryOrderPage = () => {
         totalAfterDiscount, // Use calculated total after discount
         paymentMethod,
         paymentStatus,
+        selectedDate,
       },
     });
     console.log("napa tu index :  ", index);
