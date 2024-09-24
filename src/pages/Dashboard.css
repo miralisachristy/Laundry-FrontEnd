@@ -2,7 +2,7 @@
 .dashboard-container {
   padding: 20px;
   font-family: Arial, sans-serif;
-  margin-left: 500px; /* Geser konten dashboard agar tidak tertutup oleh navigation */
+  margin-left: 200px; /* Geser konten dashboard agar tidak tertutup oleh navigation */
   transition: margin-left 0.3s ease; /* Animasi saat ukuran navigasi berubah */
 }
 

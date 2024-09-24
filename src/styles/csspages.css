@@ -788,3 +788,72 @@ td img {
   top: 10px; /* Positioning close button */
   right: 10px; /* Positioning close button */
 }
+
+/* src/styles/csspages.css */
+.dashboard-container {
+  padding: 20px; /* Add padding around the dashboard */
+  background-color: #f4f7fa; /* Light background color for contrast */
+  min-height: 100vh; /* Full height to cover screen */
+}
+
+.dashboard-header {
+  text-align: center;
+  font-size: 2rem;
+  color: #343a40;
+  margin-bottom: 30px; /* Space below the header */
+}
+
+.stat-container {
+  display: flex;
+  justify-content: space-around; /* Spread boxes evenly */
+  margin-bottom: 30px; /* Space below statistics */
+}
+
+.stat-box {
+  background-color: #ffffff; /* White background for stat boxes */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30%; /* Adjust width as needed */
+  transition: transform 0.3s ease; /* Smooth scale effect */
+}
+
+.stat-box:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.stat-box h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #495057; /* Darker color for headings */
+}
+
+.stat-box p {
+  font-size: 1.5rem; /* Larger font for values */
+  color: #007bff; /* Color for numeric values */
+}
+
+.chart-container {
+  margin-bottom: 30px; /* Space below charts */
+}
+
+.chart-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #343a40;
+}
+
+.chart {
+  padding: 20px; /* Added padding for charts */
+  background-color: #ffffff; /* White background for charts */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #868e96;
+}

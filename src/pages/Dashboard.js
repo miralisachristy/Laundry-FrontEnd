@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line, Bar } from "react-chartjs-2";
 import "chart.js/auto";
+import "../styles/csspages.css"; // Import the global CSS file
 import Navigation from "../components/Navigation";
 
 const Dashboard = () => {
@@ -9,11 +10,11 @@ const Dashboard = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState(0);
   const [revenueData, setRevenueData] = useState({
     labels: [],
-    datasets: [], // Provide default empty datasets to avoid errors
+    datasets: [],
   });
   const [serviceRequestData, setServiceRequestData] = useState({
     labels: [],
-    datasets: [], // Provide default empty datasets to avoid errors
+    datasets: [],
   });
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Revenue (Rp)",
-          data: [1000000, 1500000, 1200000, 1300000], // Data per week
+          data: [1000000, 1500000, 1200000, 1300000],
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
@@ -40,7 +41,7 @@ const Dashboard = () => {
       datasets: [
         {
           label: "Service Requests",
-          data: [30, 20, 15, 10], // Most requested services in a week
+          data: [30, 20, 15, 10],
           backgroundColor: [
             "rgba(255, 99, 132, 0.2)",
             "rgba(54, 162, 235, 0.2)",
@@ -68,43 +69,44 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <Navigation />
+      <div className="content">
+        <h1 className="dashboard-header">Dashboard</h1>
 
-      <h1 className="dashboard-header">Dashboard</h1>
+        <div className="stat-container">
+          <div className="stat-box">
+            <h3>New Customers Today</h3>
+            <p>{todayNewCustomers}</p>
+          </div>
+          <div className="stat-box">
+            <h3>Total Customers</h3>
+            <p>{totalCustomers}</p>
+          </div>
+          <div className="stat-box">
+            <h3>Monthly Revenue</h3>
+            <p>Rp {monthlyRevenue.toLocaleString()}</p>
+          </div>
+        </div>
 
-      <div className="dashboard-stats">
-        <div className="stat-box">
-          <h3>New Customers Today</h3>
-          <p>{todayNewCustomers}</p>
+        <div className="chart-container">
+          <h3 className="chart-title">Revenue (Per Week)</h3>
+          <div className="chart">
+            {revenueData.labels.length > 0 ? (
+              <Line data={revenueData} />
+            ) : (
+              <p className="loading-message">Loading data...</p>
+            )}
+          </div>
         </div>
-        <div className="stat-box">
-          <h3>Total Customers</h3>
-          <p>{totalCustomers}</p>
-        </div>
-        <div className="stat-box">
-          <h3>Monthly Revenue</h3>
-          <p>Rp {monthlyRevenue.toLocaleString()}</p>
-        </div>
-      </div>
 
-      <div className="chart-container">
-        <h3 className="chart-title">Revenue (Per Week)</h3>
-        <div className="chart">
-          {revenueData.labels.length > 0 ? (
-            <Line data={revenueData} />
-          ) : (
-            <p className="loading-message">Loading data...</p>
-          )}
-        </div>
-      </div>
-
-      <div className="chart-container">
-        <h3 className="chart-title">Most Requested Services (Last Week)</h3>
-        <div className="chart">
-          {serviceRequestData.labels.length > 0 ? (
-            <Bar data={serviceRequestData} />
-          ) : (
-            <p className="loading-message">Loading data...</p>
-          )}
+        <div className="chart-container">
+          <h3 className="chart-title">Most Requested Services (Last Week)</h3>
+          <div className="chart">
+            {serviceRequestData.labels.length > 0 ? (
+              <Bar data={serviceRequestData} />
+            ) : (
+              <p className="loading-message">Loading data...</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
