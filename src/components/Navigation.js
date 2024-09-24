@@ -99,7 +99,7 @@ const Navigation = () => {
                 to="/order-table"
                 className={location.pathname === "/order-table" ? "active" : ""}
               >
-                Order
+                Transaction List
               </Link>
             </li>
           </>
@@ -142,7 +142,7 @@ const Navigation = () => {
                 to="/order-table"
                 className={location.pathname === "/order-table" ? "active" : ""}
               >
-                Order
+                Transaction List
               </Link>
             </li>
           </>

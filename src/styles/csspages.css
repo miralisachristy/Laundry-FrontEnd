@@ -316,8 +316,9 @@ td img {
 
 .filter-menu {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .filter-button {

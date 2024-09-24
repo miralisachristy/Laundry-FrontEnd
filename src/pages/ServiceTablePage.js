@@ -143,35 +143,8 @@ const ServiceTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2>Service List</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Service List</h2>
         {error && <p className="error-message">{error}</p>}
-
-        <div className="filter-menu">
-          <button
-            className={`filter-button ${
-              selectedCategory === "all" ? "active" : ""
-            }`}
-            onClick={() => handleCategoryChange("all")}
-          >
-            All Services
-          </button>
-          <button
-            className={`filter-button ${
-              selectedCategory === "kiloan" ? "active" : ""
-            }`}
-            onClick={() => handleCategoryChange("kiloan")}
-          >
-            Kiloan
-          </button>
-          <button
-            className={`filter-button ${
-              selectedCategory === "satuan" ? "active" : ""
-            }`}
-            onClick={() => handleCategoryChange("satuan")}
-          >
-            Satuan
-          </button>
-        </div>
 
         <div>
           <input
@@ -201,6 +174,33 @@ const ServiceTablePage = () => {
               Delete Selected
             </button>
           )}
+        </div>
+
+        <div className="filter-menu">
+          <button
+            className={`filter-button ${
+              selectedCategory === "all" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("all")}
+          >
+            All Services
+          </button>
+          <button
+            className={`filter-button ${
+              selectedCategory === "kiloan" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("kiloan")}
+          >
+            Kiloan
+          </button>
+          <button
+            className={`filter-button ${
+              selectedCategory === "satuan" ? "active" : ""
+            }`}
+            onClick={() => handleCategoryChange("satuan")}
+          >
+            Satuan
+          </button>
         </div>
 
         {showAddServiceForm && (

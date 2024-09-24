@@ -122,15 +122,16 @@ const OutletTablePage = () => {
     <div className="container">
       <Navigation /> {/* Add Navigation here */}
       <div className="content">
-        <h2>Outlet List</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Outlet List</h2>
         <div className="outlet-list">
           {outlets.length > 0 ? (
             outlets.map((outlet) => (
               <div className="outlet-card" key={outlet.id_outlet}>
                 <div className="outlet-box">
-                  <h3>Logo</h3>
+                  <h3 style={{ marginLeft: "10px" }}>Logo</h3>
                   {outlet.logo ? (
                     <img
+                      style={{ marginLeft: "10px" }}
                       src={`http://localhost:3000${outlet.logo}`} // Correct string interpolation
                       alt={`${outlet.outlet_name} logo`} // Correct string interpolation
                       className="outlet-image"
@@ -140,6 +141,7 @@ const OutletTablePage = () => {
                   )}
                   <p></p>
                   <input
+                    style={{ marginLeft: "10px" }}
                     type="file"
                     accept="image/*"
                     onChange={(event) =>
@@ -217,13 +219,13 @@ const OutletTablePage = () => {
                     </div>
                   ) : (
                     <div>
-                      <h3>Outlet Name</h3>
+                      <h3>Outlet Name :</h3>
                       <p>{outlet.outlet_name}</p>
-                      <h3>Address</h3>
+                      <h3>Address :</h3>
                       <p>{outlet.address}</p>
-                      <h3>Phone</h3>
+                      <h3>Phone :</h3>
                       <p>{outlet.phone}</p>
-                      <h3>Description</h3>
+                      <h3>Description :</h3>
                       <p>{outlet.describ}</p>
                       <button
                         className="update-button"

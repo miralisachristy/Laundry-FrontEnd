@@ -100,7 +100,9 @@ const CustomerTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2>Customer Table</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>
+          Customer Table
+        </h2>
         <div>
           <input
             type="text"

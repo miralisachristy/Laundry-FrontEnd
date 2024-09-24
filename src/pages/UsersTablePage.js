@@ -117,7 +117,7 @@ const UsersTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2>Users Table</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Users Table</h2>
         <div>
           <input
             type="text"

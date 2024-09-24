@@ -216,7 +216,9 @@ const TransactionsTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2>Transactions List</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>
+          Transactions List
+        </h2>
         <table>
           <thead>
             <tr>
