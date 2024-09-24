@@ -166,10 +166,10 @@ const CustomerTablePage = () => {
                     />
                   </td>
                   <td>{customer.name}</td>
-                  <td>{customer.phone}</td>
+                  <td style={{ textAlign: "center" }}>{customer.phone}</td>
                   <td>{customer.email}</td>
                   <td>{customer.address}</td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {new Date(customer.created_at).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",
@@ -181,7 +181,7 @@ const CustomerTablePage = () => {
                       hour12: "2-digit",
                     })}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <button
                       className="update-button"
                       onClick={() => handleUpdateClick(customer)}

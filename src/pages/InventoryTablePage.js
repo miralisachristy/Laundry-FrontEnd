@@ -10,6 +10,7 @@ const InventoryTablePage = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [showAddInventoryForm, setShowAddInventoryForm] = useState(false);
+  const [inventories, setInventories] = useState([]);
 
   useEffect(() => {
     fetchInventory();
@@ -75,6 +76,7 @@ const InventoryTablePage = () => {
   const handleOnAddFinished = (newInventory) => {
     setInventory((prevInventory) => [...prevInventory, newInventory]);
     setShowAddInventoryForm(false);
+    window.location.reload(); // This will reload the entire page
   };
 
   return (
@@ -99,6 +101,8 @@ const InventoryTablePage = () => {
 
           {showAddInventoryForm && (
             <AddInventoryForm
+              setInventories={setInventories}
+              setShowAddInventoryForm={setShowAddInventoryForm}
               onClose={() => setShowAddInventoryForm(false)}
               onAdd={handleOnAddFinished}
             />
@@ -124,6 +128,7 @@ const InventoryTablePage = () => {
               <th>Item Type</th>
               <th>Supplier Name</th>
               <th>Quantity</th>
+              <th>Remark</th>
               <th>Updated At</th>
             </tr>
           </thead>
@@ -138,12 +143,13 @@ const InventoryTablePage = () => {
                       onChange={() => handleSelectItem(item.id)}
                     />
                   </td>
-                  <td>{item.item_code}</td>
+                  <td style={{ textAlign: "center" }}>{item.item_code}</td>
                   <td>{item.item_name}</td>
                   <td>{item.item_type}</td>
                   <td>{item.supplier_name}</td>
-                  <td>{item.quantity}</td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                  <td>{item.remark}</td>
+                  <td style={{ textAlign: "center" }}>
                     {new Date(item.updated_at).toLocaleDateString("id-ID", {
                       day: "numeric",
                       month: "long",

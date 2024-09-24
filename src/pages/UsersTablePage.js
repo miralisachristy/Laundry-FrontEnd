@@ -186,12 +186,12 @@ const UsersTablePage = () => {
                       <span>--</span> // Display a placeholder like a dash or empty cell
                     )}
                   </td>
-                  <td>{user.role}</td>
+                  <td style={{ textAlign: "center" }}>{user.role}</td>
                   <td>{user.name}</td>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>{user.phone}</td>
+                  <td style={{ textAlign: "center" }}>
                     {user.created_at
                       ? new Date(user.created_at).toLocaleDateString("id-ID", {
                           day: "numeric",
@@ -200,7 +200,7 @@ const UsersTablePage = () => {
                         })
                       : "N/A"}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {user.updated_at
                       ? new Date(user.updated_at).toLocaleDateString("id-ID", {
                           day: "numeric",
@@ -209,7 +209,7 @@ const UsersTablePage = () => {
                         })
                       : "N/A"}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <button
                       className="update-button"
                       onClick={() => handleUpdateClick(user)}

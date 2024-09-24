@@ -1,55 +1,100 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/csspages.css"; // Import the global CSS file
 
-const AddInventoryForm = ({ onClose, onAdd }) => {
+const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
   const [newInventory, setNewInventory] = useState({
+    item_code: "", // Item code will be generated automatically
     item_name: "",
+    item_type: "",
+    supplier_name: "",
+    remark: "",
     quantity: "",
-    unit: "",
-    price: "",
-    image: "",
   });
-  const [error, setError] = useState(null);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const [error, setError] = useState(""); // State to hold error messages
+  const [existingInventories, setExistingInventories] = useState([]); // State to hold existing inventories
+
+  useEffect(() => {
+    // Fetch existing inventories on component mount
+    const fetchExistingInventories = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/inventory");
+        setExistingInventories(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching existing inventories:", error);
+      }
+    };
+
+    fetchExistingInventories();
+    generateItemCode(); // Generate the item code on component mount
+  }, []);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setNewInventory((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleAddInventory = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    Object.keys(newInventory).forEach((key) =>
-      formData.append(key, newInventory[key])
+  const generateItemCode = () => {
+    // Simple item code generation logic (e.g., using a timestamp)
+    const timestamp = Date.now(); // Get the current timestamp
+    const itemCode = `ITEM-${timestamp}`; // Create a unique item code
+    setNewInventory((prev) => ({
+      ...prev,
+      item_code: itemCode, // Set the generated item code
+    }));
+  };
+
+  const handleAddInventory = async (event) => {
+    event.preventDefault();
+
+    // Optional: Check for duplicates based on item name or code
+    const isDuplicate = existingInventories.some(
+      (inventory) =>
+        inventory.item_name === newInventory.item_name ||
+        inventory.item_code === newInventory.item_code
     );
+
+    if (isDuplicate) {
+      setError("This item already exists in the inventory.");
+      return; // Exit if there is a duplicate
+    }
+
+    setError(""); // Clear any previous errors
 
     try {
       const response = await axios.post(
         "http://localhost:3000/api/inventory",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        newInventory
       );
-      onAdd(response.data.data);
-      onClose();
-      setNewInventory({
-        item_name: "",
-        quantity: "",
-        unit: "",
-        price: "",
-        image: "",
-      });
+
+      if (response.status === 201) {
+        // Successfully added inventory
+        setInventories((prevInventories) => [
+          ...prevInventories,
+          response.data.data,
+        ]);
+        setNewInventory({
+          item_code: "", // Reset item_code to ensure it gets generated again
+          item_name: "",
+          item_type: "",
+          supplier_name: "",
+          remark: "",
+          quantity: "",
+        });
+        setShowAddInventoryForm(false); // Close the form
+        window.location.reload(); // This will reload the entire page
+      } else {
+        // Handle any non-201 status codes
+        setError("Failed to add inventory. Please try again.");
+      }
     } catch (error) {
-      console.error("Failed to add inventory:", error);
+      console.error("Error adding new inventory:", error);
       setError(
-        error.response
+        error.response && error.response.data.message
           ? error.response.data.message
           : "Failed to add inventory. Please try again."
       );
@@ -58,21 +103,29 @@ const AddInventoryForm = ({ onClose, onAdd }) => {
 
   return (
     <div className="add-inventory-box">
+      <h3>Add New Inventory Item</h3>
       <button
         className="close-button"
         type="button"
-        onClick={onClose}
+        onClick={() => setShowAddInventoryForm(false)}
         aria-label="Close"
       >
         &times;
       </button>
-      <h3>Add New Inventory Item</h3>
       <form onSubmit={handleAddInventory}>
-        {error && <p className="error-message">{error}</p>}
         <div>
-          <label htmlFor="item_name">Item Name:</label>
+          <label>Item Code:</label>
           <input
-            id="item_name"
+            type="text"
+            name="item_code"
+            value={newInventory.item_code}
+            disabled // Make the input read-only
+            required
+          />
+        </div>
+        <div>
+          <label>Item Name:</label>
+          <input
             type="text"
             name="item_name"
             value={newInventory.item_name}
@@ -81,53 +134,48 @@ const AddInventoryForm = ({ onClose, onAdd }) => {
           />
         </div>
         <div>
-          <label htmlFor="quantity">Quantity:</label>
+          <label>Item Type:</label>
           <input
-            id="quantity"
+            type="text"
+            name="item_type"
+            value={newInventory.item_type}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Supplier Name:</label>
+          <input
+            type="text"
+            name="supplier_name"
+            value={newInventory.supplier_name}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Remark:</label>
+          <input
+            type="text"
+            name="remark"
+            value={newInventory.remark}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div>
+          <label>Quantity:</label>
+          <input
             type="number"
             name="quantity"
             value={newInventory.quantity}
             onChange={handleInputChange}
             required
+            min="0" // Prevent negative numbers in the input field
           />
         </div>
-        <div>
-          <label htmlFor="unit">Unit:</label>
-          <select
-            id="unit"
-            name="unit"
-            value={newInventory.unit}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select unit</option>
-            <option value="kg">kg</option>
-            <option value="pcs">pcs</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="price">Price:</label>
-          <input
-            id="price"
-            type="number"
-            name="price"
-            value={newInventory.price}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="image">Image:</label>
-          <input
-            id="image"
-            type="file"
-            name="image"
-            onChange={(e) =>
-              setNewInventory((prev) => ({ ...prev, image: e.target.files[0] }))
-            }
-            required
-          />
-        </div>
+        {error && <p className="error-message">{error}</p>}{" "}
+        {/* Display error message */}
         <button type="submit" className="save-button">
           Submit
         </button>

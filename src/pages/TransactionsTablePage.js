@@ -216,7 +216,7 @@ const TransactionsTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2>Transactions Table</h2>
+        <h2>Transactions List</h2>
         <table>
           <thead>
             <tr>
@@ -266,7 +266,7 @@ const TransactionsTablePage = () => {
                   </td>
                   <td>{renderOrderDetails(transaction.order_details)}</td> */}
                   {/* <td>{transaction.total_before_discount}</td> */}
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     Rp{" "}
                     {Number(transaction.discount_amount).toLocaleString(
                       "id-ID",
@@ -276,7 +276,7 @@ const TransactionsTablePage = () => {
                       }
                     )}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     Rp{" "}
                     {Number(transaction.total_after_discount).toLocaleString(
                       "id-ID",
@@ -287,9 +287,13 @@ const TransactionsTablePage = () => {
                     )}
                   </td>
 
-                  <td>{transaction.payment_method}</td>
-                  <td>{transaction.payment_status}</td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
+                    {transaction.payment_method}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    {transaction.payment_status}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
                     {transaction.payment_proof ? (
                       <a
                         href={`http://localhost:3000${transaction.payment_proof}`}

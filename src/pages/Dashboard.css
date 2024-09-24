@@ -1,51 +1,69 @@
-.dashboard {
+/* src/pages/Dashboard.css */
+.dashboard-container {
   padding: 20px;
+  font-family: Arial, sans-serif;
+  margin-left: 500px; /* Geser konten dashboard agar tidak tertutup oleh navigation */
+  transition: margin-left 0.3s ease; /* Animasi saat ukuran navigasi berubah */
 }
 
-.dashboard-overview {
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.dashboard-stats {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  justify-content: space-around;
+  margin-bottom: 40px;
 }
 
-.dashboard-card {
-  background-color: #f5f5f5;
+.stat-box {
+  background-color: #f8f9fa;
   padding: 20px;
-  width: 23%;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30%;
 }
 
-.dashboard-card h3 {
+.stat-box h3 {
   margin-bottom: 10px;
-  font-size: 1.2em;
+  font-size: 18px;
+  color: #343a40;
 }
 
-.dashboard-card p {
-  font-size: 1.5em;
+.stat-box p {
+  font-size: 24px;
   font-weight: bold;
+  color: #007bff;
+}
+/* src/pages/Dashboard.css */
+.chart {
+  padding: 10px; /* Kurangi padding */
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Lebar grafik lebih kecil */
+  height: 200px; /* Tinggi grafik lebih kecil */
+  margin: 0 auto; /* Agar grafik berada di tengah */
 }
 
-.recent-transactions {
-  margin-top: 20px;
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-.recent-transactions table {
-  width: 100%;
-  border-collapse: collapse;
+.chart-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #495057;
 }
 
-.recent-transactions th,
-.recent-transactions td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.recent-transactions th {
-  background-color: #f2f2f2;
-}
-
-.recent-transactions tr:nth-child(even) {
-  background-color: #f9f9f9;
+.loading-message {
+  text-align: center;
+  font-size: 16px;
+  color: #868e96;
 }

@@ -129,6 +129,16 @@ const Navigation = () => {
             </li>
             <li>
               <Link
+                to="/customer-table"
+                className={
+                  location.pathname === "/customer-table" ? "active" : ""
+                }
+              >
+                Customer
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/order-table"
                 className={location.pathname === "/order-table" ? "active" : ""}
               >

@@ -26,6 +26,7 @@ const TransactionDetailPage = () => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [error, setError] = useState(null);
   const [uploadError, setUploadError] = useState(null);
+  const outletName = localStorage.getItem("outlet");
 
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
@@ -85,8 +86,6 @@ const TransactionDetailPage = () => {
     const quotaDate = new Date().toISOString().split("T")[0]; // Format date as YYYY-MM-DD
     // const availableQuota = await getAvailableQuota(); // Call the function here
 
-    console.log("Napa eee quotaused : ", quotaUsed);
-    console.log("Napa eee availableQuota : ", availableQuota);
     console.log("Posting quota data:", {
       date: quotaDate,
       used: quotaUsed,
@@ -168,8 +167,22 @@ const TransactionDetailPage = () => {
 
         <div className="invoice-details">
           <p>Invoice Code: {generateInvoiceCode()}</p>
-          <p>Date: {new Date().toLocaleString()}</p>
-          <p>Outlet Name: Your Outlet Name</p>
+          <p>
+            Date:{" "}
+            {new Date().toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}{" "}
+            {new Date().toLocaleTimeString("id-ID", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true, // Ubah ke false jika ingin format 24 jam
+            })}
+          </p>
+          <p>
+            Outlet Name: {outletName ? outletName : "Outlet tidak ditemukan"}
+          </p>
         </div>
 
         {renderCustomerDetails()}

@@ -1,45 +1,111 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Line, Bar } from "react-chartjs-2";
+import "chart.js/auto";
 import Navigation from "../components/Navigation";
 
 const Dashboard = () => {
-  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [todayNewCustomers, setTodayNewCustomers] = useState(0);
+  const [totalCustomers, setTotalCustomers] = useState(0);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+  const [revenueData, setRevenueData] = useState({
+    labels: [],
+    datasets: [], // Provide default empty datasets to avoid errors
+  });
+  const [serviceRequestData, setServiceRequestData] = useState({
+    labels: [],
+    datasets: [], // Provide default empty datasets to avoid errors
+  });
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get("/api/transactions");
-        // Ensure response.data.data contains the array
-        setRecentTransactions(
-          Array.isArray(response.data.data) ? response.data.data : []
-        );
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-        setRecentTransactions([]); // Default to empty array on error
-      }
+    // Dummy data for demonstration
+    const dummyNewCustomersToday = 5;
+    const dummyTotalCustomers = 120;
+    const dummyMonthlyRevenue = 5000000; // Rp 5,000,000
+
+    const dummyRevenueData = {
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+      datasets: [
+        {
+          label: "Revenue (Rp)",
+          data: [1000000, 1500000, 1200000, 1300000], // Data per week
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
     };
 
-    fetchTransactions();
+    const dummyServiceRequestData = {
+      labels: ["Kiloan", "Satuan", "Dry Clean", "Ironing"],
+      datasets: [
+        {
+          label: "Service Requests",
+          data: [30, 20, 15, 10], // Most requested services in a week
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    setTodayNewCustomers(dummyNewCustomersToday);
+    setTotalCustomers(dummyTotalCustomers);
+    setMonthlyRevenue(dummyMonthlyRevenue);
+    setRevenueData(dummyRevenueData);
+    setServiceRequestData(dummyServiceRequestData);
   }, []);
 
   return (
-    <div className="container">
+    <div className="dashboard-container">
       <Navigation />
-      <div className="content">
-        <h2>Recent Transactions</h2>
-        {recentTransactions.length > 0 ? (
-          recentTransactions.map((transaction) => (
-            <div key={transaction.id}>
-              <p>Customer: {transaction.customerName}</p>
-              <p>Total Amount: {transaction.totalAmount}</p>
-              <p>
-                Date: {new Date(transaction.transactionDate).toLocaleString()}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No recent transactions available</p>
-        )}
+
+      <h1 className="dashboard-header">Dashboard</h1>
+
+      <div className="dashboard-stats">
+        <div className="stat-box">
+          <h3>New Customers Today</h3>
+          <p>{todayNewCustomers}</p>
+        </div>
+        <div className="stat-box">
+          <h3>Total Customers</h3>
+          <p>{totalCustomers}</p>
+        </div>
+        <div className="stat-box">
+          <h3>Monthly Revenue</h3>
+          <p>Rp {monthlyRevenue.toLocaleString()}</p>
+        </div>
+      </div>
+
+      <div className="chart-container">
+        <h3 className="chart-title">Revenue (Per Week)</h3>
+        <div className="chart">
+          {revenueData.labels.length > 0 ? (
+            <Line data={revenueData} />
+          ) : (
+            <p className="loading-message">Loading data...</p>
+          )}
+        </div>
+      </div>
+
+      <div className="chart-container">
+        <h3 className="chart-title">Most Requested Services (Last Week)</h3>
+        <div className="chart">
+          {serviceRequestData.labels.length > 0 ? (
+            <Bar data={serviceRequestData} />
+          ) : (
+            <p className="loading-message">Loading data...</p>
+          )}
+        </div>
       </div>
     </div>
   );
