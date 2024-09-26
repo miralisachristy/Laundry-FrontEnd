@@ -106,7 +106,9 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           <label>Name:</label>
           <input
             type="text"
+            placeholder="Input name"
             name="name"
+            maxLength={30}
             value={newCustomer.name}
             onChange={handleInputChange}
             required
@@ -117,6 +119,8 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           <input
             type="text"
             name="phone"
+            maxLength={15}
+            placeholder="Example: 081234567899"
             value={newCustomer.phone}
             onChange={handleInputChange}
             required
@@ -126,7 +130,9 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           <label>Email:</label>
           <input
             type="email"
+            placeholder="Input email"
             name="email"
+            maxLength={40}
             value={newCustomer.email}
             onChange={handleInputChange}
             required
@@ -136,7 +142,9 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
           <label>Address:</label>
           <input
             type="text"
+            placeholder="Input adress"
             name="address"
+            maxLength={40}
             value={newCustomer.address}
             onChange={handleInputChange}
             required

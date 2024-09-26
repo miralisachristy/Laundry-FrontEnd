@@ -33,7 +33,8 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
       .then((response) => {
         console.log("User updated successfully:", response.data);
         onUpdate(response.data.data); // Notify parent about the update
-        setShowUpdateUserForm(false); // Close the form after updating user
+        // setShowUpdateUserForm(false); // Close the form after updating user
+        window.location.reload(); // This will reload the entire page
       })
       .catch((error) => {
         console.error("Error updating user:", error);
@@ -70,6 +71,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           <input
             type="text"
             name="name"
+            maxLength={30}
             value={updatedUser.name}
             onChange={handleInputChange}
             required
@@ -80,6 +82,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           <input
             type="text"
             name="username"
+            maxLength={20}
             value={updatedUser.username}
             onChange={handleInputChange}
             required
@@ -90,6 +93,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           <input
             type="password"
             name="password"
+            maxLength={8}
             value={updatedUser.password}
             onChange={handleInputChange}
             required
@@ -100,6 +104,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           <input
             type="email"
             name="email"
+            maxLength={40}
             value={updatedUser.email}
             onChange={handleInputChange}
             required
@@ -110,6 +115,7 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
           <input
             type="text"
             name="phone"
+            maxLength={15}
             value={updatedUser.phone}
             onChange={handleInputChange}
             required

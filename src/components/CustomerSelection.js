@@ -69,6 +69,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
 
       <div className="custom-dropdown">
         <input
+          style={{ marginLeft: "10px" }}
           type="text"
           placeholder="Search by name or phone"
           value={searchTerm}
@@ -78,7 +79,7 @@ const CustomerSelection = ({ onSelectCustomer }) => {
         />
 
         {isDropdownOpen && (
-          <ul className="dropdown-list">
+          <ul className="dropdown-list" style={{ marginLeft: "10px" }}>
             {filteredCustomers.length > 0 ? (
               filteredCustomers.map((customer) => (
                 <li

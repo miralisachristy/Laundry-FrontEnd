@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const useOutletName = () => {
-  const [outletName, setOutletName] = useState("My Laundry"); // Default value
+  const [outletName, setOutletName] = useState(""); // Default value
   const [error, setError] = useState(null);
 
   useEffect(() => {

@@ -217,7 +217,7 @@ const TransactionsTablePage = () => {
       <Navigation />
       <div className="content">
         <h2 style={{ textAlign: "left", marginRight: "20px" }}>
-          Transactions List
+          Transaction List
         </h2>
         <table>
           <thead>
@@ -227,7 +227,7 @@ const TransactionsTablePage = () => {
               {/* <th>Outlet Name</th> */}
               {/* <th>Customer Details</th>
               <th>Order Details</th> */}
-              {/* <th>Total Before Discount</th> */}
+              <th>Total Before Discount</th>
               <th>Discount Amount</th>
               <th>Total After Discount</th>
               <th>Payment Method</th>
@@ -240,8 +240,10 @@ const TransactionsTablePage = () => {
             {transactions.length > 0 ? (
               transactions.map((transaction) => (
                 <tr key={transaction.id_transaction}>
-                  <td>{transaction.invoice_code}</td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
+                    {transaction.invoice_code}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
                     {new Date(transaction.transaction_date).toLocaleDateString(
                       "id-ID",
                       {
@@ -267,7 +269,9 @@ const TransactionsTablePage = () => {
                     {renderCustomerDetails(transaction.selected_customer)}
                   </td>
                   <td>{renderOrderDetails(transaction.order_details)}</td> */}
-                  {/* <td>{transaction.total_before_discount}</td> */}
+                  <td style={{ textAlign: "center" }}>
+                    {transaction.total_before_discount}
+                  </td>
                   <td style={{ textAlign: "center" }}>
                     Rp{" "}
                     {Number(transaction.discount_amount).toLocaleString(
@@ -308,7 +312,7 @@ const TransactionsTablePage = () => {
                       "No Proof"
                     )}
                   </td>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <button
                       className="update-button"
                       style={{ marginBottom: "10px" }} // Margin-left

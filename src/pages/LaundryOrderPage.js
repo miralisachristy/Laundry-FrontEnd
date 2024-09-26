@@ -35,6 +35,34 @@ const LaundryOrderPage = () => {
 
   const navigate = useNavigate(); // Initialize navigate
 
+  const now = new Date();
+  const currentHour = now.getHours(); // Jam dalam format 24 jam
+  const currentMinute = now.getMinutes(); // Menit
+  const currentSecond = now.getSeconds(); // Detik
+
+  // Format jam dengan menambahkan angka 0 di depan jika kurang dari 10
+  const currentTime = `${currentHour
+    .toString()
+    .padStart(2, "0")}:${currentMinute
+    .toString()
+    .padStart(2, "0")}:${currentSecond.toString().padStart(2, "0")}`;
+
+  // // Fungsi untuk memformat tanggal
+  // const formatDateTime = (dateString) => {
+  //   const date = new Date(dateString);
+
+  //   const options = {
+  //     day: "2-digit",
+  //     month: "long",
+  //     year: "numeric",
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     second: "2-digit",
+  //   };
+
+  //   return date.toLocaleDateString("id-ID", options);
+  // };
+
   useEffect(() => {
     // Fetch quota data
     const fetchQuotaData = async () => {
@@ -82,6 +110,12 @@ const LaundryOrderPage = () => {
 
     fetchQuotaDailyHistory();
   }, [quota]);
+
+  const remainingQuota =
+    quotaDailyHistoryState.find((history) => history.date === selectedDate)
+      ?.remaining || 0; // Safely assign 0 if remaining is undefined
+
+  const usedQuota = quota.max_quota - remainingQuota;
 
   useEffect(() => {
     // Calculate quota used based on selected service and quantity
@@ -131,35 +165,40 @@ const LaundryOrderPage = () => {
   }, [quantity, selectedService, quota]);
 
   useEffect(() => {
-    // Check quotaDailyHistoryState for a date with enough remaining quota
+    // Check quotaUsed and errors
     if (quotaUsed > 0 && Object.keys(errors).length === 0) {
       let availableDate = null;
 
       // Loop through quotaDailyHistoryState to find a date with enough remaining quota
       for (let history of quotaDailyHistoryState) {
         if (history.remaining >= quotaUsed) {
-          availableDate = history.date;
+          availableDate = history.date; // Set available date if found
           break;
         }
       }
 
-      // If no available date, create a new entry for the next date
-      if (!availableDate) {
-        const nextDate = getNextDate(quotaDailyHistoryState); // Mendapatkan tanggal berikutnya
+      // If no available date, keep looking for the next available date
+      while (!availableDate) {
+        const nextDate = getNextDate(quotaDailyHistoryState); // Get the next date
         const newHistory = {
           date: nextDate,
           used: 0,
           remaining: quota.max_quota, // Set remaining to max_quota
         };
 
-        // Update state quotaDailyHistoryState dengan tanggal baru
+        // Update state quotaDailyHistoryState with the new date
         setQuotaDailyHistoryState((prevState) => [...prevState, newHistory]);
-        availableDate = nextDate; // Set availableDate ke tanggal baru yang dibuat
+
+        // Check the new date against the quota used
+        if (newHistory.remaining >= quotaUsed) {
+          availableDate = nextDate; // If the new date has enough remaining quota
+        }
       }
 
-      setSelectedDate(availableDate); // Simpan tanggal yang dipilih atau dibuat
+      // Ensure that the selected date is updated to the final available date
+      setSelectedDate(availableDate);
     } else {
-      setSelectedDate(null); // Clear selectedDate jika ada error
+      setSelectedDate(null); // Clear selectedDate if there are errors
     }
   }, [quotaUsed, quotaDailyHistoryState, errors]);
 
@@ -195,9 +234,17 @@ const LaundryOrderPage = () => {
     return totalBeforeDiscount - (totalBeforeDiscount * discount) / 100;
   };
 
+  const totalOrder = orderDetails.reduce(
+    (sum, detail) => sum + detail.total,
+    0
+  );
+
+  console.log("napa totalOrder :", totalOrder);
+
   const handleSelectCustomer = (customer) => {
     setSelectedCustomer(customer);
     setShowCustomerSelection(false);
+    setShowAddCustomerForm(false);
   };
 
   const handleSelectService = (service) => {
@@ -329,7 +376,7 @@ const LaundryOrderPage = () => {
       setShowServiceSelection(true); // Kembali ke pemilihan layanan
     } else {
       // Jika kuota tidak mencukupi, peringatkan pengguna
-      alert("Kuota tidak mencukupi untuk layanan yang dipilih.");
+      alert("Insufficient quota for selected service");
     }
   };
 
@@ -378,9 +425,20 @@ const LaundryOrderPage = () => {
   const handleContinue = () => {
     console.log("Continue button clicked!");
 
+    // Check if a customer is selected
+    if (!selectedCustomer || Object.keys(selectedCustomer).length === 0) {
+      alert("Customer data must be added"); // Show an alert if no customer is selected
+      return; // Stop the function execution
+    }
+
     // Calculate the discount amount and total after discount
     const discountAmount = calculateDiscountAmount();
     const totalAfterDiscount = calculateTotalAfterDiscount();
+
+    console.log("Selected Date:", selectedDate); // Cetak selectedDate
+    console.log("Quota Daily History State:", quotaDailyHistoryState);
+    console.log("Used Quota:", usedQuota); // Cetak usedQuota
+    console.log("Remaining Quota:", remainingQuota); // Cetak remainingQuota
 
     // Navigate to the TransactionDetailPage while passing the required data
     navigate("/transaction-detail", {
@@ -388,11 +446,14 @@ const LaundryOrderPage = () => {
         selectedCustomer,
         orderDetails,
         index,
+        totalOrder,
         discountAmount, // Use calculated discount amount
         totalAfterDiscount, // Use calculated total after discount
         paymentMethod,
         paymentStatus,
         selectedDate,
+        usedQuota,
+        remainingQuota,
       },
     });
     console.log("napa tu index :  ", index);
@@ -460,9 +521,7 @@ const LaundryOrderPage = () => {
           <div className="service-detail">
             <h3 style={{ marginLeft: "10px" }}>Add Service</h3>
             {/* Tambahkan informasi tentang Quota yang tersisa */}
-            {selectedDate && (
-              <p>Date for Quota Usage: {formatDate(selectedDate)}</p>
-            )}
+            {selectedDate && <p>Date for Quota Usage: {selectedDate}</p>}
             {selectedDate && (
               <p>
                 Available Quota:{" "}
@@ -483,7 +542,7 @@ const LaundryOrderPage = () => {
               onChange={(e) => setQuantity(e.target.value)}
               className="quantity-input"
               min="1"
-              placeholder="Enter quantity"
+              placeholder="Qty"
             />
             <span>{getUnitLabel()}</span>
             <br />
@@ -553,10 +612,13 @@ const LaundryOrderPage = () => {
                     <td>{detail.total}</td>
                     <td>{detail.description}</td>
                     <td>
-                      {detail.date ? formatDate(detail.date) : ""} <br />
+                      {detail.date
+                        ? `${detail.date} ${currentTime}`
+                        : currentTime}{" "}
+                      <br />
                       {detail.estimatedCompletionDate
-                        ? formatDate(detail.estimatedCompletionDate)
-                        : ""}
+                        ? `${detail.estimatedCompletionDate} ${currentTime}`
+                        : currentTime}
                     </td>
                     <td>
                       <button

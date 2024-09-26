@@ -1,0 +1,121 @@
+.update-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background-color: #ffffff; /* White background for the dialog */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  width: 400px;
+  max-width: 90%;
+}
+
+.dialog-content h3 {
+  margin-bottom: 15px;
+  color: #333; /* Dark color for text */
+  text-align: center; /* Center the title */
+}
+
+label {
+  font-weight: bold; /* Bold text for labels */
+  margin-bottom: 5px;
+  display: block; /* Block display for labels */
+  color: #555; /* Slightly lighter color for labels */
+}
+
+.item-select {
+  width: 100%; /* Full width for the select */
+  padding: 10px; /* Padding inside the select */
+  margin-bottom: 15px; /* Space below each select */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Font size for select */
+}
+
+.item-select,
+.action-select,
+.input-field,
+.remark-field {
+  /* General styles for selects and inputs */
+  width: 100%; /* Make inputs take the full width */
+  padding: 10px; /* Add padding for better touch target */
+  margin: 10px 0; /* Add margin for spacing */
+  border: 1px solid #ccc; /* Border for the inputs */
+  border-radius: 4px; /* Slightly round corners */
+  font-size: 16px; /* Set font size */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.item-select:focus,
+.action-select:focus,
+.input-field:focus,
+.remark-field:focus {
+  /* Styles for focused states */
+  border-color: #007bff; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Styles for the quantity input */
+.input-field {
+  width: 15%; /* Smaller width for quantity input */
+  padding: 10px; /* Padding inside the input */
+  margin-bottom: 15px; /* Space below the input */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Font size for input */
+}
+
+/* Styles for the remark input */
+.remark-field {
+  width: 50%; /* 50% width for remark input */
+  padding: 10px; /* Padding inside the input */
+  margin-bottom: 15px; /* Space below the input */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Font size for input */
+}
+
+.button-group {
+  display: flex; /* Flexbox for button alignment */
+  justify-content: space-between; /* Space between buttons */
+}
+
+.save-button {
+  background-color: #4caf50; /* Green */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 10px 15px; /* Padding for button */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition */
+  width: 48%; /* Width of the button */
+}
+
+.save-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.cancel-button {
+  background-color: #f44336; /* Red */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 10px 15px; /* Padding for button */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition */
+  width: 48%; /* Width of the button */
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}

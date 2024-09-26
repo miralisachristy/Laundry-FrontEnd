@@ -92,14 +92,11 @@ const LoginPage = () => {
       <form onSubmit={handleLogin}>
         <div className="form-group">
           <div className="logo-container">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Laundry Logo" className="logo" />
-            ) : (
-              <img src="/images/logo.png" alt="Laundry Logo" className="logo" /> // Gambar default
-            )}
+            <img src={logoUrl} alt="Laundry Logo" className="logo" />
           </div>
+
           <h2>{outletName}</h2>
-          {error && <p className="error-message">{error}</p>}
+          {/* {error && <p className="error-message">{error}</p>} */}
           <input
             type="text"
             id="username"

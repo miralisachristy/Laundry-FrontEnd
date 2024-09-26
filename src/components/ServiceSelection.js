@@ -57,6 +57,7 @@ const ServiceSelection = ({ onSelectService }) => {
 
       <div className="custom-dropdown">
         <input
+          style={{ marginLeft: "10px" }}
           type="text"
           placeholder="Search by service name"
           value={searchTerm}
@@ -66,7 +67,7 @@ const ServiceSelection = ({ onSelectService }) => {
         />
 
         {isDropdownOpen && (
-          <ul className="dropdown-list">
+          <ul className="dropdown-list" style={{ marginLeft: "10px" }}>
             {filteredServices.length > 0 ? (
               filteredServices.map((service) => (
                 <li

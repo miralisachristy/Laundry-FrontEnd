@@ -362,7 +362,7 @@ td img {
   padding: 0;
   margin-top: 20px;
   display: grid; /* Use grid layout instead of flex */
-  grid-template-columns: repeat(7, 1fr); /* Create 3 equal-width columns */
+  grid-template-columns: repeat(6, 1fr); /* Create 3 equal-width columns */
   gap: 10px; /* Space between items */
 }
 
@@ -394,8 +394,8 @@ td img {
 }
 
 .icon-image {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   object-fit: contain; /* Ensures the image fits within the container without being cut off */
   border-radius: 5px; /* Slightly rounded corners */
   margin-bottom: 10px; /* Adjusted margin for better spacing */
@@ -814,6 +814,7 @@ td img {
   background-color: #ffffff; /* White background for stat boxes */
   padding: 20px;
   border-radius: 10px;
+  margin-left: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 30%; /* Adjust width as needed */

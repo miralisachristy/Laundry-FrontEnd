@@ -114,6 +114,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
           <input
             type="text"
             name="name"
+            maxLength={30}
+            placeholder="Input name"
             value={newUser.name}
             onChange={handleInputChange}
             required
@@ -125,6 +127,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
           <input
             type="text"
             name="username"
+            maxLength={20}
+            placeholder="Input username"
             value={newUser.username}
             onChange={handleInputChange}
             required
@@ -136,6 +140,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
           <input
             type="password"
             name="password"
+            placeholder="Input password max 8 character"
+            maxLength={8}
             value={newUser.password}
             onChange={handleInputChange}
             required
@@ -147,6 +153,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
           <input
             type="email"
             name="email"
+            maxLength={40}
+            placeholder="Input email"
             value={newUser.email}
             onChange={handleInputChange}
             required
@@ -158,6 +166,8 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
           <input
             type="text"
             name="phone"
+            maxLength={15}
+            placeholder="Example: 081234567899"
             value={newUser.phone}
             onChange={handleInputChange}
             required

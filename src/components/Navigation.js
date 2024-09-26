@@ -27,7 +27,12 @@ const Navigation = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-brand">{outletName}</div>
+      <div
+        style={{ marginTop: "10px", marginLeft: "20px" }}
+        className="navbar-brand"
+      >
+        {outletName}
+      </div>
       <ul className="navbar-menu">
         {role && (
           <li>

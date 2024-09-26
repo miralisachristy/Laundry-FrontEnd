@@ -117,7 +117,7 @@ const UsersTablePage = () => {
     <div className="container">
       <Navigation />
       <div className="content">
-        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Users Table</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>User List</h2>
         <div>
           <input
             type="text"
@@ -175,7 +175,7 @@ const UsersTablePage = () => {
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
                 <tr key={user.id_user}>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     {user.role !== "SuperAdmin" ? (
                       <input
                         type="checkbox"

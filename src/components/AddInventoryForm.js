@@ -53,9 +53,7 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
 
     // Optional: Check for duplicates based on item name or code
     const isDuplicate = existingInventories.some(
-      (inventory) =>
-        inventory.item_name === newInventory.item_name ||
-        inventory.item_code === newInventory.item_code
+      (inventory) => inventory.item_code === newInventory.item_code
     );
 
     if (isDuplicate) {
@@ -128,6 +126,8 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
           <input
             type="text"
             name="item_name"
+            maxLength={30}
+            placeholder="Input name"
             value={newInventory.item_name}
             onChange={handleInputChange}
             required
@@ -138,6 +138,8 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
           <input
             type="text"
             name="item_type"
+            maxLength={20}
+            placeholder="Input type"
             value={newInventory.item_type}
             onChange={handleInputChange}
             required
@@ -148,6 +150,8 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
           <input
             type="text"
             name="supplier_name"
+            maxLength={50}
+            placeholder="Example: Supplier Name - Phone"
             value={newInventory.supplier_name}
             onChange={handleInputChange}
             required
@@ -158,6 +162,8 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
           <input
             type="text"
             name="remark"
+            maxLength={40}
+            placeholder="Input remark"
             value={newInventory.remark}
             onChange={handleInputChange}
             required
@@ -168,6 +174,7 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
           <input
             type="number"
             name="quantity"
+            placeholder="Input quantity"
             value={newInventory.quantity}
             onChange={handleInputChange}
             required

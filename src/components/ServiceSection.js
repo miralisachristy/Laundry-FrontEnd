@@ -28,6 +28,7 @@ const ServiceSection = ({
       {selectedService && (
         <div>
           <input
+            style={{ marginLeft: "10px" }}
             type="number"
             value={quantity}
             onChange={onQuantityChange}

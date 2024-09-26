@@ -162,7 +162,7 @@ const ServiceTablePage = () => {
             Add Service
           </button>
           <button
-            className={`add-button ${
+            className={`update-button ${
               selectedServices.length > 0 ? "active" : ""
             }`}
             onClick={() => setShowEditServiceForm(!showEditServiceForm)}
@@ -177,6 +177,7 @@ const ServiceTablePage = () => {
         </div>
 
         <div className="filter-menu">
+          <p style={{ color: "#555" }}>Category: </p>
           <button
             className={`filter-button ${
               selectedCategory === "all" ? "active" : ""

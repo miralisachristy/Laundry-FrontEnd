@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PopupMessage from "../components/PopupMessage";
@@ -10,6 +10,7 @@ const ForgotPasswordPage = () => {
   const [popupMessage, setPopupMessage] = useState(""); // State for popup message
   const [isPopupVisible, setIsPopupVisible] = useState(false); // State to control popup visibility
   const [popupType, setPopupType] = useState(""); // State to determine the type of popup message (error or success)
+  const [logoUrl, setLogoUrl] = useState(null); // State untuk menyimpan URL logo
   //   const { outletName, error } = useOutletName(); // Call custom hook here
 
   const handleBackToLoginClick = () => {
@@ -17,6 +18,26 @@ const ForgotPasswordPage = () => {
   };
 
   const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/outlets");
+        const outletData = response.data.data[0]; // Assuming first element has the needed data
+        const logoPath = outletData?.logo; // Check if logo path exists
+
+        if (logoPath) {
+          setLogoUrl(`http://localhost:3000${logoPath}`);
+        } else {
+          console.error("Logo not found in outlet data");
+        }
+      } catch (error) {
+        console.error("Error fetching logo:", error);
+      }
+    };
+
+    fetchLogo();
+  }, []); // No dependencies needed, as we only want to fetch this once on mount
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -53,8 +74,9 @@ const ForgotPasswordPage = () => {
       <form onSubmit={handleForgotPassword}>
         <div className="form-group">
           <div className="logo-container">
-            <img src="/images/logo.png" alt="Laundry Logo" className="logo" />
+            <img src={logoUrl} alt="Laundry Logo" className="logo" />
           </div>
+
           {/* <h2>{outletName}</h2> */}
           {/* {error && <p className="error-message">{error}</p>} */}
           <h2>Forgot Password</h2>

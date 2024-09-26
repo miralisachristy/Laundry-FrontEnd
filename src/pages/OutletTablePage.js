@@ -68,6 +68,7 @@ const OutletTablePage = () => {
         );
         setEditingOutlet(null); // Close the edit form after saving
         alert("Outlet updated successfully!");
+        localStorage.clear();
         navigate("/"); // Navigate to the Forgot Password page
         window.location.reload(); // This will reload the entire page
       })
@@ -122,16 +123,16 @@ const OutletTablePage = () => {
     <div className="container">
       <Navigation /> {/* Add Navigation here */}
       <div className="content">
-        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Outlet List</h2>
+        <h2 style={{ textAlign: "left", marginRight: "20px" }}>Outlet</h2>
         <div className="outlet-list">
           {outlets.length > 0 ? (
             outlets.map((outlet) => (
               <div className="outlet-card" key={outlet.id_outlet}>
                 <div className="outlet-box">
-                  <h3 style={{ marginLeft: "10px" }}>Logo</h3>
+                  <h3 style={{ marginLeft: "20px" }}>Logo</h3>
                   {outlet.logo ? (
                     <img
-                      style={{ marginLeft: "10px" }}
+                      style={{ marginLeft: "20px" }}
                       src={`http://localhost:3000${outlet.logo}`} // Correct string interpolation
                       alt={`${outlet.outlet_name} logo`} // Correct string interpolation
                       className="outlet-image"
@@ -141,7 +142,7 @@ const OutletTablePage = () => {
                   )}
                   <p></p>
                   <input
-                    style={{ marginLeft: "10px" }}
+                    style={{ marginLeft: "10px", marginBottom: "10px" }}
                     type="file"
                     accept="image/*"
                     onChange={(event) =>
@@ -149,6 +150,7 @@ const OutletTablePage = () => {
                     } // Pass outlet ID
                   />
                   <button
+                    style={{ marginBottom: "10px" }}
                     className="update-button"
                     onClick={() => handleLogoUpload(outlet.id_outlet)} // Pass outlet ID
                   >
@@ -166,6 +168,7 @@ const OutletTablePage = () => {
                           <input
                             type="text"
                             name="outlet_name"
+                            maxLength={20}
                             value={formData.outlet_name}
                             onChange={handleInputChange}
                           />
@@ -177,6 +180,7 @@ const OutletTablePage = () => {
                           <input
                             type="text"
                             name="address"
+                            maxLength={40}
                             value={formData.address}
                             onChange={handleInputChange}
                           />
@@ -188,6 +192,7 @@ const OutletTablePage = () => {
                           <input
                             type="text"
                             name="phone"
+                            maxLength={15}
                             value={formData.phone}
                             onChange={handleInputChange}
                           />

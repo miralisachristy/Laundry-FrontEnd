@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation";
-import AddInventoryForm from "../components/AddInventoryForm"; // Ensure this component exists
+import AddInventoryForm from "../components/AddInventoryForm"; // Ensure this component
+import UpdateInventoryDialog from "../components/UpdateInventoryDialog";
 import "../styles/csspages.css";
 
 const InventoryTablePage = () => {
@@ -11,6 +12,8 @@ const InventoryTablePage = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [showAddInventoryForm, setShowAddInventoryForm] = useState(false);
   const [inventories, setInventories] = useState([]);
+  const [showUpdateInventoryDialog, setShowUpdateInventoryDialog] =
+    useState(false);
 
   useEffect(() => {
     fetchInventory();
@@ -61,6 +64,7 @@ const InventoryTablePage = () => {
   const handleDeleteSelected = async () => {
     if (window.confirm("Are you sure you want to delete the selected items?")) {
       try {
+        console.log("Selected IDs:", selectedIds); // Log selected IDs
         await axios.post("http://localhost:3000/api/inventory/delete", {
           ids: selectedIds,
         });
@@ -79,12 +83,20 @@ const InventoryTablePage = () => {
     window.location.reload(); // This will reload the entire page
   };
 
+  const handleUpdateInventory = () => {
+    setShowUpdateInventoryDialog(true);
+  };
+
+  const closeUpdateDialog = () => {
+    setShowUpdateInventoryDialog(false);
+  };
+
   return (
     <div className="container">
       <Navigation />
       <div className="content">
         <h2 style={{ textAlign: "left", marginRight: "20px" }}>
-          Inventory Table
+          Inventory List
         </h2>
         <div>
           <input
@@ -98,7 +110,14 @@ const InventoryTablePage = () => {
             className="add-button"
             onClick={() => setShowAddInventoryForm(true)}
           >
-            Add Inventory Item
+            Add Inventory
+          </button>
+
+          <button
+            className="update-button"
+            onClick={handleUpdateInventory} // Show update dialog
+          >
+            Update Inventory
           </button>
 
           {showAddInventoryForm && (
@@ -109,6 +128,14 @@ const InventoryTablePage = () => {
               onAdd={handleOnAddFinished}
             />
           )}
+
+          {showUpdateInventoryDialog && (
+            <UpdateInventoryDialog
+              onClose={closeUpdateDialog}
+              // Add any additional props or functionality as needed
+            />
+          )}
+
           {selectedIds.length > 0 && (
             <button className="delete-button" onClick={handleDeleteSelected}>
               Delete
@@ -138,7 +165,7 @@ const InventoryTablePage = () => {
             {filteredInventory.length > 0 ? (
               filteredInventory.map((item) => (
                 <tr key={item.id}>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <input
                       type="checkbox"
                       checked={selectedIds.includes(item.id)}

@@ -71,6 +71,7 @@ const UpdateCustomerForm = ({
           <label>Name:</label>
           <input
             type="text"
+            maxLength={30}
             name="name"
             value={updatedCustomer.name}
             onChange={handleInputChange}
@@ -82,6 +83,7 @@ const UpdateCustomerForm = ({
           <input
             type="text"
             name="phone"
+            maxLength={15}
             value={updatedCustomer.phone}
             onChange={handleInputChange}
             required
@@ -92,6 +94,7 @@ const UpdateCustomerForm = ({
           <input
             type="email"
             name="email"
+            maxLength={40}
             value={updatedCustomer.email}
             onChange={handleInputChange}
             required
@@ -102,6 +105,7 @@ const UpdateCustomerForm = ({
           <input
             type="text"
             name="address"
+            maxLength={40}
             value={updatedCustomer.address}
             onChange={handleInputChange}
             required

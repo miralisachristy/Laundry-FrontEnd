@@ -10,14 +10,14 @@ const TransactionDetailPage = () => {
   const {
     selectedCustomer = {},
     orderDetails = [],
-    index,
     discountAmount = 0,
     totalAfterDiscount = 0,
+    totalOrder = 0,
     paymentMethod: initialPaymentMethod = "",
     paymentStatus: initialPaymentStatus = "Not paid",
-    quotaUsed = 0,
-    quotaDate, // Date for quota usage
-    availableQuota = 0, // Max available quota
+    usedQuota = 0,
+    selectedDate, // Date for quota usage
+    remainingQuota = 0, // Max available quota
   } = location.state || {};
 
   const [paymentMethod, setPaymentMethod] = useState(initialPaymentMethod);
@@ -49,6 +49,8 @@ const TransactionDetailPage = () => {
     }${now.getDate()}-${now.getTime()}`;
   };
 
+  const [invoiceCode] = useState(generateInvoiceCode());
+
   const handleConfirmOrderClick = () => {
     setShowConfirmationDialog(true);
   };
@@ -58,7 +60,7 @@ const TransactionDetailPage = () => {
   };
 
   const calculateQuotaUsed = () => {
-    return quotaUsed; // Directly using passed quotaUsed
+    return usedQuota; // Directly using passed quotaUsed
   };
 
   const handleOkConfirmation = async () => {
@@ -73,9 +75,10 @@ const TransactionDetailPage = () => {
 
     const formData = new FormData();
     formData.append("paymentProof", paymentProof);
-    formData.append("invoiceCode", generateInvoiceCode());
+    formData.append("invoiceCode", invoiceCode);
     formData.append("selectedCustomer", JSON.stringify(selectedCustomer));
     formData.append("orderDetails", JSON.stringify(orderDetails));
+    formData.append("totalBeforeDiscount", totalOrder);
     formData.append("discountAmount", discountAmount);
     formData.append("totalAfterDiscount", totalAfterDiscount);
     formData.append("paymentMethod", paymentMethod);
@@ -84,15 +87,15 @@ const TransactionDetailPage = () => {
     // Calculate quota used and available quota
     const quotaUsed = calculateQuotaUsed(orderDetails);
     const quotaDate = new Date().toISOString().split("T")[0]; // Format date as YYYY-MM-DD
-    // const availableQuota = await getAvailableQuota(); // Call the function here
 
     console.log("Posting quota data:", {
-      date: quotaDate,
-      used: quotaUsed,
-      remaining: availableQuota,
+      date: selectedDate,
+      used: usedQuota,
+      remaining: remainingQuota,
     });
 
     try {
+      // Save transaction first
       const response = await axios.post(
         "http://localhost:3000/api/transactions",
         formData,
@@ -102,29 +105,69 @@ const TransactionDetailPage = () => {
           },
         }
       );
-      console.log("Transaction saved:", response.data);
 
-      // Save quota data
-      await axios.post("http://localhost:3000/api/quotas-daily-history", {
-        date: quotaDate,
-        used: quotaUsed,
-        remaining: availableQuota,
-      });
+      // Ensure response is in baseResponse format
+      if (response.data.data && response.data.code === 201) {
+        console.log("Transaction saved:", response.data.data);
 
-      navigate("/order-table", {
-        state: {
-          invoiceCode: generateInvoiceCode(),
-          selectedCustomer,
-          totalAfterDiscount,
-          paymentMethod,
-          paymentStatus,
-        },
-      });
+        // // Check if quota for the selectedDate already exists
+        // const getQuotaResponse = await axios.get(
+        //   `http://localhost:3000/api/quotas-daily-history/from-today`
+        // );
+
+        // const existingQuota = getQuotaResponse.data.data.find(
+        //   (quota) => quota.date === selectedDate
+        // );
+
+        // if (existingQuota) {
+        //   // If quota exists, update it using PUT
+        //   const updateQuotaResponse = await axios.put(
+        //     `http://localhost:3000/api/quotas-daily-history/id/${existingQuota.id}`,
+        //     {
+        //       date: selectedDate,
+        //       used: usedQuota,
+        //       remaining: remainingQuota,
+        //     }
+        //   );
+
+        //   if (
+        //     updateQuotaResponse.data &&
+        //     updateQuotaResponse.data.code === 200
+        //   ) {
+        //     console.log("Quota updated for date:", selectedDate);
+        //   }
+        // } else {
+        //   // Create a new quota if not found
+        //   const createQuotaResponse = await axios.post(
+        //     "http://localhost:3000/api/quotas-daily-history",
+        //     {
+        //       date: selectedDate,
+        //       used: usedQuota,
+        //       remaining: remainingQuota,
+        //     }
+        //   );
+
+        //   if (
+        //     createQuotaResponse.data &&
+        //     createQuotaResponse.data.code === 200
+        //   ) {
+        //     console.log("New quota created for date:", selectedDate);
+        //   }
+        // }
+
+        // Navigate to order table
+        navigate("/order-table");
+      } else {
+        setError(response.data.message || "Failed to save transaction.");
+      }
     } catch (error) {
+      console.log("apa so tu error : ", error);
+
       console.error(
         "Failed to save transaction:",
         error.response ? error.response.data : error.message
       );
+
       setError(
         error.response
           ? error.response.data.message
@@ -166,7 +209,7 @@ const TransactionDetailPage = () => {
         <h2>Transaction Details</h2>
 
         <div className="invoice-details">
-          <p>Invoice Code: {generateInvoiceCode()}</p>
+          <p>Invoice Code: {invoiceCode}</p>
           <p>
             Date:{" "}
             {new Date().toLocaleDateString("id-ID", {
@@ -235,10 +278,12 @@ const TransactionDetailPage = () => {
           onClick={handleConfirmOrderClick}
           disabled={
             !paymentMethod ||
+            !paymentStatus ||
             (paymentStatus === "Not paid" &&
               paymentMethod !== "Cash" &&
               !paymentProof)
           }
+          //jika metode pembayaran tdk ada |atau| status pembayaran = not paid |dan| metode pembayaran bukan Cash |dan| bukti transaksi tidak ada
         >
           Confirm Order
         </button>

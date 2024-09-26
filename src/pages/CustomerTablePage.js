@@ -101,7 +101,7 @@ const CustomerTablePage = () => {
       <Navigation />
       <div className="content">
         <h2 style={{ textAlign: "left", marginRight: "20px" }}>
-          Customer Table
+          Customer List
         </h2>
         <div>
           <input
@@ -158,7 +158,7 @@ const CustomerTablePage = () => {
             {filteredCustomers.length > 0 ? (
               filteredCustomers.map((customer) => (
                 <tr key={customer.id_customer}>
-                  <td>
+                  <td style={{ textAlign: "center" }}>
                     <input
                       type="checkbox"
                       checked={selectedIds.includes(customer.id_customer)}

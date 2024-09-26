@@ -23,6 +23,13 @@ const AddServiceForm = ({ onClose, onAdd }) => {
 
   const handleAddService = async (e) => {
     e.preventDefault();
+
+    // Validasi manual untuk price
+    if (newService.price < 0 || newService.price > 999999999) {
+      setError("Price must be between 0 and 999999999");
+      return;
+    }
+
     const formData = new FormData();
     Object.keys(newService).forEach((key) =>
       formData.append(key, newService[key])
@@ -80,6 +87,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             id="service_name"
             type="text"
             name="service_name"
+            maxLength={30}
             placeholder="Service Name - Processing Time"
             value={newService.service_name}
             onChange={handleInputChange}
@@ -107,6 +115,7 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             type="text"
             placeholder="Example: 24"
             name="processing_time"
+            maxLength={3}
             value={newService.processing_time}
             onChange={handleInputChange}
             required
@@ -118,6 +127,8 @@ const AddServiceForm = ({ onClose, onAdd }) => {
             id="price"
             type="number"
             name="price"
+            min="0" // Batas minimal
+            max="999999999" // Batas maksimal
             placeholder="Example: 25000"
             value={newService.price}
             onChange={handleInputChange}
