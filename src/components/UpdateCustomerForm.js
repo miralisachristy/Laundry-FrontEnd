@@ -57,15 +57,6 @@ const UpdateCustomerForm = ({
     <div className="update-customer-box">
       <h3>Update Customer</h3>
 
-      <button
-        className="close-button"
-        type="button"
-        onClick={() => setShowUpdateCustomerForm(false)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
-
       <form onSubmit={handleSubmit}>
         <div>
           <label>Name:</label>
@@ -112,8 +103,16 @@ const UpdateCustomerForm = ({
           />
         </div>
 
-        <button type="submit" className="update-button">
+        <button type="submit" className="save-button">
           Update
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={() => setShowUpdateCustomerForm(false)}
+          aria-label="Close"
+        >
+          Cancel
         </button>
         {/* <button
           type="button"

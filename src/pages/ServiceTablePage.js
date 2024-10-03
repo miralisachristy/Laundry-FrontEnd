@@ -176,6 +176,13 @@ const ServiceTablePage = () => {
           )}
         </div>
 
+        {showAddServiceForm && (
+          <AddServiceForm
+            onClose={() => setShowAddServiceForm(false)}
+            onAdd={handleOnAddFinished}
+          />
+        )}
+
         <div className="filter-menu">
           <p style={{ color: "#555" }}>Category: </p>
           <button
@@ -203,13 +210,6 @@ const ServiceTablePage = () => {
             Satuan
           </button>
         </div>
-
-        {showAddServiceForm && (
-          <AddServiceForm
-            onClose={() => setShowAddServiceForm(false)}
-            onAdd={handleOnAddFinished}
-          />
-        )}
 
         <ul className="service-icon-list">
           {filteredServices.length > 0 ? (

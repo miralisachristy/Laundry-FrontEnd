@@ -86,14 +86,7 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
   return (
     <div className="add-user-box">
       <h3>Add New User</h3>
-      <button
-        className="close-button"
-        type="button"
-        onClick={() => setShowAddUserForm(false)} // Close the form
-        aria-label="Close"
-      >
-        &times;
-      </button>
+
       <form onSubmit={handleAddUser}>
         <div className="select-container">
           <label>Role:</label>
@@ -176,6 +169,14 @@ const AddUserForm = ({ setShowAddUserForm, onAddUser }) => {
         </div>
         <button type="submit" className="save-button">
           Submit
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={() => setShowAddUserForm(false)} // Close the form
+          aria-label="Close"
+        >
+          Cancel
         </button>
       </form>
       {success && <p className="success-message">{success}</p>}

@@ -296,7 +296,7 @@ td img {
   margin-left: 10px;
 }
 
-.add-service-box form button {
+.add-service-box formin button {
   padding: 8px 16px;
   border: none;
   background-color: #007bff;
@@ -305,7 +305,7 @@ td img {
   cursor: pointer;
 }
 
-.add-service-box form button:hover {
+.add-service-box formin button:hover {
   background-color: #0056b3;
 }
 
@@ -760,7 +760,7 @@ td img {
   margin-left: 10px; /* Left margin for labels */
 }
 
-.add-inventory-box form button.save-button {
+.add-inventory-box form button.savein-button {
   padding: 8px 16px; /* Padding for button */
   border: none; /* No border */
   background-color: #007bff; /* Blue background for button */
@@ -769,7 +769,7 @@ td img {
   cursor: pointer; /* Pointer cursor on hover */
 }
 
-.add-inventory-box form button.save-button:hover {
+.add-inventory-box form button.savein-button:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 

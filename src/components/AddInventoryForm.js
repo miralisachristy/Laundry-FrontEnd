@@ -102,14 +102,7 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
   return (
     <div className="add-inventory-box">
       <h3>Add New Inventory Item</h3>
-      <button
-        className="close-button"
-        type="button"
-        onClick={() => setShowAddInventoryForm(false)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
+
       <form onSubmit={handleAddInventory}>
         <div>
           <label>Item Code:</label>
@@ -185,6 +178,14 @@ const AddInventoryForm = ({ setShowAddInventoryForm, setInventories }) => {
         {/* Display error message */}
         <button type="submit" className="save-button">
           Submit
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={() => setShowAddInventoryForm(false)}
+          aria-label="Close"
+        >
+          Cancel
         </button>
       </form>
     </div>

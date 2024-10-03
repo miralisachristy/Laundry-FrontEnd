@@ -70,14 +70,6 @@ const AddServiceForm = ({ onClose, onAdd }) => {
 
   return (
     <div className="add-service-box">
-      <button
-        className="close-button"
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-      >
-        &times;
-      </button>
       <h3>Add New Service</h3>
       <form onSubmit={handleAddService}>
         {error && <p className="error-message">{error}</p>}
@@ -163,6 +155,14 @@ const AddServiceForm = ({ onClose, onAdd }) => {
         </div>
         <button type="submit" className="save-button">
           Submit
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          Cancel
         </button>
       </form>
     </div>

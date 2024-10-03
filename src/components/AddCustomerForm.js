@@ -93,14 +93,7 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
   return (
     <div className="add-customer-box">
       <h3>Add New Customer</h3>
-      <button
-        className="close-button"
-        type="button"
-        onClick={() => setShowAddCustomerForm(false)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
+
       <form onSubmit={handleAddCustomer}>
         <div>
           <label>Name:</label>
@@ -154,6 +147,14 @@ const AddCustomerForm = ({ setShowAddCustomerForm, setCustomers }) => {
         {/* Display error message */}
         <button type="submit" className="save-button">
           Submit
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={() => setShowAddCustomerForm(false)}
+          aria-label="Close"
+        >
+          Cancel
         </button>
       </form>
     </div>

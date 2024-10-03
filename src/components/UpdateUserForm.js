@@ -45,15 +45,6 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
     <div className="update-user-box">
       <h3>Update User</h3>
 
-      <button
-        className="close-button"
-        type="button"
-        onClick={() => setShowUpdateUserForm(false)}
-        aria-label="Close"
-      >
-        &times;
-      </button>
-
       <form onSubmit={handleUpdateUser}>
         <div>
           <label>Role:</label>
@@ -124,6 +115,14 @@ const UpdateUserForm = ({ setShowUpdateUserForm, user, onUpdate }) => {
 
         <button type="submit" className="save-button">
           Submit
+        </button>
+        <button
+          className="cancel-button"
+          type="button"
+          onClick={() => setShowUpdateUserForm(false)}
+          aria-label="Close"
+        >
+          Cancel
         </button>
       </form>
     </div>
